@@ -14,6 +14,8 @@ public:
 	RockMan& operator=(const RockMan&& _Other) noexcept = delete;
 protected:
 	void GameInit() override;
+	void GameLoop() override;
+	void GameEnd() override;
 private:
 
 };

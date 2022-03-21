@@ -5,16 +5,25 @@
     <ClInclude Include="GameEngineLevel.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngineActor.h">
+      <Filter>Object\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameEngineLevel.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngineActor.cpp">
+      <Filter>Object\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Object">
       <UniqueIdentifier>{bf673943-f881-44a2-8665-2af982f2c691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Actor">
+      <UniqueIdentifier>{87e37b63-9ec0-4b7a-ae4d-212281de7a8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
