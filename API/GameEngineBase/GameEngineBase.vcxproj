@@ -23,7 +23,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="GameEngineMath.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameEngineNameObject.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineString.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -37,7 +45,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="GameEngineMath.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameEngineNameObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameEngineString.cpp">
       <SubType>
       </SubType>
     </ClCompile>

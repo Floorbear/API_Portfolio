@@ -5,6 +5,7 @@
 #include <GameEngineBase/GameEngineWindow.h>
 //게임엔진 = 게임 그자체의 시작점, 끝점, 실행점을 담당하는 녀석
 
+class GameEngineImage;
 class GameEngineLevel;
 class GameEngine
 {
@@ -17,6 +18,13 @@ public:
 	GameEngine& operator=(const GameEngine& _Ohter) = delete;
 	GameEngine& operator=(const GameEngine&& _Other) noexcept = delete;
 
+public:
+	static inline GameEngineImage* BackBufferImage()
+	{
+		return BackBufferImage_;
+	}
+
+	static HDC BackBufferDC();
 
 	template<typename GameType>
 	static void Start()
@@ -56,6 +64,9 @@ private:
 	static GameEngine* UserContents_;
 	static GameEngineLevel* CurrentLevel_;
 	static GameEngineLevel* NextLevel_;
+
+	static GameEngineImage* WindowMainImage_;
+	static GameEngineImage* BackBufferImage_;
 
 };
 

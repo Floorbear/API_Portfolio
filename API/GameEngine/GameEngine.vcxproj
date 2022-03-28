@@ -158,7 +158,24 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="GameEngineActorSubObject.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineEnum.h" />
+    <ClInclude Include="GameEngineImage.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineImageManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameEngineLevel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineRenderer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -172,7 +189,23 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="GameEngineActorSubObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameEngineImage.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameEngineImageManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameEngineLevel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameEngineRenderer.cpp">
       <SubType>
       </SubType>
     </ClCompile>

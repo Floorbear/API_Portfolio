@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include "GameEngineDebug.h"
+#include "GameEngineMath.h"
 
 class GameEngineWindow
 {
@@ -22,7 +23,17 @@ public:
 		}
 	}
 
+	static inline HDC GetHDC()
+	{
+		return Inst_->HDC_;
+	}
+	static inline float4 GetScale()
+	{
+		return Inst_->Scale_;
+	}
+
 public:
+	void SetWindowScaleAndPosition(float4 _Pos, float4 _Scale);
 	void RegClass(HINSTANCE _HInst);
 	void CreateGameWindow(HINSTANCE _hInst, const std::string& _Title);
 	void ShowGameWindow();
@@ -36,6 +47,7 @@ private:
 	std::string Title_;
 	HDC HDC_;
 	bool WindowOn_;
+	float4 Scale_;
 
 	GameEngineWindow();
 	~GameEngineWindow();

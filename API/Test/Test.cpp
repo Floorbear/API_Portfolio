@@ -1,24 +1,26 @@
 ﻿#include <iostream>
-
+#include <string>
 
 class Test
 {
 public:
-	void Func();
+
+	static std::string ToUpperReturn(const std::string& _Text)
+	{
+		std::string NewString = _Text;
+		for (size_t i = 0; i < _Text.size(); i++)
+		{
+			NewString[i] = std::toupper(_Text[i]);
+		}
+		return NewString;
+	}
 };
 
-void Test::Func()
-{
-	std::cout << "Call Func" << std::endl;
-}
+
 
 int main()
 {
-	void(Test::*VPtr)();
-	VPtr = &Test::Func;
-	Test t;
-	(t.*VPtr)();
-
+	std::cout << Test::ToUpperReturn("MyNameIsMuMu") << std::endl;
 }
 
 

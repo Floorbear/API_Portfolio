@@ -9,19 +9,36 @@ LRESULT CALLBACK MessageProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     case WM_DESTROY:
         // 윈도우를 종료하고 모든 
         GameEngineWindow::GetInst().Off();
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        break;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
         EndPaint(hWnd, &ps);
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    default:
         break;
     }
-    return DefWindowProc(hWnd, message, wParam, lParam);
+    case WM_CLOSE:
+    {
+        GameEngineWindow::GetInst().Off();
+        break;
+    }
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+    return 0;
+}
+
+void GameEngineWindow::SetWindowScaleAndPosition(float4 _Pos, float4 _Scale)
+{
+    RECT Rc = { 0,0,_Scale.ix(),_Scale.iy() };
+
+    AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+    Scale_ = _Scale;
+
+    SetWindowPos(hWnd_, nullptr, _Pos.ix(), _Pos.iy(), Rc.right - Rc.left, Rc.bottom - Rc.top, SWP_NOZORDER);
 }
 
 void GameEngineWindow::RegClass(HINSTANCE _hInst)

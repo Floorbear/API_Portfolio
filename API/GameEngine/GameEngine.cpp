@@ -1,11 +1,16 @@
 #include "GameEngine.h"
 #include "GameEngineLevel.h"
+#include "GameEngineImageManager.h"
 
 std::map<std::string, GameEngineLevel*> GameEngine::AllLevel_;
 GameEngineLevel* GameEngine::CurrentLevel_ = nullptr;
 GameEngineLevel* GameEngine::NextLevel_= nullptr;
-
 GameEngine* GameEngine::UserContents_ = nullptr;
+GameEngineImage* GameEngine::WindowMainImage_ = nullptr;
+GameEngineImage* GameEngine::BackBufferImage_= nullptr;
+
+
+
 GameEngine::GameEngine()
 {
 }
@@ -26,7 +31,9 @@ void GameEngine::EngineInit()
 {
 	UserContents_->GameInit();
 
-	//백버퍼 생성 구현하기
+	//백버퍼 생성
+	WindowMainImage_ = GameEngineImageManager::GetInst()->Create("WindowMain", GameEngineWindow::GetHDC());
+	BackBufferImage_ = GameEngineImageManager::GetInst()->Create("BackBuffer", GameEngineWindow::GetScale());
 }
 
 void GameEngine::EngineLoop()
@@ -58,7 +65,11 @@ void GameEngine::EngineLoop()
 	CurrentLevel_->Update();
 	CurrentLevel_->ActorUpdate();
 	CurrentLevel_->ActorRender();
+
 	//버퍼 업데이트 구현
+	WindowMainImage_->BitCopy(BackBufferImage_);
+
+	//엑터 릴리즈 구현
 }
 
 void GameEngine::EngineEnd()
@@ -79,6 +90,11 @@ void GameEngine::EngineEnd()
 	//이미지매니저 파괴함수도 넣어야함 
 
 	GameEngineWindow::Destory();
+}
+
+HDC GameEngine::BackBufferDC()
+{
+	return BackBufferImage_->ImageDC();
 }
 
 void GameEngine::ChangeLevel(const std::string& _Name)
