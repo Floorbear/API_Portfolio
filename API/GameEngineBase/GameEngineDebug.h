@@ -1,27 +1,35 @@
 #pragma once
 #include <crtdbg.h>
-#include <assert.h>
-#include <windows.h>
 #include <string>
+#include <assert.h>
+#include <Windows.h>
 
-// 릭체크, 에러 메세지 박스 관련 클래스
+// 설명 :
 class GameEngineDebug
 {
 public:
 	static void LeakCheckOn();
 
+
+protected:
+
 private:
+	// constrcuter destructer
 	GameEngineDebug();
 	~GameEngineDebug();
 
-
+	// delete Function
 	GameEngineDebug(const GameEngineDebug& _Other) = delete;
-	GameEngineDebug(const GameEngineDebug&& _Other) noexcept = delete;
-	GameEngineDebug& operator=(const GameEngineDebug& _Ohter) = delete;
-	GameEngineDebug& operator=(const GameEngineDebug&& _Other) noexcept = delete;
+	GameEngineDebug(GameEngineDebug&& _Other) noexcept = delete;
+	GameEngineDebug& operator=(const GameEngineDebug& _Other) = delete;
+	GameEngineDebug& operator=(GameEngineDebug&& _Other) noexcept = delete;
 
 };
 
-#define MsgBoxAssert(Text)	MessageBeep(0); \
-MessageBoxA(nullptr,Text,"Error",MB_OK);	\
-assert(false);
+#define MsgBoxAssert(Text) 	MessageBeep(0); \
+MessageBoxA(nullptr, Text, "Error", MB_OK); \
+assert(false); 
+
+#define MsgBoxAssertString(Text) 	MessageBeep(0); \
+MessageBoxA(nullptr, (Text).c_str(), "Error", MB_OK); \
+assert(false); 

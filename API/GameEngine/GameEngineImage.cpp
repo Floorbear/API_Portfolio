@@ -1,69 +1,220 @@
 #include "GameEngineImage.h"
-#include "GameEngineBase/GameEngineWindow.h"
+#include <GameEngineBase/GameEngineDebug.h>
+#include <GameEngineBase/GameEngineWindow.h>
+
+// #pragma comment(lib, "msimg32.lib")
+
 GameEngineImage::GameEngineImage()
+	:ImageDC_(nullptr)
 {
 }
 
 GameEngineImage::~GameEngineImage()
 {
+
+	if (nullptr != BitMap_)
+	{
+		DeleteObject(BitMap_);
+		BitMap_ = nullptr;
+	}
+
+	if (nullptr != OldBitMap_)
+	{
+		DeleteObject(OldBitMap_);
+		OldBitMap_ = nullptr;
+	}
+
+	if (nullptr != ImageDC_)
+	{
+		DeleteDC(ImageDC_);
+		ImageDC_ = nullptr;
+	}
 }
 
 bool GameEngineImage::Create(HDC _DC)
 {
-    ImageDC_ = _DC;
-    ImageScaleCheck();
-    return true;
+	ImageDC_ = _DC;
+	ImageScaleCheck();
+	return true;
 }
 
 bool GameEngineImage::Create(float4 _Scale)
 {
-    if (_Scale.IsZero2D() == true)
-    {
-        MsgBoxAssert("크기가 0인 이미지를 제작하려고 했습니다.");
-        return false;
-    }
-    //GetHDC()와 호환되는 비트맵을 만든다
-    BitMap_ = CreateCompatibleBitmap(GameEngineWindow::GetHDC(), _Scale.ix(), _Scale.iy());
+	if (true == _Scale.IsZero2D())
+	{
+		MsgBoxAssert("크기가 0인 이미지를 제작하려고 했습니다.");
+		return false;
+	}
 
-    //nullptr쓰면 현재 DC와 호환되는 DC를 핸들 방식으로 제공
-    ImageDC_ = CreateCompatibleDC(nullptr);
+	// 먼저 이미지 크기만한 비트맵 만들어주기
+	BitMap_ = CreateCompatibleBitmap(GameEngineWindow::GetHDC(), _Scale.ix(), _Scale.iy());
 
-    if (ImageDC_ == nullptr)
-    {
-        MsgBoxAssert("ImageDC 생성에 실패했습니다.");
-    }
+	ImageDC_ = CreateCompatibleDC(nullptr);
 
-    OldBitMap_ = (HBITMAP)SelectObject(ImageDC_, BitMap_);
+	if (nullptr == ImageDC_)
+	{
+		MsgBoxAssert("ImageDc 생성에 실패했습니다.");
+	}
 
-    ImageScaleCheck();
+	OldBitMap_ = (HBITMAP)SelectObject(ImageDC_, BitMap_);
 
-    return true;
+	ImageScaleCheck();
+
+	return true;
+}
+
+bool GameEngineImage::Load(const std::string& _Path)
+{
+	BitMap_ = static_cast<HBITMAP>(LoadImageA(
+		nullptr,
+		_Path.c_str(),
+		IMAGE_BITMAP,
+		0,
+		0,
+		LR_LOADFROMFILE
+	));
+
+	if (nullptr == BitMap_)
+	{
+		MsgBoxAssertString(_Path + " 이미지 로드에 실패했습니다. 여러분들이 살펴봐야할 문제 1. 경로는 제대로 됐나요? 2. 디버깅은 제대로 봤나요");
+	}
+
+	ImageDC_ = CreateCompatibleDC(nullptr);
+
+	if (nullptr == ImageDC_)
+	{
+		MsgBoxAssert("ImageDc 생성에 실패했습니다.");
+	}
+
+	OldBitMap_ = (HBITMAP)SelectObject(ImageDC_, BitMap_);
+
+	ImageScaleCheck();
+
+	return true;
+}
+
+void GameEngineImage::ImageScaleCheck()
+{
+	// DC 내부에 박혀있는 BITMAP을 꺼내오는 함수
+	HBITMAP CurrentBitMap = (HBITMAP)GetCurrentObject(ImageDC_, OBJ_BITMAP);
+	GetObject(CurrentBitMap, sizeof(BITMAP), &Info_);
+}
+
+void GameEngineImage::BitCopy(GameEngineImage* _Other, const float4& _CopyPos)
+{
+	BitCopy(_Other, _CopyPos, _Other->GetScale(), float4{ 0, 0 });
+}
+
+void GameEngineImage::BitCopyCenter(GameEngineImage* _Other, const float4& _CopyPos)
+{
+	BitCopy(_Other, _CopyPos - _Other->GetScale().Half(), _Other->GetScale(), float4{ 0, 0 });
+}
+
+void GameEngineImage::BitCopyCenterPivot(GameEngineImage* _Other, const float4& _CopyPos, const float4& _CopyPivot)
+{
+	BitCopy(_Other, _CopyPos - _Other->GetScale().Half() + _CopyPivot, _Other->GetScale(), float4{ 0, 0 });
+}
+
+void GameEngineImage::BitCopyBot(GameEngineImage* _Other, const float4& _CopyPos)
+{
+	float4 ImagePivot = _Other->GetScale().Half();
+	ImagePivot.y = _Other->GetScale().y;
+
+	BitCopy(_Other, _CopyPos - ImagePivot, _Other->GetScale(), float4{ 0, 0 });
+}
+
+void GameEngineImage::BitCopyBotPivot(GameEngineImage* _Other, const float4& _CopyPos, const float4& _CopyPivot)
+{
+	float4 ImagePivot = _Other->GetScale().Half();
+	ImagePivot.y = _Other->GetScale().y;
+
+	BitCopy(_Other, _CopyPos - ImagePivot + _CopyPivot, _Other->GetScale(), float4{ 0, 0 });
 }
 
 void GameEngineImage::BitCopy(GameEngineImage* _Other)
 {
-    BitCopy(_Other, { 0,0 }, _Other->GetScale(), { 0,0 });
+	BitCopy(_Other, { 0, 0 }, _Other->GetScale(), { 0, 0 });
 }
 
+// 다른 이미지가 들어와서
 void GameEngineImage::BitCopy(GameEngineImage* _Other, const float4& _CopyPos, const float4& _CopyScale, const float4& _OtherPivot)
 {
-    BitBlt(
-        ImageDC_,
-        _CopyPos.ix(),
-        _CopyPos.iy(),
-        _CopyScale.ix(),
-        _CopyScale.iy(),
-        _Other->ImageDC_,
-        _OtherPivot.ix(),
-        _OtherPivot.iy(),
-        SRCCOPY
-    );
+	// 윈도우에서 지원해주는 일반적인 dc vs dc의 복사함수입니다.
+	BitBlt(
+		ImageDC_, // 여기에 복사해라.
+		_CopyPos.ix(), // 내 이미지의 이 부분 x
+		_CopyPos.iy(), // 내 이미지의 이 부분 y 에 복사해라
+		_CopyScale.ix(), // 내 이미지의 이 크기만큼 x
+		_CopyScale.iy(), // 내 이미지의 이 크기만큼 y
+		_Other->ImageDC_, // 복사하려는 대상은
+		_OtherPivot.ix(), // 복사하려는 대상의 시작점X
+		_OtherPivot.iy(),// 복사하려는 대상의 시작점Y
+		SRCCOPY // 복사하라는 명령
+	);
+}
+
+//////////////////////////////////////////////////////////////////////// Trans
+
+
+void GameEngineImage::TransCopy(GameEngineImage* _Other, const float4& _CopyPos,
+	const float4& _CopyScale,
+	const float4& _OtherPivot, const float4& _OtherScale, unsigned int _TransColor)
+{
+	// TransCopy(_Other, _CopyPos - _RenderScale.Half(), _RenderScale, _RenderPivot, _Other->GetScale(), _TransColor);
+
+	TransparentBlt(
+		ImageDC_, // 여기에 복사(우리 윈도우이미지)
+		_CopyPos.ix(), // 윈도우 이미지의 위치 x에서부터 y
+		_CopyPos.iy(), // 윈도우 이미지의 위치 x에서부터 y
+		_CopyScale.ix(), // 내 이미지의 이 크기만큼 x
+		_CopyScale.iy(), // 내 이미지의 이 크기만큼 y
+		_Other->ImageDC_, // 복사하려는 대상은(거기에 그려지는 이미지가 뭔데?커비)
+		_OtherPivot.ix(), // 복사하려는 대상의 시작점X 위치
+		_OtherPivot.iy(),// 복사하려는 대상의 시작점Y
+		_OtherScale.ix(), // 복사하려는 대상의 시작점X 크기
+		_OtherScale.iy(),// 복사하려는 대상의 시작점Y
+		_TransColor // 복사하라는 명령
+	);
 }
 
 
-//현재 DC에 있는 비트맵을 핸들 방식으로 받아오고, 받아온 핸들 안의 비트맵을 Info_에 저장하는 함수 
-void GameEngineImage::ImageScaleCheck()
+void GameEngineImage::CutCount(int _x, int _y)
 {
-    HBITMAP CurrentBitMap = (HBITMAP)GetCurrentObject(ImageDC_, OBJ_BITMAP);
-    GetObject(CurrentBitMap, sizeof(BITMAP),&Info_);
+	float4 Scale = { GetScale().x / _x, GetScale().y / _y };
+	Cut(Scale);
+}
+
+void GameEngineImage::Cut(const float4& _CutSize)
+{
+	// 딱맞아 떨어지게 만들어줄것.
+	if (0 != (GetScale().ix() % _CutSize.ix()))
+	{
+		MsgBoxAssert("자를수 있는 수치가 딱 맞아떨어지지 않습니다.");
+	}
+
+	if (0 != (GetScale().iy() % _CutSize.iy()))
+	{
+		MsgBoxAssert("자를수 있는 수치가 딱 맞아떨어지지 않습니다.");
+	}
+
+	// 가로세로 갯수를 구하고
+	int XCount = GetScale().ix() / _CutSize.ix();
+	int YCount = GetScale().iy() / _CutSize.iy();
+
+	for (int y = 0; y < YCount; y++)
+	{
+		for (int x = 0; x < XCount; x++)
+		{
+			CutPivot_.push_back({ static_cast<float>(x * _CutSize.ix()), static_cast<float>(y * _CutSize.iy()) });
+			CutScale_.push_back(_CutSize);
+		}
+	}
+
+}
+
+
+
+int GameEngineImage::GetImagePixel(int _x, int _y)
+{
+	return GetPixel(ImageDC_, _x, _y);
 }

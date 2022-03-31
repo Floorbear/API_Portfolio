@@ -11,3 +11,11 @@ enum class RenderScaleMode
 	Image,
 	User,
 };
+
+enum class CollisionType
+{
+	Point,
+	Circle,
+	Rect,
+	Max
+};

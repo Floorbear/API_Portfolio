@@ -1,36 +1,34 @@
 #pragma once
-#include <GameEngineBase/GameEngineNameObject.h>
 #include <list>
 #include <map>
+#include <GameEngineBase/GameEngineNameObject.h>
+#include <GameEngineBase/GameEngineMath.h>
 
 class GameEngine;
 class GameEngineActor;
+class GameEngineCollision;
 class GameEngineLevel : public GameEngineNameObject
 {
 	friend GameEngine;
+	friend GameEngineActor;
+	friend GameEngineCollision;
+
 public:
+	// constrcuter destructer
 	GameEngineLevel();
 
-	//이거 짱중요함 
+	// 소멸자 virtual 중요
 	virtual ~GameEngineLevel();
 
-
+	// delete Function
 	GameEngineLevel(const GameEngineLevel& _Other) = delete;
-	GameEngineLevel(const GameEngineLevel&& _Other) noexcept = delete;
-	GameEngineLevel& operator=(const GameEngineLevel& _Ohter) = delete;
-	GameEngineLevel& operator=(const GameEngineLevel&& _Other) noexcept = delete;
-protected:
-	// 만들어지면서 리소스나 액터를 만드는 함수....
-	virtual void Loading() = 0;
+	GameEngineLevel(GameEngineLevel&& _Other) noexcept = delete;
+	GameEngineLevel& operator=(const GameEngineLevel& _Other) = delete;
+	GameEngineLevel& operator=(GameEngineLevel&& _Other) noexcept = delete;
 
-	//이 레벨이 현재 레벨일 때 해야할 일
-	virtual void Update() = 0;
 
-	virtual void LevelChangeStart() {}
-	virtual void LevelChangeEnd(){}
-	
 	template<typename ActorType>
-	ActorType* CreateActor(const std::string _Name, int _Order)
+	ActorType* CreateActor(int _Order = 0, const std::string& _Name = "")
 	{
 		ActorType* NewActor = new ActorType();
 		GameEngineActor* StartActor = NewActor;
@@ -39,12 +37,49 @@ protected:
 		StartActor->Start();
 		std::list<GameEngineActor*>& Group = AllActor_[_Order];
 		Group.push_back(NewActor);
-		return nullptr;
+
+		return NewActor;
 	}
+
+	inline float4 GetCameraPos()
+	{
+		return CameraPos_;
+	}
+
+	inline void MoveCameraPos(const float4& _Value)
+	{
+		CameraPos_ += _Value;
+	}
+
+	inline void SetCameraPos(const float4& _Value)
+	{
+		CameraPos_ = _Value;
+	}
+
+
+protected:
+
+	virtual void Loading() = 0;
+
+	virtual void Update() = 0;
+
+	virtual void LevelChangeStart() {}
+
+	virtual void LevelChangeEnd() {}
+
 private:
 	std::map<int, std::list<GameEngineActor*>> AllActor_;
 
+	float4 CameraPos_;
+
 	void ActorUpdate();
 	void ActorRender();
-};
+	void ActorRelease();
 
+private:
+
+	std::map<std::string, std::list<GameEngineCollision*>> AllCollision_;
+
+	void AddCollision(const std::string& _GroupName, GameEngineCollision* _Collision);
+
+};
