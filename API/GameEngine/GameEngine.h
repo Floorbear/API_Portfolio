@@ -3,7 +3,6 @@
 #include <string>
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEngineBase/GameEngineWindow.h>
-//게임엔진 = 게임 그자체의 시작점, 끝점, 실행점을 담당하는 녀석
 
 class GameEngineImage;
 class GameEngineLevel;
@@ -30,12 +29,20 @@ public:
 	static void Start()
 	{
 		GameEngineDebug::LeakCheckOn();
-		//템플릿이지만 타입을 강요하는 것
 		GameType UserGame;
 		UserContents_ = &UserGame;
 		WindowCreate();
 		EngineEnd();
 	}
+	static GameEngine& GetInst()
+	{
+		if (nullptr == UserContents_)
+		{
+			MsgBoxAssert("GameEngine Error Engine is not start");
+		}
+		return *UserContents_;
+	}
+
 protected:
 	virtual void GameInit() = 0;
 	virtual void GameLoop() = 0;

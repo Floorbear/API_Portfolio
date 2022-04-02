@@ -1,7 +1,7 @@
 #pragma once
 #include "GameEngineActor.h"
 
-class GameEngineActorSubObject
+class GameEngineActorSubObject : public GameEngineUpdateObject
 {
 	friend GameEngineActor;
 public:
@@ -17,6 +17,17 @@ public:
 	inline GameEngineActor* GetActor()
 	{
 		return Actor_;
+	}
+
+	inline bool IsUpdate() override
+	{
+		//SubObject가 비활성화 되거나 부모가 비활성화 되면 false 반환
+		return GameEngineUpdateObject::IsUpdate() || Actor_->IsUpdate();
+	}
+
+	inline bool IsDeath() override
+	{
+		return GameEngineUpdateObject::IsDeath() || Actor_->IsDeath();
 	}
 
 protected:

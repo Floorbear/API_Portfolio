@@ -1,21 +1,25 @@
 ﻿#include <iostream>
 #include <string>
 
-static void ToUpper(std::string& _Text)
+int a;
+
+class TestA
 {
-	for (size_t i = 0; i < _Text.size(); i++)
+public:
+	TestA()
 	{
-		_Text[i] = std::toupper(_Text[i]);
+		a = 3;
 	}
-}
+};
+
+
 
 
 
 int main()
 {
-	std::string a("hi");
-	ToUpper(a);
-	std::cout << a << std::endl;
+	TestA d;
+
 }
 
 

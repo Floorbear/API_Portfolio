@@ -1,17 +1,5 @@
 #pragma once
-class GameEngineMath
-{
-public:
-	GameEngineMath();
-	~GameEngineMath();
 
-
-	GameEngineMath(const GameEngineMath& _Other) = delete;
-	GameEngineMath(const GameEngineMath&& _Other) noexcept = delete;
-	GameEngineMath& operator=(const GameEngineMath& _Ohter) = delete;
-	GameEngineMath& operator=(const GameEngineMath&& _Other) noexcept = delete;
-
-};
 
 class GameEngineMath
 {
@@ -161,24 +149,48 @@ public:
 	float4 Scale;
 
 public:
-	int CenterLeft()
+	int CenterLeft() const
 	{
 		return Pos.ix() - Scale.hix();
 	}
 
-	int CenterRight()
+	int CenterRight() const
 	{
 		return Pos.ix() + Scale.hix();
 	}
 
-	int CenterTop()
+	int CenterTop() const
 	{
 		return Pos.iy() - Scale.hiy();
 	}
 
-	int CenterBot()
+	int CenterBot() const
 	{
 		return Pos.iy() + Scale.hiy();
+	}
+
+	bool OverLap(const GameEngineRect& _Other)
+	{
+		if ((CenterBot() < _Other.CenterTop()))
+		{
+			return false;
+		}
+
+		if ((CenterTop() > _Other.CenterBot()))
+		{
+			return false;
+		}
+
+		if (CenterRight() < _Other.CenterLeft())
+		{
+			return false;
+		}
+		if (CenterLeft() > _Other.CenterRight())
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 public:

@@ -18,7 +18,7 @@ void Player::Start()
 	GameEngineRenderer* Render = CreateRenderer("Rock_Man.bmp");
 	Render->SetTransColor(RGB(128, 0, 128));
 
-	GameEngineInput::GetInst_()->CreateKey("MoveRight", 'D');
+	GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
 
 }
 

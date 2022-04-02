@@ -4,18 +4,39 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEngineBase/GameEngineTime.h>
 
+
 bool (*CollisionCheckArray[static_cast<int>(CollisionType::Max)][static_cast<int>(CollisionType::Max)])(GameEngineCollision*, GameEngineCollision*);
 
 bool RectToRect(GameEngineCollision* _Left, GameEngineCollision* _Right)
 {
-	return false;
+	if (_Left == nullptr || _Right == nullptr)
+	{
+		return false;
+	}
+	GameEngineRect LeftRc = _Left->GetRect();
+	GameEngineRect RightRc = _Right->GetRect();
+
+	return LeftRc.OverLap(RightRc);
 }
+
+
+class CollisionInit
+{
+public:
+	CollisionInit()
+	{
+		CollisionCheckArray[static_cast<int>(CollisionType::Rect)][static_cast<int>(CollisionType::Rect)] = RectToRect;
+	}
+};
+
+CollisionInit InitInst = CollisionInit();
+
 
 GameEngineCollision::GameEngineCollision()
 	: Pivot_(float4::ZERO),
 	Scale_(float4::ZERO)
 {
-	CollisionCheckArray[static_cast<int>(CollisionType::Rect)][static_cast<int>(CollisionType::Rect)] = RectToRect;
+
 }
 
 GameEngineCollision::~GameEngineCollision()
@@ -49,4 +70,13 @@ bool GameEngineCollision::CollisionCheck(
 	}
 
 	return false;
+}
+
+bool GameEngineCollision::CollisionResult(const std::string& _TargetGroup, std::vector<GameEngineCollision*>& _ColResult, CollisionType _This, CollisionType _Target)
+{
+	return false;
+}
+
+void GameEngineCollision::DebugRender()
+{
 }

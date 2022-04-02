@@ -57,7 +57,7 @@ public:
 		DeathTime_ = _Time;
 	}
 
-	inline 	bool IsDeath()
+	inline virtual	bool IsDeath()
 	{
 		return IsDeath_;
 	}

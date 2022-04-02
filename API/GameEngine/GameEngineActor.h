@@ -4,6 +4,7 @@
 #include <GameEngineBase/GameEngineMath.h>
 #include "GameEngineEnum.h"
 #include <list>
+#include <GameEngine/GameEngineLevel.h>
 
 // 설명 :
 class GameEngineLevel;
@@ -24,6 +25,13 @@ public:
 	GameEngineActor(GameEngineActor&& _Other) noexcept = delete;
 	GameEngineActor& operator=(const GameEngineActor& _Other) = delete;
 	GameEngineActor& operator=(GameEngineActor&& _Other) noexcept = delete;
+
+public:
+	inline float4 GetCameraEffectPosition()
+	{
+		//실제 포지션이 아닌 카메라를 고려해서 최종 렌더링 되는 좌표
+		return Position_ - GetLevel()->GetCameraPos();
+	}
 
 	inline GameEngineLevel* GetLevel()
 	{
@@ -64,6 +72,8 @@ protected:
 
 	void DebugRectRender();
 
+	void Release();
+
 private:
 	GameEngineLevel* Level_;
 	float4 Position_;
@@ -80,8 +90,6 @@ public:
 	// 벡터의 값
 	GameEngineRenderer* CreateRenderer(RenderPivot _PivotType = RenderPivot::CENTER, const float4& _PivotPos = { 0,0 });
 
-	// 가장 빠를겁니다.
-	// 디폴트 인자는 선언에서만 지정 가능합니다.
 	GameEngineRenderer* CreateRenderer(const std::string& _Image, RenderPivot _PivotType = RenderPivot::CENTER, const float4& _PivotPos = { 0,0 });
 
 	GameEngineRenderer* CreateRendererToScale(const std::string& _Image, const float4& _Scale, RenderPivot _PivotType = RenderPivot::CENTER, const float4& _PivotPos = { 0,0 });
@@ -104,7 +112,7 @@ public:
 	// 
 
 private:
-	// 이터레이터
+	//엑터가 가지는 충돌체
 	std::list<GameEngineCollision*> CollisionList_;
 };
 
