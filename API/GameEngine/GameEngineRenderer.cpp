@@ -89,6 +89,9 @@ void GameEngineRenderer::Render()
 
 	switch (PivotType_)
 	{
+	case RenderPivot::LeftTop:
+		GameEngine::BackBufferImage()->TransCopy(Image_, RenderPos, RenderScale_, RenderImagePivot_, RenderImageScale_, TransColor_);
+		break;
 	case RenderPivot::CENTER:
 		GameEngine::BackBufferImage()->TransCopy(Image_, RenderPos - RenderScale_.Half(), RenderScale_, RenderImagePivot_, RenderImageScale_, TransColor_);
 		break;

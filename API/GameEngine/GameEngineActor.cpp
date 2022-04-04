@@ -118,7 +118,7 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(int _Order,RenderPivot _Pivo
 
 }
 
-
+//렌더러 생성 함수, 디폴트로 피벗이 CenterType, (0,0)으로 설정되고 렌더스케일은 이미지의 스케일을 따라간다.
 GameEngineRenderer* GameEngineActor::CreateRenderer(
 	const std::string& _Image,
 	int _Order,

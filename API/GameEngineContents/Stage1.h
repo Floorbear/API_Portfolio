@@ -1,5 +1,7 @@
 #pragma once
 #include <GameEngine/GameEngineLevel.h>
+
+class BackGround;
 class Stage1 : public GameEngineLevel
 {
 public:
@@ -16,5 +18,7 @@ protected:
 	void Loading() override;
 	void Update() override;
 
+private:
+	BackGround* BackGround_;
 };
 

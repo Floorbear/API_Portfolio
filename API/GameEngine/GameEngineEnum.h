@@ -2,6 +2,7 @@
 
 enum class RenderPivot
 {
+	LeftTop,
 	CENTER,
 	BOT,
 };
