@@ -76,7 +76,7 @@ void GameEngineRenderer::Render()
 
 	if (nullptr == Image_)
 	{
-		MsgBoxAssert("랜더러에 이미지가 세팅되어 있지 않으면 랜더링이 안됩니다.");
+		MsgBoxAssert("랜더러에 이미지가 세팅되어 있지 않거나 에니메이션으로 셋팅됐으나 ChangeAnimation을 실행하지 않았습니다.");
 		return;
 	}
 

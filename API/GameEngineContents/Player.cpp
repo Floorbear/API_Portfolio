@@ -14,12 +14,11 @@ Player::~Player()
 void Player::Start()
 {
 	SetPosition(GameEngineWindow::GetScale().Half());
-	SetScale({ 100,100 });
-	GameEngineRenderer* Render = CreateRenderer("Rock_Man.bmp");
-	Render->SetTransColor(RGB(128, 0, 128));
-
+	GameEngineRenderer* Render = CreateRenderer();
+	Render->CreateAnimation("RockMan_Idle_Right.bmp", "RockMan_Idle_Right", 0, 2, 1.0f);
+	Render->ChangeAnimation("RockMan_Idle_Right");
+	Render->SetTransColor(RGB(255, 255, 255));
 	GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
-
 }
 
 void Player::Update()

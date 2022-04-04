@@ -19,6 +19,6 @@ protected:
 	void Update() override;
 
 private:
-	BackGround* BackGround_;
+	
 };
 
