@@ -22,7 +22,7 @@ public:
 	inline bool IsUpdate() override
 	{
 		//SubObject가 비활성화 되거나 부모가 비활성화 되면 false 반환
-		return GameEngineUpdateObject::IsUpdate() || Actor_->IsUpdate();
+		return GameEngineUpdateObject::IsUpdate() && Actor_->IsUpdate();
 	}
 
 	inline bool IsDeath() override

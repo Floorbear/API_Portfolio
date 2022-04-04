@@ -14,6 +14,9 @@
     <ClInclude Include="Player.h">
       <Filter>Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Stage1.h">
+      <Filter>Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -28,6 +31,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage1.cpp">
+      <Filter>Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

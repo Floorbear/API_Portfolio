@@ -53,6 +53,7 @@ public:
 		CollisionType _Target = CollisionType::Circle
 	);
 
+	//충돌을 체크하고 + 충돌한 대상의 충돌체를 받아오는 함수
 	bool CollisionResult(const std::string& _TargetGroup,
 		std::vector<GameEngineCollision*>& _ColResult,
 		CollisionType _This = CollisionType::Circle,

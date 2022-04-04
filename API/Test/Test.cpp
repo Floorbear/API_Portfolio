@@ -1,25 +1,23 @@
-﻿#include <iostream>
-#include <string>
+﻿#include <stdio.h>
+#include <stdlib.h>
 
-int a;
 
-class TestA
+int* func2()
 {
-public:
-	TestA()
-	{
-		a = 3;
-	}
-};
+	int* a = new int();
+	*(a) = 3;
+	return a;
+}
 
-
-
+int func1()
+{
+	return *func2();
+}
 
 
 int main()
 {
-	TestA d;
+	func1();
 
 }
-
 

@@ -7,11 +7,13 @@
 class GameEngine;
 class GameEngineActor;
 class GameEngineCollision;
+class GameEngineRenderer;
 class GameEngineLevel : public GameEngineNameObject
 {
 	friend GameEngine;
 	friend GameEngineActor;
 	friend GameEngineCollision;
+	friend GameEngineRenderer;
 
 public:
 	// constrcuter destructer
@@ -32,6 +34,7 @@ public:
 	{
 		ActorType* NewActor = new ActorType();
 		GameEngineActor* StartActor = NewActor;
+		NewActor->SetOrder(_Order);
 		NewActor->SetName(_Name);
 		NewActor->SetLevel(this);
 		StartActor->Start();
@@ -75,7 +78,12 @@ private:
 	void ActorUpdate();
 	void ActorRender();
 	void ActorRelease();
+private:
+	std::map<int, std::list<GameEngineRenderer*>> AllRenderer_;
 
+	void AddRenderer(GameEngineRenderer* _Renderer);
+
+	void ChangeRenderOrder(GameEngineRenderer* _Renderer, int _NewOrder);
 private:
 
 	std::map<std::string, std::list<GameEngineCollision*>> AllCollision_;

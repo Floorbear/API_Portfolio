@@ -36,6 +36,17 @@ public:
 		IsDeath_ = true;
 	}
 
+	inline int GetOrder()
+	{
+		return Order_;
+	}
+
+	virtual inline void SetOrder(int _Order)
+	{
+		Order_ = _Order;
+	}
+
+
 	void ReleaseUpdate()
 	{
 		if (false == IsReleaseUpdate_)
@@ -64,6 +75,7 @@ public:
 
 
 private:
+	int Order_;
 	bool IsReleaseUpdate_;
 	float DeathTime_;
 

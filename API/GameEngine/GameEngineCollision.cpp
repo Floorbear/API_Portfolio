@@ -36,12 +36,12 @@ GameEngineCollision::GameEngineCollision()
 	: Pivot_(float4::ZERO),
 	Scale_(float4::ZERO)
 {
-
 }
 
 GameEngineCollision::~GameEngineCollision()
 {
 }
+
 
 bool GameEngineCollision::CollisionCheck(
 	const std::string& _TargetGroup,
@@ -53,8 +53,15 @@ bool GameEngineCollision::CollisionCheck(
 
 	if (FindTargetGroup == GetActor()->GetLevel()->AllCollision_.end())
 	{
-		MsgBoxAssert("존재하지 않는 충돌 그룹과 충돌하려고 했습니다.");
+		return false;
 	}
+	
+	if (CollisionCheckArray[static_cast<int>(_This)][static_cast<int>(_Target)] == nullptr)
+	{
+		MsgBoxAssert("처리할 수 없는 충돌체크 조합입니다.");
+		return false;
+	}
+
 
 	std::list<GameEngineCollision*>& TargetGroup = FindTargetGroup->second;
 
@@ -72,11 +79,49 @@ bool GameEngineCollision::CollisionCheck(
 	return false;
 }
 
-bool GameEngineCollision::CollisionResult(const std::string& _TargetGroup, std::vector<GameEngineCollision*>& _ColResult, CollisionType _This, CollisionType _Target)
+bool GameEngineCollision::CollisionResult(const std::string& _TargetGroup, 
+		std::vector<GameEngineCollision*>& _ColResult,
+		CollisionType _This, CollisionType _Target)
 {
-	return false;
+	size_t StartSize = _ColResult.size();
+
+	std::map<std::string, std::list<GameEngineCollision*>>::iterator FindTargetGroup = GetActor()->GetLevel()->AllCollision_.find(_TargetGroup);
+	if (FindTargetGroup == GetActor()->GetLevel()->AllCollision_.end())
+	{
+		return false;
+	}
+
+	if (CollisionCheckArray[static_cast<int>(_This)][static_cast<int>(_Target)] == nullptr)
+	{
+		MsgBoxAssert("처리할 수 없는 충돌체크 조합입니다.");
+		return false;
+	}
+
+	std::list<GameEngineCollision*> TargetGroup = FindTargetGroup->second;
+
+	std::list<GameEngineCollision*>::iterator StartIter = TargetGroup.begin();
+	std::list<GameEngineCollision*>::iterator EndIter = TargetGroup.end();
+
+	for (; StartIter != EndIter; StartIter++)
+	{
+		if (CollisionCheckArray[static_cast<int>(_This)][static_cast<int>(_Target)](this, (*StartIter)) == true)
+		{
+			_ColResult.push_back((*StartIter));
+		}
+	}
+
+	return  StartSize != _ColResult.size();
 }
 
 void GameEngineCollision::DebugRender()
 {
+	GameEngineRect DebugRect(GetActor()->GetCameraEffectPosition() + Pivot_, Scale_);
+
+	Rectangle(
+		GameEngine::BackBufferDC(),
+		DebugRect.CenterLeft(),
+		DebugRect.CenterTop(),
+		DebugRect.CenterRight(),
+		DebugRect.CenterBot()
+	);
 }

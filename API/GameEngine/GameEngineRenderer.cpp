@@ -49,6 +49,24 @@ void GameEngineRenderer::SetImage(const std::string& _Name)
 	SetImageScale();
 }
 
+void GameEngineRenderer::SetOrder(int _Order)
+{
+	if (GetActor() == nullptr)
+	{
+		MsgBoxAssert("액터가 세팅되지 않았습니다.");
+	}
+	if (GetActor()->GetLevel() == nullptr)
+	{
+		MsgBoxAssert("레벨이 세팅되지 않았습니다.");
+	}
+
+	if (_Order == GetOrder())
+	{
+		return;
+	}
+	GetActor()->GetLevel()->ChangeRenderOrder(this, _Order);
+}
+
 void GameEngineRenderer::Render()
 {
 	if (nullptr != CurrentAnimation_)

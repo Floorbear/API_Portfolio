@@ -19,3 +19,8 @@ enum class CollisionType
 	Rect,
 	Max //배열의 초기화를 위해 사용됨
 };
+
+enum class EngineMax
+{
+	RENDERORDERMAX = 2147483647,
+};
