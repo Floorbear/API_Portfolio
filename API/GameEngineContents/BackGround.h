@@ -1,5 +1,8 @@
 #pragma once
 #include <GameEngine/GameEngineActor.h>
+#include <GameEngineBase/GameEngineMath.h>
+#include <GameEngine/GameEngineImage.h>
+#include <GameEngineBase/GameEngineDebug.h>
 
 class GameEngineImage;
 class GameEngineRenderer;
@@ -16,14 +19,15 @@ public:
 	BackGround& operator=(const BackGround&& _Other) noexcept = delete;
 
 public:
-	inline void SetImage(GameEngineImage* _Other)
-	{
-		BackGroundImage_ = _Other;
-	}
+	void SetImage(GameEngineImage* _Map, GameEngineImage* _ColMap);
 
-	inline GameEngineImage* GetImage() const
+	inline float4 GetScale()
 	{
-		return BackGroundImage_;
+		if (BackGroundImage_ == nullptr)
+		{
+			MsgBoxAssert("BackGroundImage가 설정되지 않았습니다.");
+		}
+		return BackGroundImage_->GetScale();
 	}
 
 protected:
@@ -31,5 +35,6 @@ protected:
 
 private:
 	GameEngineImage* BackGroundImage_;
+	GameEngineImage* BackGroundColImage_;
 };
 

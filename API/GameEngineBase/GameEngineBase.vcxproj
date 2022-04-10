@@ -19,6 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.hpp" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_codec.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_common.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp_effects.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_errors.h" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_output.h" />
     <ClInclude Include="GameEngineDebug.h">
       <SubType>
       </SubType>
@@ -48,6 +56,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="GameEngineRandom.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineSound.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -101,6 +113,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="GameEngineSound.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameEngineString.cpp">
       <SubType>
       </SubType>
@@ -117,6 +133,25 @@
       <SubType>
       </SubType>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.cs" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp.cs" />
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_errors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL_vc.lib">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod_vc.lib">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -180,11 +215,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)Bin\$(Platform)\$(Configuration)\$(PlatformTarget)\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -31,6 +31,11 @@ std::string GameEnginePath::GetFullPath()
 	return Path_.string();
 }
 
+std::string GameEnginePath::GetStem()
+{
+	return Path_.stem().string();
+}
+
 bool GameEnginePath::IsExits()
 {
 	return std::filesystem::exists(Path_);

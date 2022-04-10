@@ -17,6 +17,7 @@ public:
 protected:
 	void Loading() override;
 	void Update() override;
+	void LevelChangeStart() override;
 
 private:
 	

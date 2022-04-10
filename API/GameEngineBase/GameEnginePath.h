@@ -19,6 +19,7 @@ public:
 	std::string GetFileName();
 	std::string GetExtension();
 	std::string GetFullPath();
+	std::string GetStem();
 
 	bool IsExits();
 

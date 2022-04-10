@@ -1,6 +1,7 @@
 #include "RockMan.h"
 #include "TitleLevel.h"
 #include "Stage1.h"
+#include "GameManager.h"
 #include <GameEngineBase/GameEngineWindow.h>
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEngineBase/GameEngineFile.h>
@@ -73,6 +74,7 @@ void RockMan::GameLoop()
 
 void RockMan::GameEnd()
 {
+	GameManager::GetInst()->Destroy();
 }
 
 

@@ -20,6 +20,9 @@
     <ClInclude Include="BackGround.h">
       <Filter>Actor</Filter>
     </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -41,6 +44,9 @@
     <ClCompile Include="BackGround.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -48,6 +54,9 @@
     </Filter>
     <Filter Include="Actor">
       <UniqueIdentifier>{d7c6e750-9f6f-4dbc-a83f-e3410e760e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{b797c775-a275-42f2-bbf0-fbe029e78aa7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

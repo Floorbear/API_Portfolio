@@ -4,6 +4,7 @@
 #include "GameEngineImageManager.h"
 #include <GameEngineBase/GameEngineInput.h>
 #include <GameEngineBase/GameEngineTime.h>
+#include <GameEngineBase/GameEngineSound.h>
 
 std::map<std::string, GameEngineLevel*> GameEngine::AllLevel_;
 GameEngineLevel* GameEngine::CurrentLevel_ = nullptr;
@@ -65,8 +66,7 @@ void GameEngine::EngineLoop()
     // 엔진수준에서 매 프레임마다 체크하고 싶은거
     UserContents_->GameLoop();
 
-    // 시점함수라고 하는데
-    // 어느 시점
+   
     if (nullptr != NextLevel_)
     {
         if (nullptr != CurrentLevel_)
@@ -93,10 +93,10 @@ void GameEngine::EngineLoop()
         MsgBoxAssert("Level is nullptr => GameEngine Loop Error");
     }
 
+    GameEngineSound::Update();
     GameEngineInput::GetInst()->Update(GameEngineTime::GetInst()->GetDeltaTime());
 
-    // 레벨수준 시간제한이 있는 게임이라면
-    // 매 프레임마다 시간을 체크해야하는데 그런일을 
+    
     CurrentLevel_->Update();
     CurrentLevel_->ActorUpdate();
     CurrentLevel_->ActorRender();
@@ -122,7 +122,7 @@ void GameEngine::EngineEnd()
         delete StartIter->second;
     }
 
-
+    GameEngineSound::AllResoucesDestroy();
     GameEngineImageManager::Destroy();
     GameEngineInput::Destroy();
     GameEngineTime::Destroy();

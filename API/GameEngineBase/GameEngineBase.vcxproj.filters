@@ -19,6 +19,18 @@
     <Filter Include="IO">
       <UniqueIdentifier>{cedb48f2-774a-43b7-bfe5-b5e5de836010}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{7f3b87b7-bd53-459f-80ba-ffb64912ec24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{488a472d-4f7c-4990-b995-d8ce03a39e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\bin">
+      <UniqueIdentifier>{4520bef6-d163-4356-b59b-c5e8b1f78aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\inc">
+      <UniqueIdentifier>{63161324-26c9-4379-8556-09e15befab9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineWindow.h">
@@ -56,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="GameEngineRandom.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineSound.h">
+      <Filter>Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +110,57 @@
     <ClCompile Include="GameEngineRandom.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngineSound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp.cs">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_errors.cs">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.cs">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.hpp">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_codec.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_common.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp_effects.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_errors.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_output.h">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod.dll">
+      <Filter>ThirdParty\bin</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod_vc.lib">
+      <Filter>ThirdParty\bin</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL.dll">
+      <Filter>ThirdParty\bin</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL_vc.lib">
+      <Filter>ThirdParty\bin</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

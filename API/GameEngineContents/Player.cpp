@@ -2,6 +2,9 @@
 #include <GameEngineBase/GameEngineWindow.h>
 #include <GameEngine/GameEngineRenderer.h>
 #include <GameEngineBase/GameEngineInput.h>
+#include "GameManager.h"
+#include "BackGround.h"
+
 
 Player::Player()
 {
@@ -37,16 +40,22 @@ void Player::Update()
 	}
 	else if (GameEngineInput::GetInst()->IsPress("MoveLeft") == true)
 	{
-		SetMove(float4::LEFT * GameEngineTime::GetDeltaTime() * 300);
+		SetMove(float4::LEFT * GameEngineTime::GetDeltaTime() * 3000);
 	}
 
 
 	float4 CameraPos = { GetPosition().x- GameEngineWindow::GetScale().Half().x,0};
+	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x;
 
 	if (CameraPos.x <= 0)
 	{
 		CameraPos.x = 0;
 	}
+	if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
+	{
+		CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
+	}
+
 	GetLevel()->SetCameraPos(CameraPos);
 }
 
