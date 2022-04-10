@@ -8,6 +8,7 @@ class GameEngineDirectory : GameEnginePath
 {
 public:
 	GameEngineDirectory();
+	GameEngineDirectory(const std::string& _Path);
 	~GameEngineDirectory();
 
 

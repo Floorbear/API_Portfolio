@@ -54,6 +54,9 @@
     <ClInclude Include="GameEngineTime.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngineRandom.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngineWindow.cpp">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="GameEngineTime.cpp">
       <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngineRandom.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

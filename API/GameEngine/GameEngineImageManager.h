@@ -2,6 +2,7 @@
 #include "GameEngineImage.h" 
 #include <GameEngineBase/GameEngineMath.h>
 #include <map>
+#include <GameEngine/GameEngineFolderImage.h>
 
 class GameEngineImageManager
 {
@@ -49,5 +50,14 @@ protected:
 
 private:
 	std::map<std::string, GameEngineImage*> AllRes;
+
+public:
+	GameEngineFolderImage* FolderImageFind(const std::string& _Name);
+	GameEngineFolderImage* FolderImageLoad(const std::string& _Path);
+	GameEngineFolderImage* FolderImageLoad(const std::string& _Path, const std::string& _Name);
+
+
+private:
+	std::map<std::string, GameEngineFolderImage*> AllFolderRes;
 };
 

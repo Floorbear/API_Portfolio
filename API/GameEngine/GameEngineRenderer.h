@@ -6,6 +6,7 @@
 
 // 설명 : 그리는걸 도와주는 클래스
 class GameEngineImage;
+class GameEngineFolderImage;
 class GameEngineRenderer : public GameEngineActorSubObject
 {
 	friend GameEngineActor;
@@ -94,17 +95,20 @@ private:
 	///////////////////////////////////////////////////////////////// 애니메이션
 
 private:
-	class FrameAnimation
+	class FrameAnimation : public GameEngineNameObject
 	{
 	public:
 		GameEngineRenderer* Renderer_;
 		GameEngineImage* Image_;
+		GameEngineFolderImage* FolderImage_;
+
 		int CurrentFrame_;
 		int StartFrame_;
 		int EndFrame_;
 		float CurrentInterTime_;
 		float InterTime_;
-		bool Loop_;
+		bool Loop_ = false;
+		bool IsEnd;
 
 	public:
 		FrameAnimation()
@@ -114,7 +118,8 @@ private:
 			EndFrame_(-1),
 			CurrentInterTime_(0.1f),
 			InterTime_(0.1f),
-			Loop_(true)
+			Loop_(true),
+			IsEnd(false)
 
 		{
 
@@ -125,6 +130,7 @@ private:
 
 		void Reset()
 		{
+			IsEnd = false;
 			CurrentFrame_ = StartFrame_;
 			CurrentInterTime_ = InterTime_;
 		}
@@ -135,6 +141,12 @@ public:
 
 	// 옵션을 
 	void ChangeAnimation(const std::string& _Name);
+
+	void CreateFolderAnimation(const std::string& _Image, const std::string& _Name, int _StartIndex, int _EndIndex, float _InterTime, bool _Loop = true);
+
+	bool IsEndAnimation();
+
+	bool IsAnimationName(const std::string& _Name);
 
 
 private:

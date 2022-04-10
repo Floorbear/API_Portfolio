@@ -46,7 +46,6 @@ GameEngineActor::~GameEngineActor()
 
 void GameEngineActor::DebugRectRender()
 {
-	// 선생님은 기본적으로 중앙을 기준으로하는걸 좋아합니다.
 
 	GameEngineRect DebugRect(Position_, Scale_);
 
@@ -74,6 +73,7 @@ void GameEngineActor::Release()
 				continue;
 			}
 			delete (*StartIter);
+			(*StartIter) = nullptr;
 			StartIter = RenderList_.erase(StartIter);
 		}
 
@@ -90,6 +90,7 @@ void GameEngineActor::Release()
 				continue;
 			}
 			delete (*StartIter);
+			(*StartIter) = nullptr;
 			StartIter = CollisionList_.erase(StartIter);
 		}
 
