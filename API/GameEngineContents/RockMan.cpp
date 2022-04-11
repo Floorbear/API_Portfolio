@@ -7,6 +7,7 @@
 #include <GameEngineBase/GameEngineFile.h>
 #include <GameEngine/GameEngineImageManager.h>
 #include <GameEngine/GameEngineImage.h>
+#include <GameEngineBase/GameEngineTime.h>
 
 RockMan::RockMan()
 {
@@ -53,16 +54,22 @@ void RockMan::GameInit()
 	
 	//캐릭터 비트맵 초기화
 	{
-		{
-			GameEngineImage* PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Idle_Right.bmp");
-			PlayerImage->Cut({ 256,256 });
-		}
-		{
-			GameEngineImage* PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Idle_left.bmp");
-			PlayerImage->Cut({ 256,256 });
-		}
+		
+		GameEngineImage* PlayerImage;
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Idle_Right.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Idle_left.bmp");
+		PlayerImage->Cut({ 256,256 });
+		
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Move_left.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Move_Right.bmp");
+		PlayerImage->Cut({ 256,256 });
 	}
-	
+	GameEngineTime::GetInst()->SetTimeScale(0,1.0f);
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<Stage1>("Stage1");
 	ChangeLevel("Stage1");

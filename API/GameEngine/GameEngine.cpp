@@ -12,6 +12,7 @@ GameEngineLevel* GameEngine::NextLevel_ = nullptr;
 GameEngine* GameEngine::UserContents_ = nullptr;
 GameEngineImage* GameEngine::BackBufferImage_ = nullptr;
 GameEngineImage* GameEngine::WindowMainImage_ = nullptr; // 그려지면 화면에 진짜 나오게 되는 이미지
+GameEngineLevel* GameEngine::PrevLevel_ = nullptr;
 
 HDC GameEngine::BackBufferDC()
 {
@@ -69,6 +70,8 @@ void GameEngine::EngineLoop()
    
     if (nullptr != NextLevel_)
     {
+        PrevLevel_ = CurrentLevel_;
+
         if (nullptr != CurrentLevel_)
         {
             CurrentLevel_->LevelChangeEnd();

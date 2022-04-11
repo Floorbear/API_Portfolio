@@ -30,6 +30,11 @@ public:
 		return BackGroundImage_->GetScale();
 	}
 
+	//_Pos에서 BackGroundCol의 픽셀값이 검정인지 확인하는 함수
+	bool IsBlocked(float4& _Pos);
+	bool IsBlocked(float4& _Pos1, float4& _Pos2);
+
+
 protected:
 	void Start() override;
 

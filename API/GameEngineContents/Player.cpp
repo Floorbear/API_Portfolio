@@ -6,8 +6,57 @@
 #include "BackGround.h"
 
 
-Player::Player()
+void Player::StateUpdate()
 {
+	switch (CurState_)
+	{
+	case PlayerState::Idle:
+		IdleUpdate();
+		break;
+	case PlayerState::Move:
+		MoveUpdate();
+		break;
+	default:
+		break;
+	}
+}
+
+void Player::StateChange(PlayerState _State)
+{
+	if (CurState_ == _State)
+	{
+		return;
+	}
+
+	switch (_State)
+	{
+	case PlayerState::Idle:
+		IdleStart();
+		break;
+	case PlayerState::Move:
+		MoveStart();
+		break;
+	default:
+		break;
+	}
+	CurState_ = _State;
+}
+
+
+bool Player::IsMoveKeyPress()
+{
+	return GameEngineInput::GetInst()->IsPress("MoveRight") ||
+		GameEngineInput::GetInst()->IsPress("MoveLeft");
+}
+
+Player::Player()
+	:Speed_(10.0),
+	AccSpeed_(0.5f),
+	CurDir_(PlayerDir::Right),
+	MoveDir_({0,0})
+{
+	PlayerDirStr_[static_cast<int>(PlayerDir::Left)] = "Left";
+	PlayerDirStr_[static_cast<int>(PlayerDir::Right)] = "Right";
 }
 
 Player::~Player()
@@ -16,49 +65,28 @@ Player::~Player()
 
 void Player::Start()
 {
-	SetPosition(GameEngineWindow::GetScale().Half());
-	//Idle왼쪽 애니메이션 초기화
-	{
-		GameEngineRenderer* Render = CreateRenderer();
-		Render->CreateAnimation("RockMan_Idle_Left.bmp", "RockMan_Idle_Left", 0, 11, 0.3f);
-		Render->CreateAnimation("RockMan_Idle_Right.bmp", "RockMan_Idle_Right", 0, 11, 0.3f);
-		Render->ChangeAnimation("RockMan_Idle_Right");
-		Render->SetTransColor(RGB(255, 255, 255));
-	}
-
-
+	SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200);
+	SetScale({ 256,256 });
 	
-	GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
-	GameEngineInput::GetInst()->CreateKey("MoveLeft", 'A');
+	LoadAnimation();
+
+
+	//키초기화 << 이걸 여기서 해야하나?
+	{
+		GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
+		GameEngineInput::GetInst()->CreateKey("MoveLeft", 'A');
+	}
+	
+	StateChange(PlayerState::Idle);
 }
 
 void Player::Update()
 {
-	if (GameEngineInput::GetInst()->IsPress("MoveRight") == true)
-	{
-		SetMove(float4::RIGHT * GameEngineTime::GetDeltaTime() * 3000);
-	}
-	else if (GameEngineInput::GetInst()->IsPress("MoveLeft") == true)
-	{
-		SetMove(float4::LEFT * GameEngineTime::GetDeltaTime() * 3000);
-	}
-
-
-	float4 CameraPos = { GetPosition().x- GameEngineWindow::GetScale().Half().x,0};
-	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x;
-
-	if (CameraPos.x <= 0)
-	{
-		CameraPos.x = 0;
-	}
-	if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
-	{
-		CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
-	}
-
-	GetLevel()->SetCameraPos(CameraPos);
+	StateUpdate();
+	
 }
 
 void Player::Render()
 {
+
 }

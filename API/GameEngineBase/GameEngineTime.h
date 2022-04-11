@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 class GameEngineTime
 {
 
@@ -26,9 +27,31 @@ public:
 
 	static inline float GetDeltaTime()
 	{
-
+		
 		return Inst_->DeltaTime_;
 	}
+
+	static inline float GetDeltaTime(int _Key)
+	{
+		return Inst_->DeltaTime_ * Inst_->GetTimeScale(_Key);
+	}
+
+	void SetTimeScale(int _Key, float _TimeScale)
+	{
+		if (TimeScale_.end() == TimeScale_.find(_Key))
+		{
+			_TimeScale = 1.0f;
+		}
+
+		TimeScale_[_Key] = _TimeScale;
+	}
+
+	float GetTimeScale(int _Key)
+	{
+		return TimeScale_[_Key];
+	}
+
+
 
 
 
@@ -40,7 +63,7 @@ private:
 	__int64 PrevCount_;
 	float DeltaTime_;
 	double RealDeltaTime_;
-
+	std::map<int, float> TimeScale_;
 
 	GameEngineTime();
 	~GameEngineTime();

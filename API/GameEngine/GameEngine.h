@@ -59,6 +59,11 @@ protected:
 	}
 	void ChangeLevel(const std::string& _Name);
 
+	static inline GameEngineLevel* GetPrevLevel()
+	{
+		return PrevLevel_;
+	}
+
 private:
 	static void WindowCreate();
 	static void EngineInit();
@@ -71,6 +76,8 @@ private:
 	static GameEngine* UserContents_;
 	static GameEngineLevel* CurrentLevel_;
 	static GameEngineLevel* NextLevel_;
+	static GameEngineLevel* PrevLevel_;
+
 
 	static GameEngineImage* WindowMainImage_;
 	static GameEngineImage* BackBufferImage_;

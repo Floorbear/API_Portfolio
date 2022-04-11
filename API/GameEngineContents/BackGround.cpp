@@ -28,3 +28,14 @@ void BackGround::Start()
 	SetPosition({ 0,0 });
 	SetScale(GameEngineWindow::GetScale());
 }
+
+bool BackGround::IsBlocked(float4& _Pos1, float4& _Pos2)
+{
+	return RGB(0, 0, 0) == BackGroundColImage_->GetImagePixel(_Pos1) || 
+		RGB(0, 0, 0) == BackGroundColImage_->GetImagePixel(_Pos2);
+}
+
+bool BackGround::IsBlocked(float4& _Pos)
+{
+	return RGB(0,0,0) == BackGroundColImage_->GetImagePixel(_Pos);
+}

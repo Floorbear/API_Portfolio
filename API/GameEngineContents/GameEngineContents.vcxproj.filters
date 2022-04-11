@@ -11,9 +11,6 @@
     <ClInclude Include="TitleBackGround.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Stage1.h">
       <Filter>Level</Filter>
     </ClInclude>
@@ -21,7 +18,13 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="GameManager.h">
-      <Filter>Manager</Filter>
+      <Filter>Global\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="RockManEnum.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Actor\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,9 +38,6 @@
     <ClCompile Include="TitleBackGround.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Stage1.cpp">
       <Filter>Level</Filter>
     </ClCompile>
@@ -45,7 +45,16 @@
       <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
-      <Filter>Manager</Filter>
+      <Filter>Global\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAnimation.cpp">
+      <Filter>Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>Actor\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,8 +64,14 @@
     <Filter Include="Actor">
       <UniqueIdentifier>{d7c6e750-9f6f-4dbc-a83f-e3410e760e43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Manager">
+    <Filter Include="Global">
+      <UniqueIdentifier>{e5c415a5-2ece-4e9e-800b-45f6679b038f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global\Manager">
       <UniqueIdentifier>{b797c775-a275-42f2-bbf0-fbe029e78aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Player">
+      <UniqueIdentifier>{ee4a0701-2c18-4dfe-aa30-b594dbf6d7eb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

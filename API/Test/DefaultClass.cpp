@@ -1,9 +1,1 @@
-#include "DefaultClass.h"
-
-DefaultClass::DefaultClass()
-{
-}
-
-DefaultClass::~DefaultClass()
-{
-}
+int Statica = 3;

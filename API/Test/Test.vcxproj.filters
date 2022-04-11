@@ -26,5 +26,8 @@
     <ClInclude Include="DefaultClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="헤더.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
