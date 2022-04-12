@@ -51,12 +51,19 @@ bool Player::IsMoveKeyPress()
 
 Player::Player()
 	:Speed_(10.0),
-	AccSpeed_(0.5f),
+	AccSpeed_(100.0f),
+	MaxSpeed_(50.0),
 	CurDir_(PlayerDir::Right),
 	MoveDir_({0,0})
 {
 	PlayerDirStr_[static_cast<int>(PlayerDir::Left)] = "Left";
 	PlayerDirStr_[static_cast<int>(PlayerDir::Right)] = "Right";
+
+	DirValue_[static_cast<int>(PlayerDir::Left)] = -1.0f;
+	DirValue_[static_cast<int>(PlayerDir::Right)] = 1.0f;
+	DirValue_[static_cast<int>(PlayerDir::Up)] = -1.0f;
+	DirValue_[static_cast<int>(PlayerDir::Down)] = 1.0f;
+
 }
 
 Player::~Player()

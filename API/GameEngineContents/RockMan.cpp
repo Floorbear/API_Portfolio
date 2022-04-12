@@ -9,6 +9,11 @@
 #include <GameEngine/GameEngineImage.h>
 #include <GameEngineBase/GameEngineTime.h>
 
+//디버깅 때 콘솔창 띄우기
+#ifdef _DEBUG
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#endif
+
 RockMan::RockMan()
 {
 }

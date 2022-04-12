@@ -21,8 +21,17 @@ void Player::IdleUpdate()
 	{
 		StateChange(PlayerState::Move);
 	}
+	
+	if (MoveDir_.Len2D() >= 0.03f)
+	{
+		MoveDir_ += -MoveDir_ * GameEngineTime::GetDeltaTime()*5;
+		Move();
+	}
+	else
+	{
+		MoveDir_ = float4::ZERO;
+	}
 
-	MoveDir_ = float4::ZERO;
 }
 
 void Player::MoveUpdate()
@@ -32,18 +41,24 @@ void Player::MoveUpdate()
 		StateChange(PlayerState::Idle);
 	}
 
-
 	PlayerDir PlayerDir_ = PlayerDir::Right;
 
 	if (GameEngineInput::GetInst()->IsPress("MoveRight") == true)
 	{
-		MoveDir_ += float4::RIGHT*AccSpeed_;
+		CheckPixelCol(PlayerDir::Right);
+		MoveDir_ += float4::RIGHT*AccSpeed_ * GameEngineTime::GetDeltaTime();
 		PlayerDir_ = PlayerDir::Right;
 	}
 	else if (GameEngineInput::GetInst()->IsPress("MoveLeft") == true)
 	{
-		MoveDir_ += float4::LEFT*AccSpeed_;
+		MoveDir_ += float4::LEFT*AccSpeed_ * GameEngineTime::GetDeltaTime();
 		PlayerDir_ = PlayerDir::Left;
+	}
+
+	//최대 속도 조절
+	if (MoveDir_.Len2D() >= MaxSpeed_)
+	{
+		MoveDir_.Range2D(MaxSpeed_);
 	}
 
 	//방향전환이 일어나면 Idle로
@@ -53,17 +68,33 @@ void Player::MoveUpdate()
 		CurDir_ = PlayerDir_;
 	}
 
-	//픽셀체크
-	float4 CheckHoriPos = GetPosition()  /*MoveDir_*/ ;
+	
+	Move();
 
-	//중력
-	float Gravity = 30;
+}
 
+bool Player::CheckPixelCol(PlayerDir _Dir)
+{
+	//콜리전 체크
+	BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
+
+	float4 CheckPos_Top = GetPosition() + float4(50, -50) * DirValue_[static_cast<int>(CurDir_)];
+	float4 CheckPos_Mid = GetPosition() + float4(50, 0);
+	float4 CheckPos_Bottom = GetPosition() + float4(50, 50);
+
+	if (CurBackGround->IsBlocked(CheckPos_Top) ||
+		CurBackGround->IsBlocked(CheckPos_Mid) ||
+		CurBackGround->IsBlocked(CheckPos_Bottom)
+		)
+	{
+		return;
+	}
+}
+
+void Player::Move()
+{
 	//이동
 	SetMove(MoveDir_ * GameEngineTime::GetDeltaTime() * Speed_);
-
-
-
 
 	//카메라 체크
 	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,0 };
