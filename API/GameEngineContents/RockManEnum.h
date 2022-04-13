@@ -4,14 +4,7 @@ enum class PlayerState
 {
 	Idle,
 	Move,
+	Jump,
 	Max
 };
 
-enum class PlayerDir
-{
-	Left,
-	Right,
-	Up,
-	Down,
-	Max
-};

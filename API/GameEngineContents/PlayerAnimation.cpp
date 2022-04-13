@@ -12,8 +12,8 @@ void Player::LoadAnimation()
 	PlayerRenderer_->CreateAnimation("RockMan_Idle_Left.bmp", "RockMan_Idle_Left", 0, 11, 0.3f);
 	PlayerRenderer_->CreateAnimation("RockMan_Idle_Right.bmp", "RockMan_Idle_Right", 0, 11, 0.3f);
 
-	PlayerRenderer_->CreateAnimation("RockMan_Move_Right.bmp", "RockMan_Move_Right", 0, 2, 0.18f);
-	PlayerRenderer_->CreateAnimation("RockMan_Move_Left.bmp", "RockMan_Move_Left", 0, 2, 0.18f);
+	PlayerRenderer_->CreateAnimation("RockMan_Move_Right.bmp", "RockMan_Move_Right", 0, 2, 0.13f);
+	PlayerRenderer_->CreateAnimation("RockMan_Move_Left.bmp", "RockMan_Move_Left", 0, 2, 0.13f);
 	PlayerRenderer_->ChangeAnimation("RockMan_Idle_Right");
 
 

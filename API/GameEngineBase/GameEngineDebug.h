@@ -3,6 +3,7 @@
 #include <string>
 #include <assert.h>
 #include <Windows.h>
+#include <iostream>
 
 // Ό³Έν :
 class GameEngineDebug

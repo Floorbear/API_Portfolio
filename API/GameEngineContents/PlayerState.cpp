@@ -7,107 +7,134 @@
 
 void Player::IdleStart()
 {
-	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + PlayerDirStr_[static_cast<int>(CurDir_)]));
+	if (CurDir_.CompareInt2D(float4::RIGHT) == true)
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Idle_Right");
+	}
+	else if (CurDir_.CompareInt2D(float4::LEFT) == true)
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Idle_Left");
+	}
 }
 
 void Player::MoveStart()
 {
-	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Move_" + PlayerDirStr_[static_cast<int>(CurDir_)]));
+	if (CurDir_.CompareInt2D(float4::RIGHT) == true)
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Move_Right");
+	}
+	else if (CurDir_.CompareInt2D(float4::LEFT) == true)
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Move_Left");
+	}
+	
 }
 
 void Player::IdleUpdate()
 {
 	if (IsMoveKeyPress() == true)
 	{
+		CurDir_ = WantDir_;
 		StateChange(PlayerState::Move);
 	}
-	
-	if (MoveDir_.Len2D() >= 0.03f)
+
+	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
 	{
-		MoveDir_ += -MoveDir_ * GameEngineTime::GetDeltaTime()*5;
-		Move();
+		Gravity_ = Default_Gravity_;
+		StateChange(PlayerState::Jump);
+	}
+	
+	if (CurSpeed_ <= 10.0f)
+	{
+		Move(CurDir_, 0);
 	}
 	else
 	{
-		MoveDir_ = float4::ZERO;
+		CurSpeed_ += -CurSpeed_ * GameEngineTime::GetDeltaTime() * 10;
+		Move(CurDir_, CurSpeed_);
 	}
-
 }
 
 void Player::MoveUpdate()
 {
+	
 	if (IsMoveKeyPress() == false)
 	{
 		StateChange(PlayerState::Idle);
 	}
 
-	PlayerDir PlayerDir_ = PlayerDir::Right;
-
-	if (GameEngineInput::GetInst()->IsPress("MoveRight") == true)
+	//점프
+	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
 	{
-		//CheckPixelCol(PlayerDir::Right);
-		MoveDir_ += float4::RIGHT*AccSpeed_ * GameEngineTime::GetDeltaTime();
-		PlayerDir_ = PlayerDir::Right;
+		Gravity_ = Default_Gravity_;
+		StateChange(PlayerState::Jump);
+		
 	}
-	else if (GameEngineInput::GetInst()->IsPress("MoveLeft") == true)
+	if (CheckPixelCol(float4::DOWN) == false)
 	{
-		MoveDir_ += float4::LEFT*AccSpeed_ * GameEngineTime::GetDeltaTime();
-		PlayerDir_ = PlayerDir::Left;
-	}
-
-	//최대 속도 조절
-	if (MoveDir_.Len2D() >= MaxSpeed_)
-	{
-		MoveDir_.Range2D(MaxSpeed_);
+		Gravity_ = 0;
+		StateChange(PlayerState::Jump);
 	}
 
 	//방향전환이 일어나면 Idle로
-	if (PlayerDir_ != CurDir_)
+	if (WantDir_.CompareInt2D(CurDir_) == false)
 	{
+		CurSpeed_ = 0;
 		StateChange(PlayerState::Idle);
-		CurDir_ = PlayerDir_;
 	}
 
-	
-	Move();
 
+	CurDir_ = WantDir_;
+
+	CurSpeed_ += GameEngineTime::GetDeltaTime() * AccSpeed_;
+
+	//최대 속도 조절
+	if (CurSpeed_ >= MaxSpeed_)
+	{
+		CurSpeed_ = MaxSpeed_;
+	}
+
+
+	Move(CurDir_, CurSpeed_);
 }
 
-//bool Player::CheckPixelCol(PlayerDir _Dir)
-//{
-//	//콜리전 체크
-//	BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
-//
-//	float4 CheckPos_Top = GetPosition() + float4(50, -50) * DirValue_[static_cast<int>(CurDir_)];
-//	float4 CheckPos_Mid = GetPosition() + float4(50, 0);
-//	float4 CheckPos_Bottom = GetPosition() + float4(50, 50);
-//
-//	if (CurBackGround->IsBlocked(CheckPos_Top) ||
-//		CurBackGround->IsBlocked(CheckPos_Mid) ||
-//		CurBackGround->IsBlocked(CheckPos_Bottom)
-//		)
-//	{
-//		return;
-//	}
-//}
-
-void Player::Move()
+void Player::JumpStart()
 {
-	//이동
-	SetMove(MoveDir_ * GameEngineTime::GetDeltaTime() * Speed_);
+	//애니메이션
+}
 
-	//카메라 체크
-	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,0 };
-	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x;
-
-	if (CameraPos.x <= 0)
+void Player::JumpUpdate()
+{
+	
+	//중력가속도
+	Gravity_ += AccGravity_ * GameEngineTime::GetDeltaTime();
+	if (Gravity_ >= MaxGravity_)
 	{
-		CameraPos.x = 0;
-	}
-	if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
-	{
-		CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
+		Gravity_ = MaxGravity_;
 	}
 
-	GetLevel()->SetCameraPos(CameraPos);
+
+	//점프 중 이동
+	if (IsMoveKeyPress() == true)
+	{
+		CurDir_ = WantDir_;
+		CurSpeed_ += GameEngineTime::GetDeltaTime() * AccSpeed_;
+
+		//최대 속도 조절
+		if (CurSpeed_ >= MaxSpeed_)
+		{
+			CurSpeed_ = MaxSpeed_;
+		}
+		Move(CurDir_, CurSpeed_);
+	}	
+
+
+	SetMove(float4::DOWN * Gravity_*GameEngineTime::GetDeltaTime());
+
+
+	if (CheckPixelCol(float4::DOWN) == true)
+	{		
+		StateChange(PlayerState::Idle);
+	}
+
 }

@@ -12,20 +12,21 @@ public:
 private:
 	void IdleStart();
 	void MoveStart();
+	void JumpStart();
 
 	void IdleUpdate();
 	void MoveUpdate();
+	void JumpUpdate();
 
 	//Sub Function
-	bool CheckPixelCol(PlayerDir _Dir);
+	bool CheckPixelCol(float4 _Dir); //충돌체가 있으면 true, 없으면 false
 
-	void Move(); //MoveDir_ 방향으로 Speed만큼 이동시키고 카메라 이동을 해주는 함수
+	void Move(float4 _Dir, float _Speed); //충돌체크하고 이동해주는 함수
 
-	bool IsMoveKeyPress();
+	bool IsMoveKeyPress(); //키가 눌렸는지 감지하고, 눌린 키값을 WantDir_에 셋팅
 
 private:
 	PlayerState CurState_;
-	std::string PlayerDirStr_[static_cast<int>(PlayerDir::Max)];
 
 	//애니메이션
 private:
@@ -37,12 +38,17 @@ private:
 
 	//스테이터스
 private:
+	float CurSpeed_;
 	float Speed_;
 	float AccSpeed_;
 	float MaxSpeed_;
-	PlayerDir CurDir_;
-	float4 MoveDir_;
-	float DirValue_[static_cast<int>(PlayerDir::Max)];
+	float Gravity_;
+	float AccGravity_;
+	float MaxGravity_;
+	float Default_Gravity_;
+	float4 WantDir_;//내가 실제로 바꾸고 싶은 방향
+	float4 CurDir_; //플레이어의 방향
+	float4 MoveVec_;
 
 public:
 	Player();
