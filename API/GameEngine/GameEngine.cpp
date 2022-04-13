@@ -125,7 +125,7 @@ void GameEngine::EngineEnd()
         delete StartIter->second;
     }
 
-    GameEngineSound::AllResoucesDestroy();
+    GameEngineSound::AllResourcesDestroy();
     GameEngineImageManager::Destroy();
     GameEngineInput::Destroy();
     GameEngineTime::Destroy();

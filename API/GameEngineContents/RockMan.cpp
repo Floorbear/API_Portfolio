@@ -74,7 +74,7 @@ void RockMan::GameInit()
 		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Move_Right.bmp");
 		PlayerImage->Cut({ 256,256 });
 	}
-	GameEngineTime::GetInst()->SetTimeScale(0,1.0f);
+
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<Stage1>("Stage1");
 	ChangeLevel("Stage1");

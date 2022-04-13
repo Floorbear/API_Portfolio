@@ -42,7 +42,7 @@ public:
 	{
 		ActorType* NewActor = new ActorType();
 		GameEngineActor* StartActor = NewActor;
-		NewActor->SetOrder(_Order);
+		NewActor->GameEngineUpdateObject::SetOrder(_Order);
 		NewActor->SetName(_Name);
 		NewActor->SetLevel(this);
 		StartActor->Start();
@@ -125,3 +125,4 @@ private:
 
 	void AddCollision(const std::string& _GroupName, GameEngineCollision* _Collision);
 };
+

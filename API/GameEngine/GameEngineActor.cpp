@@ -3,15 +3,17 @@
 #include <GameEngineBase/GameEngineWindow.h>
 #include "GameEngineRenderer.h"
 #include "GameEngineCollision.h"
-#include "GameEngineLevel.h"
+#include <GameEngineBase/GameEngineDebug.h>
+
 
 GameEngineActor::GameEngineActor()
 	: Level_(nullptr)
 {
+	// delete this;
 }
 
 GameEngineActor::~GameEngineActor()
-{		
+{
 	{
 		std::list<GameEngineRenderer*>::iterator StartIter = RenderList_.begin();
 		std::list<GameEngineRenderer*>::iterator EndIter = RenderList_.end();
@@ -26,13 +28,14 @@ GameEngineActor::~GameEngineActor()
 			(*StartIter) = nullptr;
 		}
 	}
-	
+
 	{
 		std::list<GameEngineCollision*>::iterator StartIter = CollisionList_.begin();
 		std::list<GameEngineCollision*>::iterator EndIter = CollisionList_.end();
-		for (; StartIter != EndIter;StartIter++)
+
+		for (; StartIter != EndIter; ++StartIter)
 		{
-			if ((*StartIter)->IsDeath() == false)
+			if (nullptr == (*StartIter))
 			{
 				continue;
 			}
@@ -40,12 +43,11 @@ GameEngineActor::~GameEngineActor()
 			(*StartIter) = nullptr;
 		}
 	}
-
-
 }
 
 void GameEngineActor::DebugRectRender()
 {
+	// 선생님은 기본적으로 중앙을 기준으로하는걸 좋아합니다.
 
 	GameEngineRect DebugRect(Position_, Scale_);
 
@@ -59,56 +61,21 @@ void GameEngineActor::DebugRectRender()
 	);
 }
 
-//엑터에 있는 엔진상 삭제된 렌더러와 충돌체를 메모리에서 제거해주는 함수
-void GameEngineActor::Release()
-{
-	{
-		std::list<GameEngineRenderer*>::iterator StartIter = RenderList_.begin();
-		std::list<GameEngineRenderer*>::iterator EndIter = RenderList_.end();
-		for (; StartIter != EndIter;)
-		{
-			if ((*StartIter)->IsDeath() == false)
-			{
-				StartIter++;
-				continue;
-			}
-			delete (*StartIter);
-			(*StartIter) = nullptr;
-			StartIter = RenderList_.erase(StartIter);
-		}
-
-	}
-
-	{
-		std::list<GameEngineCollision*>::iterator StartIter = CollisionList_.begin();
-		std::list<GameEngineCollision*>::iterator EndIter = CollisionList_.end();
-		for (; StartIter != EndIter;)
-		{
-			if ((*StartIter)->IsDeath() == false)
-			{
-				StartIter++;
-				continue;
-			}
-			delete (*StartIter);
-			(*StartIter) = nullptr;
-			StartIter = CollisionList_.erase(StartIter);
-		}
-
-	}
-}
-
-GameEngineRenderer* GameEngineActor::CreateRenderer(int _Order,RenderPivot _PivotType /*= RenderPivot::CENTER*/, const float4& _PivotPos /*= { 0,0 }*/)
+GameEngineRenderer* GameEngineActor::CreateRenderer(
+	int _Order, /*= static_cast<int>(EngineMax::RENDERORDERMAX)*/
+	RenderPivot _PivotType /*= RenderPivot::CENTER*/,
+	const float4& _PivotPos /*= { 0,0 }*/)
 {
 	GameEngineRenderer* NewRenderer = new GameEngineRenderer();
 
 	NewRenderer->SetActor(this);
 	if (_Order != static_cast<int>(EngineMax::RENDERORDERMAX))
 	{
-		NewRenderer->SetOrder(_Order);
+		NewRenderer->GameEngineUpdateObject::SetOrder(_Order);
 	}
 	else
 	{
-		NewRenderer->SetOrder(GetOrder());
+		NewRenderer->GameEngineUpdateObject::SetOrder(GetOrder());
 	}
 	NewRenderer->SetPivot(_PivotPos);
 	NewRenderer->SetPivotType(_PivotType);
@@ -119,10 +86,10 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(int _Order,RenderPivot _Pivo
 
 }
 
-//렌더러 생성 함수, 디폴트로 피벗이 CenterType, (0,0)으로 설정되고 렌더스케일은 이미지의 스케일을 따라간다.
+
 GameEngineRenderer* GameEngineActor::CreateRenderer(
 	const std::string& _Image,
-	int _Order,
+	int _Order, /*= static_cast<int>(EngineMax::RENDERORDERMAX)*/
 	RenderPivot _PivotType /*= RenderPivot::CENTER*/,
 	const float4& _PivotPos /*= { 0,0 }*/
 )
@@ -147,16 +114,16 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(
 	return NewRenderer;
 }
 
-
 GameEngineRenderer* GameEngineActor::CreateRendererToScale(
 	const std::string& _Image, const float4& _Scale,
-	int _Order,
+	int _Order, /*= static_cast<int>(EngineMax::RENDERORDERMAX)*/
 	RenderPivot _PivotType /*= RenderPivot::CENTER*/, const float4& _PivotPos /*= { 0,0 }*/
 )
 {
 	GameEngineRenderer* NewRenderer = new GameEngineRenderer();
 
 	NewRenderer->SetActor(this);
+
 	if (_Order != static_cast<int>(EngineMax::RENDERORDERMAX))
 	{
 		NewRenderer->GameEngineUpdateObject::SetOrder(_Order);
@@ -180,10 +147,66 @@ GameEngineCollision* GameEngineActor::CreateCollision(const std::string& _GroupN
 {
 	GameEngineCollision* NewCollision = new GameEngineCollision();
 	NewCollision->SetActor(this);
-	NewCollision->SetScale(_Scale);
 	NewCollision->SetPivot(_Pivot);
+	NewCollision->SetScale(_Scale);
 
 	GetLevel()->AddCollision(_GroupName, NewCollision);
 	CollisionList_.push_back(NewCollision);
 	return NewCollision;
+}
+
+void GameEngineActor::Release()
+{
+	{
+		std::list<GameEngineRenderer*>::iterator StartIter = RenderList_.begin();
+		std::list<GameEngineRenderer*>::iterator EndIter = RenderList_.end();
+
+		for (; StartIter != EndIter;)
+		{
+			if (false == (*StartIter)->IsDeath())
+			{
+				++StartIter;
+				continue;
+			}
+
+			delete (*StartIter);
+			(*StartIter) = nullptr;
+			StartIter = RenderList_.erase(StartIter);
+		}
+	}
+
+	{
+		std::list<GameEngineCollision*>::iterator StartIter = CollisionList_.begin();
+		std::list<GameEngineCollision*>::iterator EndIter = CollisionList_.end();
+
+		for (; StartIter != EndIter;)
+		{
+			if (false == (*StartIter)->IsDeath())
+			{
+				++StartIter;
+				continue;
+			}
+
+			delete (*StartIter);
+			(*StartIter) = nullptr;
+			StartIter = CollisionList_.erase(StartIter);
+		}
+	}
+
+
+}
+
+void GameEngineActor::SetOrder(int _Order)
+{
+	if (nullptr == GetLevel())
+	{
+		MsgBoxAssert("레벨이 셋팅되지 않았습니다.");
+	}
+
+	if (_Order == GetOrder())
+	{
+		return;
+	}
+
+	GetLevel()->ChangeUpdateOrder(this, _Order);
 }

@@ -45,7 +45,7 @@ void Player::MoveUpdate()
 
 	if (GameEngineInput::GetInst()->IsPress("MoveRight") == true)
 	{
-		CheckPixelCol(PlayerDir::Right);
+		//CheckPixelCol(PlayerDir::Right);
 		MoveDir_ += float4::RIGHT*AccSpeed_ * GameEngineTime::GetDeltaTime();
 		PlayerDir_ = PlayerDir::Right;
 	}
@@ -73,23 +73,23 @@ void Player::MoveUpdate()
 
 }
 
-bool Player::CheckPixelCol(PlayerDir _Dir)
-{
-	//콜리전 체크
-	BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
-
-	float4 CheckPos_Top = GetPosition() + float4(50, -50) * DirValue_[static_cast<int>(CurDir_)];
-	float4 CheckPos_Mid = GetPosition() + float4(50, 0);
-	float4 CheckPos_Bottom = GetPosition() + float4(50, 50);
-
-	if (CurBackGround->IsBlocked(CheckPos_Top) ||
-		CurBackGround->IsBlocked(CheckPos_Mid) ||
-		CurBackGround->IsBlocked(CheckPos_Bottom)
-		)
-	{
-		return;
-	}
-}
+//bool Player::CheckPixelCol(PlayerDir _Dir)
+//{
+//	//콜리전 체크
+//	BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
+//
+//	float4 CheckPos_Top = GetPosition() + float4(50, -50) * DirValue_[static_cast<int>(CurDir_)];
+//	float4 CheckPos_Mid = GetPosition() + float4(50, 0);
+//	float4 CheckPos_Bottom = GetPosition() + float4(50, 50);
+//
+//	if (CurBackGround->IsBlocked(CheckPos_Top) ||
+//		CurBackGround->IsBlocked(CheckPos_Mid) ||
+//		CurBackGround->IsBlocked(CheckPos_Bottom)
+//		)
+//	{
+//		return;
+//	}
+//}
 
 void Player::Move()
 {
