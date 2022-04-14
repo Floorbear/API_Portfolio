@@ -11,6 +11,7 @@ enum class PlayerState
 enum class GameLayer
 {
 	Background,
+	Object,
 	Player,
 	Max
 };

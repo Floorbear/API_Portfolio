@@ -29,6 +29,9 @@
     <ClInclude Include="SelectBackground.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="SelectLogo.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -60,6 +63,9 @@
       <Filter>Actor\UI</Filter>
     </ClCompile>
     <ClCompile Include="SelectBackground.cpp">
+      <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectLogo.cpp">
       <Filter>Actor\UI</Filter>
     </ClCompile>
   </ItemGroup>
