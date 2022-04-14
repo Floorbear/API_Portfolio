@@ -1,5 +1,6 @@
 #include "RockMan.h"
 #include "TitleLevel.h"
+#include "SelectLevel.h"
 #include "Stage1.h"
 #include "GameManager.h"
 #include <GameEngineBase/GameEngineWindow.h>
@@ -34,6 +35,7 @@ void RockMan::GameInit()
 	InitKey();
 
 	CreateLevel<TitleLevel>("Title");
+	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
 	ChangeLevel("Title");
 }
@@ -108,7 +110,7 @@ void RockMan::LoadResources()
 		SelectDir.Move("Resources");
 		SelectDir.Move("UI");
 		SelectDir.Move("Select");
-		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(),"SelectAni");
+		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(),"SelectFolder");
 	}
 }
 

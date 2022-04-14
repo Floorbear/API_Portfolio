@@ -45,7 +45,7 @@ void TitleLogo::Update()
 		Time_ -= GameEngineTime::GetDeltaTime();
 		if (Time_ <= 0)
 		{
-			GameManager::GetInst()->ChangeLevel("Stage1");
+			GameManager::GetInst()->ChangeLevel("Select");
 		}
 	}
 }
