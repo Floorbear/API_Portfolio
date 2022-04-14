@@ -37,7 +37,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Select");
+	ChangeLevel("Title");
 }
 
 void RockMan::GameLoop()
@@ -117,6 +117,10 @@ void RockMan::LoadResources()
 		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(), "SelectFolder_Cutman");
 
 		//Cutman에서 나가주기
+		SelectDir.MoveParent("Select");
+		SelectDir.Move("Logo");
+		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(), "SelectFolder_Logo");
+
 	}
 }
 
