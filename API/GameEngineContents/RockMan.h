@@ -17,6 +17,7 @@ protected:
 	void GameLoop() override;
 	void GameEnd() override;
 private:
+	void LoadResources();
 	void InitImage();
 	void InitKey();
 

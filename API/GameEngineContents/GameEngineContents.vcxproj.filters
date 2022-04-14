@@ -5,12 +5,6 @@
     <ClInclude Include="TitleLevel.h">
       <Filter>Level</Filter>
     </ClInclude>
-    <ClInclude Include="TitleLogo.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleBackGround.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Stage1.h">
       <Filter>Level</Filter>
     </ClInclude>
@@ -26,17 +20,20 @@
     <ClInclude Include="Player.h">
       <Filter>Actor\Player</Filter>
     </ClInclude>
+    <ClInclude Include="SelectLevel.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleLogo.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectBackground.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
     <ClCompile Include="TitleLevel.cpp">
       <Filter>Level</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleLogo.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleBackGround.cpp">
-      <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="Stage1.cpp">
       <Filter>Level</Filter>
@@ -56,6 +53,15 @@
     <ClCompile Include="PlayerState.cpp">
       <Filter>Actor\Player</Filter>
     </ClCompile>
+    <ClCompile Include="SelectLevel.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLogo.cpp">
+      <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectBackground.cpp">
+      <Filter>Actor\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -72,6 +78,9 @@
     </Filter>
     <Filter Include="Actor\Player">
       <UniqueIdentifier>{ee4a0701-2c18-4dfe-aa30-b594dbf6d7eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\UI">
+      <UniqueIdentifier>{bd7d7510-2fd4-4ee8-ba1c-7c2b9ee410af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -166,11 +166,15 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="RockManEnum.h" />
-    <ClInclude Include="Stage1.h">
+    <ClInclude Include="SelectBackground.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TitleBackGround.h">
+    <ClInclude Include="SelectLevel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Stage1.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -202,11 +206,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Stage1.cpp">
+    <ClCompile Include="SelectBackground.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TitleBackGround.cpp">
+    <ClCompile Include="SelectLevel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Stage1.cpp">
       <SubType>
       </SubType>
     </ClCompile>

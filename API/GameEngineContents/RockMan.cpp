@@ -28,6 +28,34 @@ void RockMan::GameInit()
 	//해상도 셋팅
 	GameEngineWindow::GetInst().SetWindowScaleAndPosition({100,100}, {1024,960});
 
+	
+	LoadResources();
+	InitImage();
+	InitKey();
+
+	CreateLevel<TitleLevel>("Title");
+	CreateLevel<Stage1>("Stage1");
+	ChangeLevel("Title");
+}
+
+void RockMan::GameLoop()
+{
+	//레벨 변경 명령이 감지되면, 레벨을 변경한다.
+	if (GameManager::GetInst()->IsChangeLevel_ == true)
+	{
+		std::string LevelName = GameManager::GetInst()->GetLevelString();
+		ChangeLevel(LevelName);
+		GameManager::GetInst()->ResetLevelInfo();
+	}
+}
+
+void RockMan::GameEnd()
+{
+	GameManager::GetInst()->Destroy();
+}
+
+void RockMan::LoadResources()
+{
 	{
 		//맵 디렉토리 로드
 		GameEngineDirectory MapDir;
@@ -42,7 +70,7 @@ void RockMan::GameInit()
 			GameEngineImageManager::GetInst()->Load(AllImageList[i].GetFullPath());
 		}
 	}
-	
+
 	{
 		//오브젝트 디렉토리 로드
 		GameEngineDirectory ObjDir;
@@ -72,29 +100,16 @@ void RockMan::GameInit()
 			GameEngineImageManager::GetInst()->Load(AllImageList[i].GetFullPath());
 		}
 	}
-	
-	InitImage();
-	InitKey();
 
-	CreateLevel<TitleLevel>("Title");
-	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Title");
-}
-
-void RockMan::GameLoop()
-{
-	//레벨 변경 명령이 감지되면, 레벨을 변경한다.
-	if (GameManager::GetInst()->IsChangeLevel_ == true)
+	//Select Folder이미지 로드
 	{
-		std::string LevelName = GameManager::GetInst()->GetLevelString();
-		ChangeLevel(LevelName);
-		GameManager::GetInst()->ResetLevelInfo();
+		GameEngineDirectory SelectDir;
+		SelectDir.MoveParent("API");
+		SelectDir.Move("Resources");
+		SelectDir.Move("UI");
+		SelectDir.Move("Select");
+		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(),"SelectAni");
 	}
-}
-
-void RockMan::GameEnd()
-{
-	GameManager::GetInst()->Destroy();
 }
 
 void RockMan::InitImage()

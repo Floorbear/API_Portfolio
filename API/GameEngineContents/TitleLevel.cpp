@@ -1,6 +1,5 @@
 #include "TitleLevel.h"
 #include "TitleLogo.h"
-#include "TitleBackGround.h"
 #include "Player.h"
 
 TitleLevel::TitleLevel()

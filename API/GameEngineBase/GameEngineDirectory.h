@@ -4,7 +4,7 @@
 #include <vector>
 
 class GameEngineFile;
-class GameEngineDirectory : GameEnginePath
+class GameEngineDirectory : public GameEnginePath
 {
 public:
 	GameEngineDirectory();
