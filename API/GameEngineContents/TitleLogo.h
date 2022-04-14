@@ -17,5 +17,10 @@ protected:
 	virtual void Start() override;
 	virtual void Update() override;
 
+private:
+	GameEngineRenderer* BackGroundRender_;
+	bool IsPress_;
+	float Time_;
+
 };
 

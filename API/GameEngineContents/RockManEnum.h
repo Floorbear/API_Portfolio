@@ -8,3 +8,10 @@ enum class PlayerState
 	Max
 };
 
+enum class GameLayer
+{
+	Background,
+	Player,
+	Max
+};
+

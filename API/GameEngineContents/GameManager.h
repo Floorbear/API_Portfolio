@@ -1,5 +1,6 @@
 #pragma once
 #include <GameEngine/GameEngineLevel.h>
+#include <GameEngineBase/GameEngineDebug.h>
 
 class BackGround;
 class GameManager
@@ -7,16 +8,33 @@ class GameManager
 	friend GameEngineLevel;
 	//인터페이스 함수
 public:
+	bool IsChangeLevel_;
+
 	BackGround* GetCurrentBackGround() const;
+	void ChangeLevel(const std::string& _Name);
+	void ResetLevelInfo();
+
+public:
+
+	inline std::string& GetLevelString()
+	{
+		if (ChangeLevelName_.empty() == true)
+		{
+			MsgBoxAssert("ChangeLevelName_이 셋팅되지 않았습니다.");
+		}
+
+		return ChangeLevelName_;
+	}
+
 	inline void SetCurrentBackGround(BackGround* _Other)
 	{
 		CurrentBackGround_ = _Other;
 	}
 
-private:
-	
 
 private:
+
+	std::string ChangeLevelName_;
 	BackGround* CurrentBackGround_;
 
 	//싱글톤

@@ -91,13 +91,7 @@ void Player::Start()
 	LoadAnimation();
 
 
-	//키초기화 << 이걸 여기서 해야하나?
-	{
-		GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
-		GameEngineInput::GetInst()->CreateKey("MoveLeft", 'A');
-		GameEngineInput::GetInst()->CreateKey("Jump", 'K');
-	}
-	
+
 	StateChange(PlayerState::Idle);
 }
 

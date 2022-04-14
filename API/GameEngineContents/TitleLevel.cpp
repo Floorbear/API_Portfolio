@@ -11,11 +11,16 @@ TitleLevel::~TitleLevel()
 {
 }
 
+
+//레벨이 만들어 질 때 로드
 void TitleLevel::Loading()
 {
-	CreateActor<TitleLogo>(0,"Title");
 
+}
 
+void TitleLevel::LevelChangeStart()
+{
+	CreateActor<TitleLogo>(static_cast<int>(GameLayer::Background), "TitleLogo");
 }
 
 void TitleLevel::Update()
