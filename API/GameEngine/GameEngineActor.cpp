@@ -61,6 +61,16 @@ void GameEngineActor::DebugRectRender()
 	);
 }
 
+void GameEngineActor::LevelRegist(std::string _RegistName)
+{
+	if (_RegistName == "")
+	{
+		GetLevel()->RegistActor(GetNameConstPtr(), this);
+	}
+
+	GetLevel()->RegistActor(_RegistName, this);
+}
+
 GameEngineRenderer* GameEngineActor::CreateRenderer(
 	int _Order, /*= static_cast<int>(EngineMax::RENDERORDERMAX)*/
 	RenderPivot _PivotType /*= RenderPivot::CENTER*/,

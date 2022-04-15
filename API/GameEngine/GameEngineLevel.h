@@ -83,6 +83,16 @@ public:
 		CameraPos_ = _Value;
 	}
 
+	template<typename ConvertType>
+	ConvertType* FindActor(const std::string& _Name)
+	{
+		return dynamic_cast<ConvertType*>(FindActor(_Name));
+	}
+
+	GameEngineActor* FindActor(const std::string& _Name);
+
+	void RegistActor(const std::string& _Name, GameEngineActor* _Actor);
+
 
 protected:
 	// 시점함수
@@ -95,9 +105,14 @@ protected:
 	// Current레벨 => Next레벨로 이전할때 이전레벨이 실행하는 함수.
 	virtual void LevelChangeEnd() {}
 
+	void ActorLevelChangeStart();
+	void ActorLevelChangeEnd();
+
 private:
 	// std::vector로 관리하는게 더 좋다고 생각..
 	std::map<int, std::list<GameEngineActor*>> AllActor_;
+
+	std::map<std::string, GameEngineActor*> RegistActor_;
 
 	std::vector<ChangeOrderItem> ChangeOrderList;
 
