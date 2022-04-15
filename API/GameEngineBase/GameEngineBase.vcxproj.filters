@@ -25,9 +25,6 @@
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{488a472d-4f7c-4990-b995-d8ce03a39e7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\bin">
-      <UniqueIdentifier>{4520bef6-d163-4356-b59b-c5e8b1f78aac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty\inc">
       <UniqueIdentifier>{63161324-26c9-4379-8556-09e15befab9d}</UniqueIdentifier>
     </Filter>
@@ -150,17 +147,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod.dll">
-      <Filter>ThirdParty\bin</Filter>
+    <CopyFileToFolders Include="ThirdParty\fmod.dll">
+      <Filter>ThirdParty</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod_vc.lib">
-      <Filter>ThirdParty\bin</Filter>
+    <CopyFileToFolders Include="ThirdParty\fmod_vc.lib">
+      <Filter>ThirdParty</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL.dll">
-      <Filter>ThirdParty\bin</Filter>
+    <CopyFileToFolders Include="ThirdParty\fmodL.dll">
+      <Filter>ThirdParty</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL_vc.lib">
-      <Filter>ThirdParty\bin</Filter>
+    <CopyFileToFolders Include="ThirdParty\fmodL_vc.lib">
+      <Filter>ThirdParty</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

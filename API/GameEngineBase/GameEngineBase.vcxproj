@@ -79,6 +79,12 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <CopyFileToFolders Include="ThirdParty\fmod.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="ThirdParty\fmodL.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngineDebug.cpp">
@@ -135,21 +141,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod.dll">
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL.dll">
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
     <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod.cs" />
     <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_dsp.cs" />
     <None Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\inc\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmodL_vc.lib">
+    <CopyFileToFolders Include="ThirdParty\fmodL_vc.lib">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="..\..\..\AR40\API\GameEngineBase\ThirdParty\bin\fmod_vc.lib">
+    <CopyFileToFolders Include="ThirdParty\fmod_vc.lib">
       <FileType>Document</FileType>
     </CopyFileToFolders>
   </ItemGroup>
