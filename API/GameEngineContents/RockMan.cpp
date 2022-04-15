@@ -37,7 +37,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Title");
+	ChangeLevel("Select");
 }
 
 void RockMan::GameLoop()
@@ -149,6 +149,19 @@ void RockMan::InitImage()
 		GameEngineImage* UIImage;
 		UIImage = GameEngineImageManager::GetInst()->Find("Title.bmp");
 		UIImage->Cut({ 1024,960 });
+	}
+
+	//몬스터 미트맵 초기화
+	{
+		//스테이지1 보스 컷맨 
+		{
+			GameEngineImage* CutmanImage;
+			CutmanImage = GameEngineImageManager::GetInst()->Find("Cutman_Right.bmp");
+			CutmanImage->Cut({ 256,256 });
+
+			CutmanImage = GameEngineImageManager::GetInst()->Find("Cutman_Left.bmp");
+			CutmanImage->Cut({ 256,256 });
+		}
 	}
 }
 

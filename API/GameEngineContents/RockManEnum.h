@@ -16,3 +16,9 @@ enum class GameLayer
 	Max
 };
 
+enum class BossName
+{
+	Cutman,
+	Max
+};
+

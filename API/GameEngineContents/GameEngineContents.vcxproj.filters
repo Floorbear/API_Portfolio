@@ -32,6 +32,9 @@
     <ClInclude Include="SelectLogo.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="SelectBossActor.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -66,6 +69,9 @@
       <Filter>Actor\UI</Filter>
     </ClCompile>
     <ClCompile Include="SelectLogo.cpp">
+      <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectBossActor.cpp">
       <Filter>Actor\UI</Filter>
     </ClCompile>
   </ItemGroup>

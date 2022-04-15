@@ -21,7 +21,9 @@ protected:
 	void Update() override;
 
 private:
+	float WaitTime_;
 	bool IsOn_1_;//업데이트 조건문 한번 실행하기 위한 플래그
+	bool IsOn_2_;
 	GameEngineRenderer* Boss_Name_Renderer_;
 	GameEngineRenderer* Clear_Points_Renderer_;
 	GameEngineRenderer* Number_Renderer_;
