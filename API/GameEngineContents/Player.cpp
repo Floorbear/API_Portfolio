@@ -65,7 +65,7 @@ bool Player::IsMoveKeyPress()
 }
 
 Player::Player()
-	:Speed_(100.0),
+	:
 	AccSpeed_(500.0f),
 	MaxSpeed_(400.0),
 	CurDir_(float4::RIGHT),
@@ -73,7 +73,7 @@ Player::Player()
 	PlayerRenderer_(nullptr),
 	Gravity_(500.0),
 	AccGravity_(1000),
-	MaxGravity_(100000),
+	MaxGravity_(1000),
 	Default_Gravity_(-500)
 {
 
@@ -85,7 +85,7 @@ Player::~Player()
 
 void Player::Start()
 {
-	SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*200);
+	SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*-300);
 	SetScale({ 100,100 });
 	
 	LoadAnimation();
@@ -117,6 +117,7 @@ void Player::Update()
 	GetLevel()->SetCameraPos(CameraPos);
 }
 
+
 bool Player::CheckPixelCol(float4 _Dir)
 {
 	//_Dir == left or right
@@ -124,9 +125,10 @@ bool Player::CheckPixelCol(float4 _Dir)
 	{
 		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
-		float4 CheckPos_Top = GetPosition() + float4(50 * CurDir_.x, -50);
-		float4 CheckPos_Mid = GetPosition() + float4(50 * CurDir_.x, 0);
-		float4 CheckPos_Bottom = GetPosition() + float4(50 * CurDir_.x, 50);
+		float SpeedPos = CurDir_.x*CurSpeed_ * GameEngineTime::GetDeltaTime();
+		float4 CheckPos_Top = GetPosition() + float4(SpeedPos+GetScale().Half().x * CurDir_.x, -GetScale().Half().y);
+		float4 CheckPos_Mid = GetPosition() + float4(GetScale().Half().x * CurDir_.x, 0);
+		float4 CheckPos_Bottom = GetPosition() + float4(GetScale().Half().x * CurDir_.x, GetScale().Half().y-10);
 
 
 		if (CurBackGround->IsBlocked(CheckPos_Top) ||
@@ -143,9 +145,20 @@ bool Player::CheckPixelCol(float4 _Dir)
 	{
 		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
-		float4 CheckPos_Left = GetPosition() + float4(-45,_Dir.y*54);
-		float4 CheckPos_Mid = GetPosition() + float4(0, _Dir.y * 54);
-		float4 CheckPos_Right = GetPosition() + float4(45, _Dir.y * 54);
+		
+		float Sign = 0; //Gravity의 부호
+		if (Gravity_ >= 0)
+		{
+			Sign = 1.0f;
+		}
+		else
+		{
+			Sign = -1.0f;
+		}
+		float GravityPos = MaxGravity_ * GameEngineTime::GetDeltaTime(); //현재 중력에 따른 미래위치 추가량
+		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x, Sign*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
+		float4 CheckPos_Mid = GetPosition() + float4(0,  Sign*(GetScale().Half().y+1));
+		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x, Sign*(GetScale().Half().y +1));
 
 
 		if (CurBackGround->IsBlocked(CheckPos_Left) ||
@@ -178,5 +191,5 @@ void Player::Move(float4 _Dir, float _Speed)
 
 void Player::Render()
 {
-	DebugRectRender();
 }
+

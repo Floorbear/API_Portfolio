@@ -10,7 +10,7 @@ BackGround::~BackGround()
 {
 }
 
-void BackGround::SetImage(GameEngineImage* _Map , GameEngineImage* _ColMap)
+void BackGround::SetBackGroundImage(GameEngineImage* _Map , GameEngineImage* _ColMap)
 {
 	BackGroundImage_ = _Map;
 	BackGroundColImage_ = _ColMap;

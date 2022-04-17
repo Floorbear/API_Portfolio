@@ -5,6 +5,8 @@
 #include <GameEngine/GameEngineRenderer.h>
 #include "Player.h"
 #include "GameManager.h"
+#include "HPBar.h"
+#include "Scoreboard.h"
 
 Stage1::Stage1()
 {
@@ -27,13 +29,18 @@ void Stage1::Update()
 
 void Stage1::LevelChangeStart()
 {
-	//필수 액터 로드
+	//백그라운드 셋팅
 	BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "BackGround_Stage1");
 	GameEngineRenderer* Render = BackGround_->CreateRenderer("Stage1_1.bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
 	GameEngineImage* ColImage = GameEngineImageManager::GetInst()->Find("Stage1_1_Col.bmp");
-	BackGround_->SetImage(Render->GetImage(),ColImage);
+	BackGround_->SetBackGroundImage(Render->GetImage(),ColImage);
+	GameManager::GetInst()->SetCurrentBackGround(BackGround_);
+
+	//UI 셋팅
+	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
+	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
+
 	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
 
-	//게임매니저 셋
-	GameManager::GetInst()->SetCurrentBackGround(BackGround_);
+
 }

@@ -23,16 +23,22 @@
     <ClInclude Include="SelectLevel.h">
       <Filter>Level</Filter>
     </ClInclude>
-    <ClInclude Include="TitleLogo.h">
-      <Filter>Actor\UI</Filter>
-    </ClInclude>
     <ClInclude Include="SelectBackground.h">
-      <Filter>Actor\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectLogo.h">
-      <Filter>Actor\UI</Filter>
+      <Filter>Actor\UI\Title&amp;Select</Filter>
     </ClInclude>
     <ClInclude Include="SelectBossActor.h">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectLogo.h">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleLogo.h">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClInclude>
+    <ClInclude Include="HPBar.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scoreboard.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,16 +68,23 @@
     <ClCompile Include="SelectLevel.cpp">
       <Filter>Level</Filter>
     </ClCompile>
-    <ClCompile Include="TitleLogo.cpp">
-      <Filter>Actor\UI</Filter>
-    </ClCompile>
     <ClCompile Include="SelectBackground.cpp">
-      <Filter>Actor\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectLogo.cpp">
-      <Filter>Actor\UI</Filter>
+      <Filter>Actor\UI\Title&amp;Select</Filter>
     </ClCompile>
     <ClCompile Include="SelectBossActor.cpp">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectLogo.cpp">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLogo.cpp">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClCompile>
+    <ClCompile Include="HPBar.cpp">
+      <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="RockmanInit.cpp" />
+    <ClCompile Include="Scoreboard.cpp">
       <Filter>Actor\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,6 +106,9 @@
     </Filter>
     <Filter Include="Actor\UI">
       <UniqueIdentifier>{bd7d7510-2fd4-4ee8-ba1c-7c2b9ee410af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\UI\Title&amp;Select">
+      <UniqueIdentifier>{1bab4ede-ef11-4fe9-b116-139fdcfeb48b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

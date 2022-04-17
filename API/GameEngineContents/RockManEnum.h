@@ -12,7 +12,10 @@ enum class GameLayer
 {
 	Background,
 	Object,
+	Monster,
+	Bullet,
 	Player,
+	UI,
 	Max
 };
 

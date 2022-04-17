@@ -38,8 +38,7 @@ private:
 
 	//스테이터스
 private:
-	float CurSpeed_;
-	float Speed_;
+	float CurSpeed_; //"속력"
 	float AccSpeed_;
 	float MaxSpeed_;
 	float Gravity_;
@@ -65,4 +64,6 @@ private:
 	void Update() override;
 	void Render() override;
 };
+
+
 

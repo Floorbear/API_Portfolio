@@ -32,6 +32,12 @@ void Player::MoveStart()
 
 void Player::IdleUpdate()
 {
+	//중력체크
+	if (CheckPixelCol(float4::DOWN) == false)
+	{
+		Gravity_ = MaxGravity_;
+		StateChange(PlayerState::Jump);
+	}
 	if (IsMoveKeyPress() == true)
 	{
 		CurDir_ = WantDir_;
@@ -72,7 +78,7 @@ void Player::MoveUpdate()
 	}
 	if (CheckPixelCol(float4::DOWN) == false)
 	{
-		Gravity_ = 0;
+		Gravity_ = MaxGravity_;
 		StateChange(PlayerState::Jump);
 	}
 
@@ -129,11 +135,12 @@ void Player::JumpUpdate()
 	}	
 
 
-	SetMove(float4::DOWN * Gravity_*GameEngineTime::GetDeltaTime());
+	Move(float4::DOWN,Gravity_);
 
 
 	if (CheckPixelCol(float4::DOWN) == true)
 	{		
+		Gravity_ = MaxGravity_;
 		StateChange(PlayerState::Idle);
 	}
 
