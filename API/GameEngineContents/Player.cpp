@@ -4,6 +4,7 @@
 #include <GameEngineBase/GameEngineInput.h>
 #include "GameManager.h"
 #include "BackGround.h"
+#include "Bullet.h"
 
 
 void Player::StateUpdate()
@@ -64,15 +65,24 @@ bool Player::IsMoveKeyPress()
 	return false;
 }
 
-void Player::Attack(float4 _Dir)
+void Player::Attack(const float4& _Dir)
 {
-
+	if (AttackCount_ < MaxAttackCount_)
+	{
+		AttackTickTime_ = 0.0f;
+		IsAttacking = true;
+		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(static_cast<int>(GameLayer::Bullet), "Bullet");
+		NewBullet->SetDir(GetPosition()+float4(_Dir.x*50,0), _Dir);
+		AttackCount_++;
+	}
 }
 
 Player::Player()
 	:
-	AccSpeed_(500.0f),
-	MaxSpeed_(400.0),
+	CurSpeed_(0.0f),
+	CurState_(PlayerState::Idle),
+	AccSpeed_(800.0f),
+	MaxSpeed_(350.0),
 	CurDir_(float4::RIGHT),
 	PlayerRenderer_(nullptr),
 	Gravity_(500.0),
@@ -83,7 +93,13 @@ Player::Player()
 	IsColVer(false),
 	CurJumpTime_(0),
 	MaxJumpTime_(0.25f),
-	CanJump_(true)
+	CanJump_(true),
+	IsAttacking(false),
+	IsAttackEnd_(false),
+	AttackTickTime_(0.0f),
+	MaxAttackTickTime_(0.45f),
+	AttackCount_(0),
+	MaxAttackCount_(3)
 {
 
 }
@@ -108,6 +124,19 @@ void Player::Update()
 {
 	StateUpdate();
 
+
+	//공격 딜레이 체크
+	if (IsAttacking == true)
+	{
+		AttackTickTime_ += GameEngineTime::GetDeltaTime();
+		if (AttackTickTime_ >= MaxAttackTickTime_)
+		{
+			IsAttacking = false;
+			AttackTickTime_ = 0.0f;
+			AttackCount_ = 0;
+			IsAttackEnd_ = true;
+		}
+	}
 	
 
 	//카메라 체크
@@ -178,9 +207,6 @@ bool Player::CheckPixelCol(float4 _Dir)
 			return true;
 		}
 	}
-	
-
-
 	return false;
 }
 
@@ -189,7 +215,7 @@ void Player::Move(float4 _Dir, float _Speed)
 	if (CheckPixelCol(_Dir) == true)
 	{
 		//좀더 정확한 충돌 측정
-		if (_Dir.CompareInt2D(float4::DOWN))
+		if (_Dir.CompareInt2D(float4::DOWN) && Gravity_ >= 0) //충돌했는데 아래쪽
 		{
 			BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 			float Sign = 0; //Gravity의 부호
@@ -222,6 +248,11 @@ void Player::Move(float4 _Dir, float _Speed)
 			}
 			float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 			SetMove(WantMovePos);
+			IsColVer = true;
+			return;
+		}
+		else if (Gravity_ < 0) //충돌했는데 머리쪽
+		{
 			IsColVer = true;
 			return;
 		}

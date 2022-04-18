@@ -26,7 +26,7 @@ private:
 
 	bool IsMoveKeyPress(); //키가 눌렸는지 감지하고, 눌린 키값을 WantDir_에 셋팅
 
-	void Attack(float4 _Dir);
+	void Attack(const float4& _Dir);
 
 
 
@@ -60,6 +60,14 @@ private:
 	float CurJumpTime_; //점프키를 꾹 누를 경우 더 높이 점프하게 할 수 있는 변수
 	float MaxJumpTime_; //점프키를 꾹 누를 경우 더 높이 점프하게 할 수 있는 변수
 	bool CanJump_;
+
+	//공격 관련
+	int AttackCount_;
+	int MaxAttackCount_;
+	bool IsAttacking;
+	bool IsAttackEnd_;
+	float AttackTickTime_;
+	float MaxAttackTickTime_; //연속 공격까지 기다려주는 시간
 
 public:
 	Player();

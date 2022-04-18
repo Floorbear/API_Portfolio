@@ -5,15 +5,26 @@
 #include "GameManager.h"
 #include "BackGround.h"
 #include "RockmanUtility.h"
+#include "Bullet.h"
 
 void Player::IdleStart()
 {
-
+	//공격관련 초기화
+	IsAttacking = false;
+	AttackTickTime_ = 0.0f;
+	IsAttackEnd_ = false;
+	AttackCount_ = 0;
 	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurDir_)));
 }
 
 void Player::MoveStart()
 {
+	//공격관련 초기화
+	IsAttacking = false;
+	AttackTickTime_ = 0.0f;
+	IsAttackEnd_ = false;
+	AttackCount_ = 0;
+
 	PlayerRenderer_->ChangeAnimation("RockMan_Move_"+RockmanUtility::DirToStr(CurDir_));
 }
 
@@ -35,11 +46,14 @@ void Player::IdleUpdate()
 	if (GameEngineInput::GetInst()->IsDown("Attack") == true)
 	{
 		PlayerRenderer_->ChangeAnimation("RockMan_IdleAttack_" + RockmanUtility::DirToStr(CurDir_));
+		Attack(CurDir_);
 	}
-	if (PlayerRenderer_->IsEndAnimation() == true)
+	if (IsAttackEnd_ == true)
 	{
 		PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurDir_)));
+		IsAttackEnd_ = false;
 	}
+	
 	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
 	{
 		Gravity_ = JumpStrength_;
@@ -66,8 +80,8 @@ void Player::MoveUpdate()
 		StateChange(PlayerState::Idle);
 	}
 
-	//점프
-	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
+
+	if (GameEngineInput::GetInst()->IsDown("Jump") == true) //점프키를 눌렀을 경우
 	{
 		Gravity_ = JumpStrength_;
 		StateChange(PlayerState::Jump);
@@ -80,9 +94,22 @@ void Player::MoveUpdate()
 		StateChange(PlayerState::Jump);
 		return;
 	}
+	if (GameEngineInput::GetInst()->IsDown("Attack") == true) //공격키를 눌렀을 경우
+	{
+		if (IsAttacking == false)
+		{
+			PlayerRenderer_->ChangeAnimation("RockMan_MoveAttack_" + RockmanUtility::DirToStr(CurDir_));
+		}
+		Attack(CurDir_);
+	}
+	if (IsAttackEnd_ == true) //공격키를 누르고 일정 시간이 지난 후
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Move_" + RockmanUtility::DirToStr(CurDir_));
+		IsAttackEnd_ = false;
+	}
 
-	//방향전환이 일어나면 Idle로
-	if (WantDir_.CompareInt2D(CurDir_) == false)
+	
+	if (WantDir_.CompareInt2D(CurDir_) == false) //방향전환이 일어나면 Idle로 변경
 	{
 		CurSpeed_ = 0;
 		StateChange(PlayerState::Idle);
@@ -106,6 +133,11 @@ void Player::MoveUpdate()
 
 void Player::JumpStart()
 {
+	//공격관련 초기화
+	IsAttacking = false;
+	AttackTickTime_ = 0.0f;
+	IsAttackEnd_ = false;
+	AttackCount_ = 0;
 
 	PlayerRenderer_->ChangeAnimation("RockMan_Jump_"+ RockmanUtility::DirToStr(CurDir_));
 }
@@ -114,7 +146,9 @@ void Player::JumpUpdate()
 {
 	
 	//점프 키를 누른만큼 더 점프 거리가 늘어남
-	if (GameEngineInput::GetInst()->IsPress("Jump") == true && CanJump_ == true && CurJumpTime_ <= MaxJumpTime_)
+	if (GameEngineInput::GetInst()->IsPress("Jump") == true &&
+		CanJump_ == true && CurJumpTime_ <= MaxJumpTime_ &&
+		CheckPixelCol(float4::UP) == false)
 	{
 		CurJumpTime_ += GameEngineTime::GetDeltaTime();
 		Gravity_ = JumpStrength_;
@@ -138,6 +172,7 @@ void Player::JumpUpdate()
 		//이동 중 방향이 바뀌면 애니메이션이 바뀐다
 		if (CurDir_.CompareInt2D(WantDir_) == false)
 		{
+			CurSpeed_ = 0;
 			PlayerRenderer_->ChangeAnimation("RockMan_Jump_" + RockmanUtility::DirToStr(WantDir_));
 		}
 		CurDir_ = WantDir_;
@@ -155,13 +190,18 @@ void Player::JumpUpdate()
 	Move(float4::DOWN, Gravity_);
 
 
-	//땅에 닿았어
+	//땅이나 머리에 닿았어
 	if (IsColVer == true)
 	{
-		CanJump_ = true;
-		CurJumpTime_ = 0.0f;
-		Gravity_ = MaxGravity_;//이거때문에 천장에 머리박으면 바로 가속으로 추락하는거야
-		StateChange(PlayerState::Idle);
+		Gravity_ = MaxGravity_;
+		if (Gravity_ >= 0)
+		{
+			CanJump_ = true; //점프를 다시 할 수 있더
+			CurJumpTime_ = 0.0f;
+			StateChange(PlayerState::Idle);
+			return;
+		}
+		
 	}
 
 }

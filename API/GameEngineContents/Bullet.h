@@ -14,7 +14,7 @@ public:
 	Bullet& operator=(const Bullet& _Ohter) = delete;
 	Bullet& operator=(const Bullet&& _Other) noexcept = delete;
 public:
-	void SetDir(const float4& _Dir);
+	void SetDir(const float4& _Pos,const float4& _Dir);
 
 protected:
 	void Start() override;
