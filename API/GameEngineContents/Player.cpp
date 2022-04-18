@@ -64,17 +64,26 @@ bool Player::IsMoveKeyPress()
 	return false;
 }
 
+void Player::Attack(float4 _Dir)
+{
+
+}
+
 Player::Player()
 	:
 	AccSpeed_(500.0f),
 	MaxSpeed_(400.0),
 	CurDir_(float4::RIGHT),
-	MoveVec_({ 0,0 }),
 	PlayerRenderer_(nullptr),
 	Gravity_(500.0),
-	AccGravity_(1000),
-	MaxGravity_(1000),
-	Default_Gravity_(-500)
+	AccGravity_(5000),
+	MaxGravity_(800),
+	JumpStrength_(-600),
+	IsColHori(false),
+	IsColVer(false),
+	CurJumpTime_(0),
+	MaxJumpTime_(0.25f),
+	CanJump_(true)
 {
 
 }
@@ -119,7 +128,7 @@ void Player::Update()
 
 
 bool Player::CheckPixelCol(float4 _Dir)
-{
+{ 
 	//_Dir == left or right
 	if (_Dir.CompareInt2D(float4::LEFT) == true || _Dir.CompareInt2D(float4::RIGHT) == true)
 	{
@@ -156,9 +165,9 @@ bool Player::CheckPixelCol(float4 _Dir)
 			Sign = -1.0f;
 		}
 		float GravityPos = MaxGravity_ * GameEngineTime::GetDeltaTime(); //현재 중력에 따른 미래위치 추가량
-		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x, Sign*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
+		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x+5, Sign*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
 		float4 CheckPos_Mid = GetPosition() + float4(0,  Sign*(GetScale().Half().y+1));
-		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x, Sign*(GetScale().Half().y +1));
+		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x-5, Sign*(GetScale().Half().y +1));
 
 
 		if (CurBackGround->IsBlocked(CheckPos_Left) ||
@@ -179,9 +188,48 @@ void Player::Move(float4 _Dir, float _Speed)
 {
 	if (CheckPixelCol(_Dir) == true)
 	{
+		//좀더 정확한 충돌 측정
+		if (_Dir.CompareInt2D(float4::DOWN))
+		{
+			BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
+			float Sign = 0; //Gravity의 부호
+			if (Gravity_ >= 0)
+			{
+				Sign = 1.0f;
+			}
+			else
+			{
+				Sign = -1.0f;
+			}
+			float4 NextPos = float4(0, Sign * (GetScale().Half().y + 1));
+			float4 CheckPos_Mid = GetPosition() + float4(0, Sign * (GetScale().Half().y + 1));
+			float Len = NextPos.Len2D();
+
+			while (
+				true == CurBackGround->IsBlocked(CheckPos_Mid)
+				)
+			{
+				NextPos.Normal2D();
+				Len -= 1.0f;
+				NextPos *= Len;
+				CheckPos_Mid = GetPosition() += NextPos;
+
+				//무한루프 탈출을 위한 안전장치
+				if (1.0f >= NextPos.Len2D())
+				{
+					break;
+				}
+			}
+			float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
+			SetMove(WantMovePos);
+			IsColVer = true;
+			return;
+		}
+
 		return;
 	}
 
+	IsColVer = false;
 	SetMove(_Dir * GameEngineTime::GetDeltaTime() * _Speed);
 }
 

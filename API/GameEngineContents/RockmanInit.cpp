@@ -112,6 +112,21 @@ void RockMan::InitImage()
 
 		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Move_Right.bmp");
 		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Jump_Right.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Jump_Left.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Attack_Left.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Attack_Right.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("Bullet.bmp");
+		PlayerImage->Cut({ 256,256 });
 	}
 
 
@@ -143,6 +158,7 @@ void RockMan::InitKey()
 		GameEngineInput::GetInst()->CreateKey("MoveRight", 'D');
 		GameEngineInput::GetInst()->CreateKey("MoveLeft", 'A');
 		GameEngineInput::GetInst()->CreateKey("Jump", 'K');
+		GameEngineInput::GetInst()->CreateKey("Attack", 'J');
 	}
 
 }

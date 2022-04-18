@@ -4,38 +4,26 @@
 #include <GameEngine/GameEngineRenderer.h>
 #include "GameManager.h"
 #include "BackGround.h"
+#include "RockmanUtility.h"
 
 void Player::IdleStart()
 {
-	if (CurDir_.CompareInt2D(float4::RIGHT) == true)
-	{
-		PlayerRenderer_->ChangeAnimation("RockMan_Idle_Right");
-	}
-	else if (CurDir_.CompareInt2D(float4::LEFT) == true)
-	{
-		PlayerRenderer_->ChangeAnimation("RockMan_Idle_Left");
-	}
+
+	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurDir_)));
 }
 
 void Player::MoveStart()
 {
-	if (CurDir_.CompareInt2D(float4::RIGHT) == true)
-	{
-		PlayerRenderer_->ChangeAnimation("RockMan_Move_Right");
-	}
-	else if (CurDir_.CompareInt2D(float4::LEFT) == true)
-	{
-		PlayerRenderer_->ChangeAnimation("RockMan_Move_Left");
-	}
-	
+	PlayerRenderer_->ChangeAnimation("RockMan_Move_"+RockmanUtility::DirToStr(CurDir_));
 }
 
 void Player::IdleUpdate()
 {
-	//중력체크
+	//가만이 있다가 뚝 떨어진 경우
 	if (CheckPixelCol(float4::DOWN) == false)
 	{
 		Gravity_ = MaxGravity_;
+		CanJump_ = false;
 		StateChange(PlayerState::Jump);
 	}
 	if (IsMoveKeyPress() == true)
@@ -44,10 +32,19 @@ void Player::IdleUpdate()
 		StateChange(PlayerState::Move);
 	}
 
+	if (GameEngineInput::GetInst()->IsDown("Attack") == true)
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_IdleAttack_" + RockmanUtility::DirToStr(CurDir_));
+	}
+	if (PlayerRenderer_->IsEndAnimation() == true)
+	{
+		PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurDir_)));
+	}
 	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
 	{
-		Gravity_ = Default_Gravity_;
+		Gravity_ = JumpStrength_;
 		StateChange(PlayerState::Jump);
+		return;
 	}
 	
 	if (CurSpeed_ <= 10.0f)
@@ -56,7 +53,7 @@ void Player::IdleUpdate()
 	}
 	else
 	{
-		CurSpeed_ += -CurSpeed_ * GameEngineTime::GetDeltaTime() * 10;
+		CurSpeed_ += -CurSpeed_ * GameEngineTime::GetDeltaTime() * 30;
 		Move(CurDir_, CurSpeed_);
 	}
 }
@@ -72,14 +69,16 @@ void Player::MoveUpdate()
 	//점프
 	if (GameEngineInput::GetInst()->IsDown("Jump") == true)
 	{
-		Gravity_ = Default_Gravity_;
+		Gravity_ = JumpStrength_;
 		StateChange(PlayerState::Jump);
-		
+		return;
 	}
-	if (CheckPixelCol(float4::DOWN) == false)
+	if (CheckPixelCol(float4::DOWN) == false) //가다가 뚝 떨어진 경우
 	{
+		CanJump_ = false;
 		Gravity_ = MaxGravity_;
 		StateChange(PlayerState::Jump);
+		return;
 	}
 
 	//방향전환이 일어나면 Idle로
@@ -87,6 +86,7 @@ void Player::MoveUpdate()
 	{
 		CurSpeed_ = 0;
 		StateChange(PlayerState::Idle);
+		return;
 	}
 
 
@@ -106,12 +106,23 @@ void Player::MoveUpdate()
 
 void Player::JumpStart()
 {
-	//애니메이션
+
+	PlayerRenderer_->ChangeAnimation("RockMan_Jump_"+ RockmanUtility::DirToStr(CurDir_));
 }
 
 void Player::JumpUpdate()
 {
 	
+	//점프 키를 누른만큼 더 점프 거리가 늘어남
+	if (GameEngineInput::GetInst()->IsPress("Jump") == true && CanJump_ == true && CurJumpTime_ <= MaxJumpTime_)
+	{
+		CurJumpTime_ += GameEngineTime::GetDeltaTime();
+		Gravity_ = JumpStrength_;
+	}
+	else if(GameEngineInput::GetInst()->IsFree("Jump") == true)
+	{
+		CanJump_ = false;
+	}
 	//중력가속도
 	Gravity_ += AccGravity_ * GameEngineTime::GetDeltaTime();
 	if (Gravity_ >= MaxGravity_)
@@ -119,10 +130,16 @@ void Player::JumpUpdate()
 		Gravity_ = MaxGravity_;
 	}
 
+	
 
 	//점프 중 이동
 	if (IsMoveKeyPress() == true)
 	{
+		//이동 중 방향이 바뀌면 애니메이션이 바뀐다
+		if (CurDir_.CompareInt2D(WantDir_) == false)
+		{
+			PlayerRenderer_->ChangeAnimation("RockMan_Jump_" + RockmanUtility::DirToStr(WantDir_));
+		}
 		CurDir_ = WantDir_;
 		CurSpeed_ += GameEngineTime::GetDeltaTime() * AccSpeed_;
 
@@ -135,12 +152,15 @@ void Player::JumpUpdate()
 	}	
 
 
-	Move(float4::DOWN,Gravity_);
+	Move(float4::DOWN, Gravity_);
 
 
-	if (CheckPixelCol(float4::DOWN) == true)
-	{		
-		Gravity_ = MaxGravity_;
+	//땅에 닿았어
+	if (IsColVer == true)
+	{
+		CanJump_ = true;
+		CurJumpTime_ = 0.0f;
+		Gravity_ = MaxGravity_;//이거때문에 천장에 머리박으면 바로 가속으로 추락하는거야
 		StateChange(PlayerState::Idle);
 	}
 

@@ -41,6 +41,12 @@
     <ClInclude Include="Scoreboard.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="RockmanUtility.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Actor\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -86,6 +92,12 @@
     <ClCompile Include="RockmanInit.cpp" />
     <ClCompile Include="Scoreboard.cpp">
       <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="RockmanUtility.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Actor\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
