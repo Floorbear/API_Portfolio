@@ -5,6 +5,8 @@
 #include "GameManager.h"
 #include "BackGround.h"
 #include "Bullet.h"
+#include <GameEngine/GameEngine.h>
+#include "RockmanUtility.h"
 
 
 void Player::StateUpdate()
@@ -19,6 +21,9 @@ void Player::StateUpdate()
 		break;
 	case PlayerState::Jump:
 		JumpUpdate();
+		break;
+	case PlayerState::Climb:
+		ClimbUpdate();
 		break;
 	default:
 		break;
@@ -43,23 +48,40 @@ void Player::StateChange(PlayerState _State)
 	case PlayerState::Jump:
 		JumpStart();
 		break;
+	case PlayerState::Climb:
+		ClimbStart();
+		break;
 	default:
 		break;
 	}
 	CurState_ = _State;
 }
 
+bool Player::IsMoveVerKeyPress()
+{
+	if (GameEngineInput::GetInst()->IsPress("MoveUp") == true)
+	{
+		WantVerDir_ = float4::UP;
+		return true;
+	}
+	else if (GameEngineInput::GetInst()->IsPress("MoveDown") == true)
+	{
+		WantVerDir_ = float4::DOWN;
+		return true;
+	}
+	return false;
+}
 
-bool Player::IsMoveKeyPress()
+bool Player::IsMoveHoriKeyPress()
 {
 	if (GameEngineInput::GetInst()->IsPress("MoveRight") == true)
 	{
-		WantDir_ = float4::RIGHT;
+		WantHoriDir_ = float4::RIGHT;
 		return true;
 	}
 	else if (GameEngineInput::GetInst()->IsPress("MoveLeft") == true)
 	{
-		WantDir_ = float4::LEFT;
+		WantHoriDir_ = float4::LEFT;
 		return true;
 	}
 	return false;
@@ -83,7 +105,8 @@ Player::Player()
 	CurState_(PlayerState::Idle),
 	AccSpeed_(800.0f),
 	MaxSpeed_(350.0),
-	CurDir_(float4::RIGHT),
+	CurHoriDir_(float4::RIGHT),
+	WantVerDir_(float4::ZERO),
 	PlayerRenderer_(nullptr),
 	Gravity_(500.0),
 	AccGravity_(5000),
@@ -101,6 +124,11 @@ Player::Player()
 	AttackCount_(0),
 	MaxAttackCount_(3)
 {
+	PlayerStateStr_[static_cast<int>(PlayerState::Idle)] = "Idle";
+	PlayerStateStr_[static_cast<int>(PlayerState::Move)] = "Move";
+	PlayerStateStr_[static_cast<int>(PlayerState::Jump)] = "Jump";
+	PlayerStateStr_[static_cast<int>(PlayerState::Climb)] = "Climb";
+
 
 }
 
@@ -156,22 +184,29 @@ void Player::Update()
 }
 
 
-bool Player::CheckPixelCol(float4 _Dir)
+bool Player::CheckPixelCol(float4 _Dir, unsigned long _RGB, bool _CheckOnlyMid)
 { 
 	//_Dir == left or right
 	if (_Dir.CompareInt2D(float4::LEFT) == true || _Dir.CompareInt2D(float4::RIGHT) == true)
 	{
 		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
-		float SpeedPos = CurDir_.x*CurSpeed_ * GameEngineTime::GetDeltaTime();
-		float4 CheckPos_Top = GetPosition() + float4(SpeedPos+GetScale().Half().x * CurDir_.x, -GetScale().Half().y);
-		float4 CheckPos_Mid = GetPosition() + float4(GetScale().Half().x * CurDir_.x, 0);
-		float4 CheckPos_Bottom = GetPosition() + float4(GetScale().Half().x * CurDir_.x, GetScale().Half().y-10);
+		float4 CheckPos_Top = GetPosition() + float4((GetScale().Half().x-15) * CurHoriDir_.x, -GetScale().Half().y);
+		float4 CheckPos_Mid = GetPosition() + float4((GetScale().Half().x-15) * CurHoriDir_.x, 0);
+		float4 CheckPos_Bottom = GetPosition() + float4((GetScale().Half().x-15 )* CurHoriDir_.x, GetScale().Half().y-10);
 
+		if (_CheckOnlyMid == true)
+		{
+			if (CurBackGround->IsBlocked(CheckPos_Mid, _RGB) == true)
+			{
+				return true;
+			}
+			return false;
+		}
 
-		if (CurBackGround->IsBlocked(CheckPos_Top) ||
-			CurBackGround->IsBlocked(CheckPos_Mid) ||
-			CurBackGround->IsBlocked(CheckPos_Bottom)
+		if (CurBackGround->IsBlocked(CheckPos_Top,_RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Mid , _RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Bottom, _RGB)
 			)
 		{
 			return true;
@@ -184,24 +219,56 @@ bool Player::CheckPixelCol(float4 _Dir)
 		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
 		
-		float Sign = 0; //Gravity의 부호
-		if (Gravity_ >= 0)
-		{
-			Sign = 1.0f;
-		}
-		else
-		{
-			Sign = -1.0f;
-		}
-		float GravityPos = MaxGravity_ * GameEngineTime::GetDeltaTime(); //현재 중력에 따른 미래위치 추가량
-		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x+5, Sign*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
-		float4 CheckPos_Mid = GetPosition() + float4(0,  Sign*(GetScale().Half().y+1));
-		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x-5, Sign*(GetScale().Half().y +1));
+		//float Sign = 0; //Gravity의 부호
+		//if (Gravity_ >= 0)
+		//{
+		//	Sign = 1.0f;
+		//}
+		//else
+		//{
+		//	Sign = -1.0f;
+		//}
+		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x+20, _Dir.y*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
+		float4 CheckPos_Mid = GetPosition() + float4(0, _Dir.y  *(GetScale().Half().y+1));
+		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x-20, _Dir.y *(GetScale().Half().y +1));
 
 
-		if (CurBackGround->IsBlocked(CheckPos_Left) ||
-			CurBackGround->IsBlocked(CheckPos_Mid) ||
-			CurBackGround->IsBlocked(CheckPos_Right)
+		if (_CheckOnlyMid == true)
+		{
+			if (CurBackGround->IsBlocked(CheckPos_Mid, _RGB) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		if (CurBackGround->IsBlocked(CheckPos_Left,_RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Mid,_RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Right,_RGB)
+			)
+		{
+			return true;
+		}
+	}
+	else if (_Dir.CompareInt2D(float4::ZERO) == true)
+	{
+		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
+
+		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x + 20,0);
+		float4 CheckPos_Mid = GetPosition() + float4(0,0);
+		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x - 20,0);
+
+
+		if (_CheckOnlyMid == true)
+		{
+			if (CurBackGround->IsBlocked(CheckPos_Mid, _RGB) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+		if (CurBackGround->IsBlocked(CheckPos_Left, _RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Mid, _RGB) ||
+			CurBackGround->IsBlocked(CheckPos_Right, _RGB)
 			)
 		{
 			return true;
@@ -214,48 +281,6 @@ void Player::Move(float4 _Dir, float _Speed)
 {
 	if (CheckPixelCol(_Dir) == true)
 	{
-		//좀더 정확한 충돌 측정
-		if (_Dir.CompareInt2D(float4::DOWN) && Gravity_ >= 0) //충돌했는데 아래쪽
-		{
-			BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
-			float Sign = 0; //Gravity의 부호
-			if (Gravity_ >= 0)
-			{
-				Sign = 1.0f;
-			}
-			else
-			{
-				Sign = -1.0f;
-			}
-			float4 NextPos = float4(0, Sign * (GetScale().Half().y + 1));
-			float4 CheckPos_Mid = GetPosition() + float4(0, Sign * (GetScale().Half().y + 1));
-			float Len = NextPos.Len2D();
-
-			while (
-				true == CurBackGround->IsBlocked(CheckPos_Mid)
-				)
-			{
-				NextPos.Normal2D();
-				Len -= 1.0f;
-				NextPos *= Len;
-				CheckPos_Mid = GetPosition() += NextPos;
-
-				//무한루프 탈출을 위한 안전장치
-				if (1.0f >= NextPos.Len2D())
-				{
-					break;
-				}
-			}
-			float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
-			SetMove(WantMovePos);
-			IsColVer = true;
-			return;
-		}
-		else if (Gravity_ < 0) //충돌했는데 머리쪽
-		{
-			IsColVer = true;
-			return;
-		}
 
 		return;
 	}
@@ -270,5 +295,10 @@ void Player::Move(float4 _Dir, float _Speed)
 
 void Player::Render()
 {
+	if (GameManager::GetInst()->GetIsDebugMode() == true)
+	{
+		RockmanUtility::DebugText(PlayerStateStr_[static_cast<int>(CurState_)], GetCameraEffectPosition() + float4(0, -90));
+	}
+
 }
 

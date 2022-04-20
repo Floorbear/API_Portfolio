@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngine/GameEngineActor.h>
 #include <GameEngineContents/RockManEnum.h>
+#include <Windows.h>
 
 class Player : public GameEngineActor
 {
@@ -13,25 +14,35 @@ private:
 	void IdleStart();
 	void MoveStart();
 	void JumpStart();
+	void ClimbStart();
 
 	void IdleUpdate();
 	void MoveUpdate();
 	void JumpUpdate();
+	void ClimbUpdate();
 
 
-	//Sub Function
-	bool CheckPixelCol(float4 _Dir); //충돌체가 있으면 true, 없으면 false
+	//충돌체가 있으면 true, 없으면 false
+	//플레이어의 가상 PixelCollision을 만들고 _Dir 방향 픽셀 충돌 검사
+	bool CheckPixelCol(float4 _Dir,unsigned long _RGB = RGB(0,0,0),bool _CheckOnlyMid = false);
 
 	void Move(float4 _Dir, float _Speed); //픽셀충돌체크하고 이동해주는 함수, 픽셀충돌할 경우 방향에 맞춰 IsCol, IsVerti 를 On한다
 
-	bool IsMoveKeyPress(); //키가 눌렸는지 감지하고, 눌린 키값을 WantDir_에 셋팅
+	bool IsMoveHoriKeyPress(); //A or D 키가 눌렸는지 감지하고, 눌린 키값을 WantHoriDir_에 셋팅
+
+	bool IsMoveVerKeyPress();//W or S 키가 눌렸는지 감지하고, 눌린 키값을 WantVerDir_에 셋팅
 
 	void Attack(const float4& _Dir);
+
+	void ResetAttackPara(); //공격관련 변수들을 리셋시키는 함수
+
+	void MoveToLadderPos(); //사다리로 찰싹 붙게하는 함수
 
 
 
 private:
 	PlayerState CurState_;
+	std::string PlayerStateStr_[static_cast<int>(PlayerState::Max)];
 
 	//애니메이션
 private:
@@ -43,14 +54,16 @@ private:
 
 	//스테이터스
 private:
-	bool IsColHori;
-	bool IsColVer;
+	bool IsColHori; //수평 픽셀 충돌을 했냐
+	bool IsColVer; //수직 픽셀 충돌을 했냐
 
 	float CurSpeed_; //"속력"
 	float AccSpeed_;
 	float MaxSpeed_;
-	float4 WantDir_;//내가 실제로 바꾸고 싶은 방향
-	float4 CurDir_; //플레이어의 방향
+	float4 WantHoriDir_;//내가 실제로 바꾸고 싶은 방향
+	float4 CurHoriDir_; //플레이어의 방향
+
+	float4 WantVerDir_;
 
 	//중력 관련
 	float Gravity_;

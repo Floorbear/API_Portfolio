@@ -27,6 +27,9 @@ void Player::LoadAnimation()
 	PlayerRenderer_->CreateAnimation("RockMan_Attack_Left.bmp", "RockMan_JumpAttack_Left", 4, 4, 0.5f, false);
 	PlayerRenderer_->CreateAnimation("RockMan_Attack_Right.bmp", "RockMan_JumpAttack_Right", 4, 4, 0.5f, false);
 
+	PlayerRenderer_->CreateAnimation("RockMan_Climb.bmp", "RockMan_Climb", 0, 1, 0.2f, true);
+
+	PlayerRenderer_->CreateAnimation("RockMan_ClimbFinish.bmp", "RockMan_ClimbFinish", 0, 0, 0.2f, false);
 
 
 	PlayerRenderer_->ChangeAnimation("RockMan_Idle_Right");

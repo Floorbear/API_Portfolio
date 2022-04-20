@@ -1,5 +1,7 @@
 #include "RockmanUtility.h"
 #include <GameEngineBase/GameEngineDebug.h>
+#include <Windows.h>
+#include <GameEngine/GameEngine.h>
 
 RockmanUtility::RockmanUtility()
 {
@@ -35,4 +37,9 @@ std::string RockmanUtility::DirToStr(float4& _Dir)
 	}
 
 	return ReturnValue;
+}
+
+void RockmanUtility::DebugText(const std::string& _Str, float4 _Pos)
+{
+	TextOut(GameEngine::BackBufferDC(), _Pos.ix(), _Pos.iy(), _Str.c_str(), _Str.length());
 }

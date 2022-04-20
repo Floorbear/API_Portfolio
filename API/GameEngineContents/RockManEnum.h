@@ -5,6 +5,7 @@ enum class PlayerState
 	Idle,
 	Move,
 	Jump,
+	Climb,
 	Max
 };
 

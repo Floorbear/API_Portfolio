@@ -3,6 +3,7 @@
 #include <GameEngineBase/GameEngineMath.h>
 #include <GameEngine/GameEngineImage.h>
 #include <GameEngineBase/GameEngineDebug.h>
+#include <Windows.h>
 
 class GameEngineImage;
 class GameEngineRenderer;
@@ -31,9 +32,7 @@ public:
 	}
 
 	//_Pos에서 BackGroundCol의 픽셀값이 검정인지 확인하는 함수
-	bool IsBlocked(float4& _Pos);
-	bool IsBlocked(float4& _Pos1, float4& _Pos2);
-
+	bool IsBlocked(const float4& _Pos , unsigned long _RGB = RGB(0,0,0));
 
 protected:
 	void Start() override;

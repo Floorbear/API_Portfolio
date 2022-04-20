@@ -35,6 +35,9 @@ void RockMan::GameLoop()
 		ChangeLevel(LevelName);
 		GameManager::GetInst()->ResetLevelInfo();
 	}
+
+	//게임매니저의 업데이트
+	GameManager::GetInst()->Update();
 }
 
 void RockMan::GameEnd()

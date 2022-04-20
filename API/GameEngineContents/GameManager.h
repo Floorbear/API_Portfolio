@@ -5,17 +5,27 @@
 class BackGround;
 class GameManager
 {
-	friend GameEngineLevel;
-	//인터페이스 함수
 public:
+	//업데이트
+	void Update();
+	//레벨 체인지 관련
 	bool IsChangeLevel_;
-
-	BackGround* GetCurrentBackGround() const;
 	void ChangeLevel(const std::string& _Name);
 	void ResetLevelInfo();
 
-public:
+	//백그라운드 관련
+	BackGround* GetCurrentBackGround() const;
 
+	//디버그 모드 관련
+private:
+	bool IsDebugMode_;
+
+public:
+	// 인라인
+	inline bool GetIsDebugMode()
+	{
+		return IsDebugMode_;
+	}
 	inline std::string& GetLevelString()
 	{
 		if (ChangeLevelName_.empty() == true)
