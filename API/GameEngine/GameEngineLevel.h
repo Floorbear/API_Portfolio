@@ -36,6 +36,21 @@ public:
 	GameEngineLevel& operator=(const GameEngineLevel& _Other) = delete;
 	GameEngineLevel& operator=(GameEngineLevel&& _Other) noexcept = delete;
 
+	bool IsDebugModeOn()
+	{
+		IsDebug = true;
+	}
+
+	bool IsDebugModeOff()
+	{
+		IsDebug = false;
+	}
+
+	bool IsDebugModeSwitch()
+	{
+		IsDebug = !IsDebug;
+	}
+
 
 	template<typename ActorType>
 	ActorType* CreateActor(int _Order = 0, const std::string& _Name = "")
@@ -117,6 +132,8 @@ private:
 	std::vector<ChangeOrderItem> ChangeOrderList;
 
 	float4 CameraPos_;
+
+	static bool IsDebug;
 
 	void ActorUpdate();
 	void ActorRender();

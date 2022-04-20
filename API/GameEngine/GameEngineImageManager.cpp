@@ -11,17 +11,34 @@ GameEngineImageManager::GameEngineImageManager()
 
 GameEngineImageManager::~GameEngineImageManager()
 {
-	std::map<std::string, GameEngineImage*>::iterator StartIter = AllRes.begin();
-	std::map<std::string, GameEngineImage*>::iterator EndIter = AllRes.end();
-
-	for (; StartIter != EndIter; ++StartIter)
 	{
-		if (nullptr != StartIter->second)
+		std::map<std::string, GameEngineImage*>::iterator StartIter = AllRes.begin();
+		std::map<std::string, GameEngineImage*>::iterator EndIter = AllRes.end();
+
+		for (; StartIter != EndIter; ++StartIter)
 		{
-			delete StartIter->second;
-			StartIter->second = nullptr;
+			if (nullptr != StartIter->second)
+			{
+				delete StartIter->second;
+				StartIter->second = nullptr;
+			}
 		}
 	}
+
+	{
+		std::map<std::string, GameEngineImage*>::iterator StartIter = AllRes.begin();
+		std::map<std::string, GameEngineImage*>::iterator EndIter = AllRes.end();
+
+		for (; StartIter != EndIter; ++StartIter)
+		{
+			if (nullptr != StartIter->second)
+			{
+				delete StartIter->second;
+				StartIter->second = nullptr;
+			}
+		}
+	}
+	
 }
 
 GameEngineImage* GameEngineImageManager::Find(const std::string& _Name)

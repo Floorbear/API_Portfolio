@@ -23,6 +23,12 @@ void TitleLevel::LevelChangeStart()
 	CreateActor<TitleLogo>(static_cast<int>(GameLayer::Background), "TitleLogo");
 }
 
+void TitleLevel::LevelChangeEnd()
+{
+}
+
+
+
 void TitleLevel::Update()
 {
 }

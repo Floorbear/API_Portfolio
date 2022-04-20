@@ -14,6 +14,12 @@ private:
 	GameEngineMath& operator=(const GameEngineMath& _Other) = delete;
 	GameEngineMath& operator=(GameEngineMath&& _Other) noexcept = delete;
 
+public:
+	static const float PIE;
+	static const float DEG;
+	static const float DegreeToRadian;
+
+
 protected:
 
 private:
@@ -22,6 +28,16 @@ private:
 
 class float4
 {
+public:
+	static float4 DegreeToDirectionFloat4(float _Degree)
+	{
+		return RadianToDirectionFloat4(_Degree * GameEngineMath::DegreeToRadian);
+	}
+
+	static float4 RadianToDirectionFloat4(float _Radian)
+	{
+		return { cosf(_Radian), sinf(_Radian) };
+	}
 public:
 	static float4 LEFT;
 	static float4 RIGHT;
