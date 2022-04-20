@@ -15,10 +15,14 @@ void SelectLevel::Loading()
 {
 }
 
-void SelectLevel::LevelChangeStart()
+void SelectLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
 	CreateActor<SelectBackground>(static_cast<int>(GameLayer::Background), "SelectBackground");
+}
 
+
+void SelectLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
+{
 }
 
 void SelectLevel::Update()

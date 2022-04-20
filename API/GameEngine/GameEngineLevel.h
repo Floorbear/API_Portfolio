@@ -51,7 +51,6 @@ public:
 		IsDebug = !IsDebug;
 	}
 
-
 	template<typename ActorType>
 	ActorType* CreateActor(int _Order = 0, const std::string& _Name = "")
 	{
@@ -108,7 +107,6 @@ public:
 
 	void RegistActor(const std::string& _Name, GameEngineActor* _Actor);
 
-
 protected:
 	// 시점함수
 	// 만들어지면서 리소스나 액터를 만들때 써라
@@ -116,14 +114,17 @@ protected:
 	// 이 레벨이 현재 레벨일때 해야할일을 실행한다.
 	virtual void Update() = 0;
 	// Current레벨 => Next레벨로 이전할때 현재레벨이 실행하는 함수.
-	virtual void LevelChangeStart() {}
+	void ActorLevelChangeStart(GameEngineLevel* _PrevLevel);
+	virtual void LevelChangeStart(GameEngineLevel* _PrevLevel) {}
 	// Current레벨 => Next레벨로 이전할때 이전레벨이 실행하는 함수.
-	virtual void LevelChangeEnd() {}
+	void ActorLevelChangeEnd(GameEngineLevel* _NextLevel);
+	virtual void LevelChangeEnd(GameEngineLevel* _NextLevel) {}
 
-	void ActorLevelChangeStart();
-	void ActorLevelChangeEnd();
+	void ObjectLevelMoveCheck(GameEngineLevel* _NextLevel);
 
 private:
+	static bool IsDebug;
+
 	// std::vector로 관리하는게 더 좋다고 생각..
 	std::map<int, std::list<GameEngineActor*>> AllActor_;
 
@@ -132,8 +133,6 @@ private:
 	std::vector<ChangeOrderItem> ChangeOrderList;
 
 	float4 CameraPos_;
-
-	static bool IsDebug;
 
 	void ActorUpdate();
 	void ActorRender();
@@ -157,4 +156,3 @@ private:
 
 	void AddCollision(const std::string& _GroupName, GameEngineCollision* _Collision);
 };
-

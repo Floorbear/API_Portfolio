@@ -9,10 +9,11 @@
 std::map<std::string, GameEngineLevel*> GameEngine::AllLevel_;
 GameEngineLevel* GameEngine::CurrentLevel_ = nullptr;
 GameEngineLevel* GameEngine::NextLevel_ = nullptr;
+GameEngineLevel* GameEngine::PrevLevel_ = nullptr;
+
 GameEngine* GameEngine::UserContents_ = nullptr;
 GameEngineImage* GameEngine::BackBufferImage_ = nullptr;
 GameEngineImage* GameEngine::WindowMainImage_ = nullptr; // 그려지면 화면에 진짜 나오게 되는 이미지
-GameEngineLevel* GameEngine::PrevLevel_ = nullptr;
 
 HDC GameEngine::BackBufferDC()
 {
@@ -67,23 +68,28 @@ void GameEngine::EngineLoop()
     // 엔진수준에서 매 프레임마다 체크하고 싶은거
     UserContents_->GameLoop();
 
-   
+    // 시점함수라고 하는데
+    // 어느 시점
     if (nullptr != NextLevel_)
     {
         PrevLevel_ = CurrentLevel_;
 
         if (nullptr != CurrentLevel_)
         {
-            CurrentLevel_->ActorLevelChangeEnd();
-            CurrentLevel_->LevelChangeEnd();
+            CurrentLevel_->ActorLevelChangeEnd(NextLevel_);
+            CurrentLevel_->LevelChangeEnd(NextLevel_);
+
+            CurrentLevel_->ObjectLevelMoveCheck(NextLevel_);
+
         }
 
+        GameEngineLevel* PrevLevel = CurrentLevel_;
         CurrentLevel_ = NextLevel_;
 
         if (nullptr != CurrentLevel_)
         {
-            CurrentLevel_->LevelChangeStart();
-            CurrentLevel_->ActorLevelChangeStart();
+            CurrentLevel_->LevelChangeStart(PrevLevel);
+            CurrentLevel_->ActorLevelChangeStart(PrevLevel);
         }
 
         NextLevel_ = nullptr;
@@ -101,10 +107,12 @@ void GameEngine::EngineLoop()
     GameEngineSound::Update();
     GameEngineInput::GetInst()->Update(GameEngineTime::GetInst()->GetDeltaTime());
 
-    
+    // 레벨수준 시간제한이 있는 게임이라면
+    // 매 프레임마다 시간을 체크해야하는데 그런일을 
     CurrentLevel_->Update();
     CurrentLevel_->ActorUpdate();
     CurrentLevel_->ActorRender();
+    CurrentLevel_->CollisionDebugRender();
     WindowMainImage_->BitCopy(BackBufferImage_);
 
     CurrentLevel_->ActorRelease();
@@ -126,6 +134,7 @@ void GameEngine::EngineEnd()
         }
         delete StartIter->second;
     }
+
 
     GameEngineSound::AllResourcesDestroy();
     GameEngineImageManager::Destroy();

@@ -27,13 +27,13 @@ void Stage1::Update()
 {
 }
 
-void Stage1::LevelChangeStart()
+void Stage1::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
 	//백그라운드 셋팅
 	BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "BackGround_Stage1");
 	GameEngineRenderer* Render = BackGround_->CreateRenderer("Stage1_1.bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
 	GameEngineImage* ColImage = GameEngineImageManager::GetInst()->Find("Stage1_1_Col.bmp");
-	BackGround_->SetBackGroundImage(Render->GetImage(),ColImage);
+	BackGround_->SetBackGroundImage(Render->GetImage(), ColImage);
 	GameManager::GetInst()->SetCurrentBackGround(BackGround_);
 
 	//UI 셋팅
@@ -41,6 +41,9 @@ void Stage1::LevelChangeStart()
 	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
 
 	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
-
-
 }
+
+void Stage1::LevelChangeEnd(GameEngineLevel* _NextLevel)
+{
+}
+
