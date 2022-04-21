@@ -307,7 +307,8 @@ void Player::Render()
 {
 	if (GameManager::GetInst()->GetIsDebugMode() == true)
 	{
-		RockmanUtility::DebugText(PlayerStateStr_[static_cast<int>(CurState_)], GetCameraEffectPosition() + float4(0, -90));
+		RockmanUtility::DebugText(PlayerStateStr_[static_cast<int>(CurState_)]+"\n x :"+
+			std::to_string(GetPosition().x) + "\n y :"+ std::to_string(GetPosition().y), GetCameraEffectPosition() + float4(0, -90));
 	}
 
 }
