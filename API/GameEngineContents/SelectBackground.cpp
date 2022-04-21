@@ -20,6 +20,7 @@ SelectBackground::~SelectBackground()
 
 void SelectBackground::Start()
 {
+	StageSelectSound_ = GameEngineSound::SoundPlayControl("StageSelect.mp3");
 	BackgroundRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
 	BackgroundRenderer_->CreateFolderAnimation("SelectFolder", "SelectAni_Decide", 0, 1, 0.15f);
 	BackgroundRenderer_->CreateFolderAnimation("SelectFolder", "SelectAni_Fliker_Cutman", 2, 3, 0.3f);
@@ -40,17 +41,20 @@ void SelectBackground::Update()
 		}
 	}
 
-	if (GameEngineInput::GetInst()->IsPress("Jump")
+	if (GameEngineInput::GetInst()->IsPress("Jump") || GameEngineInput::GetInst()->IsPress("Attack")
 		)
 	{
 		if (IsPress_ == false)
 		{
-			//1.5초정도 
+			//1.5초정도 번쩍거리게
 			BackgroundRenderer_->ChangeAnimation("SelectAni_Decide");
 			//컷맨 액터 생성 >> 이거나중에 콘텐츠 많아지면 바꿔야함
 			SelectBossActor* BossActor = GetLevel()->CreateActor<SelectBossActor>(static_cast<int>(GameLayer::Object), "SelectBossActor");
 			BossActor->InitSelectActor(BossName::Cutman);
 			IsPress_ = true;
+
+			//사운드 셋팅
+			StageSelectSound_.Stop();
 		}
 	}
 }

@@ -32,7 +32,7 @@ private:
 
 	bool IsMoveVerKeyPress();//W or S 키가 눌렸는지 감지하고, 눌린 키값을 WantVerDir_에 셋팅
 
-	void Attack(const float4& _Dir);
+	void Attack(const float4& _Dir,const float4& _AttackPos = {55,0});
 
 	void ResetAttackPara(); //공격관련 변수들을 리셋시키는 함수
 
@@ -58,25 +58,25 @@ private:
 	bool IsColVer; //수직 픽셀 충돌을 했냐
 
 	float CurSpeed_; //"속력"
-	float AccSpeed_;
-	float MaxSpeed_;
+	float AccSpeed_; // 가속력
+	float MaxSpeed_; //최대 속력
 	float4 WantHoriDir_;//내가 실제로 바꾸고 싶은 방향
 	float4 CurHoriDir_; //플레이어의 방향
 
-	float4 WantVerDir_;
+	float4 WantVerDir_; //플레이어의 수직 방향
 
 	//중력 관련
-	float Gravity_;
-	float AccGravity_;
-	float MaxGravity_;
+	float Gravity_; // 중력 양수이면 떨어지는 상태
+	float AccGravity_; // 중력 가속도
+	float MaxGravity_; // 최대 중력
 	float JumpStrength_; //점프할 때의 힘
 	float CurJumpTime_; //점프키를 꾹 누를 경우 더 높이 점프하게 할 수 있는 변수
-	float MaxJumpTime_; //점프키를 꾹 누를 경우 더 높이 점프하게 할 수 있는 변수
-	bool CanJump_;
+	float MaxJumpTime_; //점프키를 꾹 누를 경우 점프 하는 시간
+	bool CanJump_; // 점프 할 수 있는 상태를 체크
 
 	//공격 관련
-	int AttackCount_;
-	int MaxAttackCount_;
+	int AttackCount_; 
+	int MaxAttackCount_; // 최대 발사 수까지 발사하면, 쿨타임 동안 공격하지 못하게 하는 변수
 	bool IsAttacking;
 	bool IsAttackEnd_;
 	float AttackTickTime_;

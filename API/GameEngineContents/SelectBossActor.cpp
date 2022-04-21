@@ -13,7 +13,8 @@ SelectBossActor::SelectBossActor()
 	BossName_(BossName::Max),
 	IdleTime_(2.0f),
 	IsIdleEnd_(false),
-	Renderer_(nullptr)
+	Renderer_(nullptr),
+	SoundTime_(7.0f)
 {
 }
 
@@ -47,10 +48,14 @@ void SelectBossActor::Start()
 	//컷맨 위치
 	Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Object), RenderPivot::CENTER);
 	Renderer_->SetTransColor(RGB(255,255,255));
+
+	//사운드 셋팅
+	EnemyChosenSound_ = GameEngineSound::SoundPlayControl("EnemyChosen.mp3");
 }
 
 void SelectBossActor::Update()
 {
+	SoundTime_-= GameEngineTime::GetDeltaTime();
 	Time_ -= GameEngineTime::GetDeltaTime();
 	//목표지점 이동
 	if (Time_ >= 0 && IsLand_ == false)
@@ -84,6 +89,10 @@ void SelectBossActor::Update()
 		Renderer_->PauseOn();
 		GetLevel()->CreateActor<SelectLogo>(static_cast<int>(GameLayer::Object), "SelectLogo");
 		IsIdleEnd_ = true;
+	}
+	if (SoundTime_ <= 0)
+	{
+		EnemyChosenSound_.Stop();
 	}
 }
 

@@ -6,11 +6,13 @@
 #include "BackGround.h"
 #include "RockmanUtility.h"
 #include "Bullet.h"
+#include <GameEngineBase/GameEngineSound.h>
 
 
 
 void Player::IdleStart()
 {
+	PlayerRenderer_->SetPivot({ 0,50 });
 	ResetAttackPara();
 	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurHoriDir_)));
 	PlayerRenderer_->PauseOff();
@@ -88,6 +90,7 @@ void Player::IdleUpdate()
 
 void Player::MoveStart()
 {
+	PlayerRenderer_->SetPivot({ 0,50 });
 	ResetAttackPara();
 
 	PlayerRenderer_->ChangeAnimation("RockMan_Move_"+RockmanUtility::DirToStr(CurHoriDir_));
@@ -179,7 +182,7 @@ void Player::MoveUpdate()
 void Player::JumpStart()
 {
 	ResetAttackPara();
-
+	PlayerRenderer_->SetPivot({ 0,50 });
 	PlayerRenderer_->ChangeAnimation("RockMan_Jump_"+ RockmanUtility::DirToStr(CurHoriDir_));
 	PlayerRenderer_->PauseOff();
 }
@@ -213,7 +216,7 @@ void Player::JumpUpdate()
 		{
 			PlayerRenderer_->ChangeAnimation("RockMan_JumpAttack_" + RockmanUtility::DirToStr(CurHoriDir_));
 		}
-		Attack(CurHoriDir_);
+		Attack(CurHoriDir_,{55,-20});
 	}
 	if (IsAttackEnd_ == true) //공격키를 누르고 일정 시간이 지난 후
 	{
@@ -282,6 +285,8 @@ void Player::JumpUpdate()
 				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 				SetMove(WantMovePos);
 				IsColVer = true;
+				//착지 사운드
+				GameEngineSound::SoundPlayOneShot("Landing.mp3");
 		}
 		else
 		{
@@ -289,7 +294,7 @@ void Player::JumpUpdate()
 		}
 		
 	}
-	else //반대면 ( == 중력이 0 이하이면)점프 상태
+	else //반대면 ( == 중력이 0 이하이면) 점프 상태
 	{
 		Move(float4::UP, -Gravity_);
 		if (CheckPixelCol(float4::UP) == true)
@@ -304,17 +309,14 @@ void Player::JumpUpdate()
 
 
 
-	//땅이나 머리에 닿았어
+	//땅이나 머리 WallPixel이 닿았어
 	if (IsColVer == true)
 	{
 		Gravity_ = MaxGravity_;
-		if (Gravity_ >= 0) //이 조건 안걸면 점프해서 머리에 벽 박아도 Idle상태가 되
-		{
-			CanJump_ = true; //점프를 다시 할 수 있더
-			CurJumpTime_ = 0.0f;
-			StateChange(PlayerState::Idle);
-			return;
-		}
+		CanJump_ = true; //점프를 다시 할 수 있더
+		CurJumpTime_ = 0.0f;
+		StateChange(PlayerState::Idle);
+		return;
 		
 	}
 
@@ -322,6 +324,7 @@ void Player::JumpUpdate()
 
 void Player::ClimbStart()
 {
+	PlayerRenderer_->SetPivot({ 0,50 });
 	ResetAttackPara();
 	MoveToLadderPos();
 	PlayerRenderer_->ChangeAnimation("RockMan_Climb");
@@ -330,14 +333,14 @@ void Player::ClimbStart()
 
 void Player::ClimbUpdate()
 {
-	if (IsMoveVerKeyPress() == true)
+	if (IsMoveVerKeyPress() == true && IsAttacking == false) // W or S를 눌렀다면
 	{
 		PlayerRenderer_->PauseOff();
 		Move(WantVerDir_, 170.0f);//Climb Speed
 		if (CheckPixelCol(float4::DOWN, LadderColor, true) == false
-		|| (WantVerDir_.CompareInt2D(float4::UP) &&(CheckPixelCol(float4::ZERO, LadderColor, true) == false))) //사다리가 끝나는 조건
+		|| (WantVerDir_.CompareInt2D(float4::UP) &&(CheckPixelCol(float4::ZERO, LadderColor, true) == false))) //사다리가 끝나는 조건 Base 개념 : 내 발 아래 사다리 픽셀이 없으면 Climb종료
 		{
-			if (CheckPixelCol(float4::UP, LadderColor, true) == false) //윗쪽에서 사다리를 다오르면 ClimbFinish 애니메이션을 출력
+			if (CheckPixelCol(float4::UP, LadderColor, true) == false) //윗쪽에서 사다리를 다오르면 사다리 픽셀 체크를 중심에서 함. 이렇게 안하면 사다리 애니메이션이 위에서 마칠 때 되게 어색해짐
 			{
 				SetMove(float4::UP * 46);
 				StateChange(PlayerState::Idle);
@@ -348,7 +351,7 @@ void Player::ClimbUpdate()
 			}		
 		}
 	}
-	else
+	else //수직 키를 누르지 않았다면 애니메이션 정지
 	{
 		PlayerRenderer_->PauseOn();
 	}
@@ -358,6 +361,32 @@ void Player::ClimbUpdate()
 		Gravity_ = 0;
 		StateChange(PlayerState::Jump);
 		return;
+	}
+
+	if (IsMoveHoriKeyPress() == true) //수평 키를 눌렀을 경우 CurHoriDir_ 변경
+	{
+		CurHoriDir_ = WantHoriDir_;
+	}
+
+	if (GameEngineInput::GetInst()->IsDown("Attack") == true) //공격키를 눌렀을 경우
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_ClimbAttack_" + RockmanUtility::DirToStr(CurHoriDir_));
+		//렌더러 위치 자연스럽게 틀기
+		if (CurHoriDir_.CompareInt2D(float4::RIGHT) == true)
+		{
+			PlayerRenderer_->SetPivot({ 17,50 });
+		}
+		else if (CurHoriDir_.CompareInt2D(float4::LEFT) == true)
+		{
+			PlayerRenderer_->SetPivot({ -17,50 });
+		}
+		Attack(CurHoriDir_, { 55,-20 });
+	}
+	if (IsAttackEnd_ == true) //공격키를 누르고 일정 시간이 지난 후
+	{
+		PlayerRenderer_->ChangeAnimation("RockMan_Climb");
+		PlayerRenderer_->SetPivot({ 0,50 }); //틀어진 랜더러 피벗 다시 원위치로
+		IsAttackEnd_ = false;
 	}
 }
 

@@ -29,6 +29,9 @@ void Stage1::Update()
 
 void Stage1::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
+	//Bgm 셋팅
+	Bgm_ = GameEngineSound::SoundPlayControl("CutMan.mp3", 30);
+
 	//백그라운드 셋팅
 	BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "BackGround_Stage1");
 	GameEngineRenderer* Render = BackGround_->CreateRenderer("Stage1_1.bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
@@ -45,5 +48,11 @@ void Stage1::LevelChangeStart(GameEngineLevel* _PrevLevel)
 
 void Stage1::LevelChangeEnd(GameEngineLevel* _NextLevel)
 {
+}
+
+void Stage1::InitBackground()
+{
+	//모든 백그라운드 이미지 찾기
+
 }
 

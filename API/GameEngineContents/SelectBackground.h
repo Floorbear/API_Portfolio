@@ -1,5 +1,7 @@
 #pragma once
 #include <GameEngine/GameEngineActor.h>
+#include <GameEngineBase/GameEngineSound.h>
+
 
 
 class SelectBackground : public GameEngineActor
@@ -24,5 +26,7 @@ private:
 	bool IsOn_; //Update의 조건문을 한번 실행하면 true
 	float Time_Decide_;
 	GameEngineRenderer* BackgroundRenderer_;
+
+	GameEngineSoundPlayer StageSelectSound_;
 };
 

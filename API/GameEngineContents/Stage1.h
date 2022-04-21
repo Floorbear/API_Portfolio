@@ -1,5 +1,7 @@
 #pragma once
 #include <GameEngine/GameEngineLevel.h>
+#include <GameEngine/GameEngineImage.h>
+#include <GameEngineBase/GameEngineSound.h>
 
 class BackGround;
 class Stage1 : public GameEngineLevel
@@ -21,6 +23,13 @@ protected:
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override;
 
 private:
+	void InitBackground();
+
+private:
+	GameEngineSoundPlayer Bgm_;
+	std::vector<GameEngineImage*> AllBackgroundImages_[2];
+	std::vector<GameEngineImage*> AllBackgroundColImages_[2];
+	std::vector<BackGround*> AllBackground_[2];
 	
 };
 

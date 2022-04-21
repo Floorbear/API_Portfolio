@@ -7,6 +7,7 @@
 #include "Bullet.h"
 #include <GameEngine/GameEngine.h>
 #include "RockmanUtility.h"
+#include <GameEngineBase/GameEngineSound.h>
 
 
 void Player::StateUpdate()
@@ -87,14 +88,16 @@ bool Player::IsMoveHoriKeyPress()
 	return false;
 }
 
-void Player::Attack(const float4& _Dir)
+void Player::Attack(const float4& _Dir,const float4& _AttackPos)
 {
 	if (AttackCount_ < MaxAttackCount_)
 	{
+		//사운드
+		GameEngineSound::SoundPlayOneShot("Bullet.mp3");
 		AttackTickTime_ = 0.0f;
 		IsAttacking = true;
 		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(static_cast<int>(GameLayer::Bullet), "Bullet");
-		NewBullet->SetDir(GetPosition()+float4(_Dir.x*50,0), _Dir);
+		NewBullet->SetDir(GetPosition()+float4(_Dir.x*_AttackPos.x,_AttackPos.y), _Dir);
 		AttackCount_++;
 	}
 }
@@ -138,7 +141,9 @@ Player::~Player()
 
 void Player::Start()
 {
+
 	SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*-300);
+	//SetPosition({ 3500,700 });
 	SetScale({ 100,100 });
 	
 	LoadAnimation();
@@ -152,6 +157,11 @@ void Player::Update()
 {
 	StateUpdate();
 
+	//빨간벽 체크
+	if (CheckPixelCol(float4::UP, MoveUpColor) == true)
+	{
+		SetPosition({0,0});
+	}
 
 	//공격 딜레이 체크
 	if (IsAttacking == true)

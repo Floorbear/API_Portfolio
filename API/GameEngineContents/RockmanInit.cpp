@@ -10,6 +10,7 @@
 #include <GameEngine/GameEngineImage.h>
 #include <GameEngineBase/GameEngineTime.h>
 #include <GameEngineBase/GameEngineInput.h>
+#include <GameEngineBase/GameEngineSound.h>
 
 void RockMan::GameInit()
 {
@@ -91,7 +92,21 @@ void RockMan::LoadResources()
 		SelectDir.MoveParent("Select");
 		SelectDir.Move("Logo");
 		GameEngineImageManager::GetInst()->FolderImageLoad(SelectDir.GetFullPath(), "SelectFolder_Logo");
+	}
 
+	//사운드 폴더 로드
+	{
+		GameEngineDirectory SoundDir;
+		SoundDir.MoveParent("API");
+		SoundDir.Move("Resources");
+		SoundDir.Move("Sounds");
+		
+		std::vector<GameEngineFile> AllSoundList = SoundDir.GetAllFile("mp3");
+
+		for (size_t i = 0; i < AllSoundList.size(); i++)
+		{
+			GameEngineSound::LoadRes(AllSoundList[i].GetFullPath());
+		}
 	}
 }
 
@@ -128,7 +143,7 @@ void RockMan::InitImage()
 		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Climb.bmp");
 		PlayerImage->Cut({ 256,256 });
 
-		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_ClimbFinish.bmp");
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_ClimbAttack.bmp");
 		PlayerImage->Cut({ 256,256 });
 
 		PlayerImage = GameEngineImageManager::GetInst()->Find("Bullet.bmp");

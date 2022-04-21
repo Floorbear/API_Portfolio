@@ -55,7 +55,7 @@ bool GameEngineSound::Load(const std::string& _Path)
 
 /// /////////////////////////////////////////////////////////////// 기능 매니지먼트
 
-GameEngineSoundPlayer GameEngineSound::SoundPlayControl(const std::string& _Name)
+GameEngineSoundPlayer GameEngineSound::SoundPlayControl(const std::string& _Name,int _LoopCount)
 {
 	std::string UpperName = GameEngineString::ToUpperReturn(_Name);
 
@@ -70,6 +70,8 @@ GameEngineSoundPlayer GameEngineSound::SoundPlayControl(const std::string& _Name
 	FMOD::Channel* PlayControl = nullptr;
 
 	SoundSystem_->playSound(FindSound->Sound, nullptr, false, &PlayControl);
+
+	PlayControl->setLoopCount(_LoopCount);
 
 	return GameEngineSoundPlayer(FindSound, PlayControl);
 }

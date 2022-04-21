@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngine/GameEngineActor.h>
 #include "RockManEnum.h"
+#include <GameEngineBase/GameEngineSound.h>
 
 class SelectBossActor : public GameEngineActor
 {
@@ -26,11 +27,13 @@ private:
 	float Gravity_;
 	float AccGravity_;
 	float Speed_;
-	float Time_;
+	float Time_; //점프 애니메이션의 시간
 	float IdleTime_;
 	bool IsLand_;
 	bool IsIdleEnd_;
-public:
+	float SoundTime_; //사운드 지속 시간
+	GameEngineSoundPlayer EnemyChosenSound_;
+	
 	
 
 };
