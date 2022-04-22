@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "BackGround.h"
 #include <GameEngineBase/GameEngineInput.h>
+#include <GameEngine/GameEngineLevel.h>
 
 GameManager* GameManager::Inst_ = new GameManager();
 
@@ -15,6 +16,7 @@ void GameManager::Update()
 	if (GameEngineInput::GetInst()->IsDown("DebugMode") == true)
 	{
 		IsDebugMode_ = !IsDebugMode_;
+		GameEngineLevel::IsDebugModeSwitch();
 	}
 }
 
@@ -34,7 +36,7 @@ GameManager::GameManager()
 	:CurrentBackGround_(nullptr),
 	ChangeLevelName_(),
 	IsChangeLevel_(false),
-	IsDebugMode_(true)
+	IsDebugMode_(false)
 {
 }
 

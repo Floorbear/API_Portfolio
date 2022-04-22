@@ -8,6 +8,8 @@
 #include <GameEngine/GameEngine.h>
 #include "RockmanUtility.h"
 #include <GameEngineBase/GameEngineSound.h>
+#include <GameEngine/GameEngineCollision.h>
+#include "RockmanStage.h"
 
 
 void Player::StateUpdate()
@@ -125,7 +127,9 @@ Player::Player()
 	AttackTickTime_(0.0f),
 	MaxAttackTickTime_(0.45f),
 	AttackCount_(0),
-	MaxAttackCount_(3)
+	MaxAttackCount_(3),
+	PlayerCol_(nullptr),
+	CameraPosY_(0)
 {
 	PlayerStateStr_[static_cast<int>(PlayerState::Idle)] = "Idle";
 	PlayerStateStr_[static_cast<int>(PlayerState::Move)] = "Move";
@@ -142,14 +146,12 @@ Player::~Player()
 void Player::Start()
 {
 
-	SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*-300);
-	//SetPosition({ 3500,700 });
+	//SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*-300);
+	SetPosition({ 3500,700 });
 	SetScale({ 100,100 });
 	
 	LoadAnimation();
-
-
-
+	PlayerCol_ = CreateCollision("Player", { 60,80 });
 	StateChange(PlayerState::Idle);
 }
 
@@ -157,10 +159,15 @@ void Player::Update()
 {
 	StateUpdate();
 
-	//빨간벽 체크
-	if (CheckPixelCol(float4::UP, MoveUpColor) == true)
+	//충돌 체크
+	if (PlayerCol_->CollisionCheck("MoveUP", CollisionType::Rect, CollisionType::Rect) == true )
 	{
-		SetPosition({0,0});
+		printf("dfdf");
+		RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
+		CurrentStage->ChangeBackground(BackgroundDir::Next, float4::UP);
+		CameraPosY_ = -1024;
+		SetMove({ 0,-100 }); //test
+		MoveToLadderPos();
 	}
 
 	//공격 딜레이 체크
@@ -178,12 +185,12 @@ void Player::Update()
 	
 
 	//카메라 체크
-	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,0 };
-	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x;
+	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,CameraPosY_ };
+	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x + GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
 
-	if (CameraPos.x <= 0)
+	if (CameraPos.x <= GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
 	{
-		CameraPos.x = 0;
+		CameraPos.x = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
 	}
 	if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
 	{
@@ -308,7 +315,7 @@ void Player::Render()
 	if (GameManager::GetInst()->GetIsDebugMode() == true)
 	{
 		RockmanUtility::DebugText(PlayerStateStr_[static_cast<int>(CurState_)]+"\n x :"+
-			std::to_string(GetPosition().x) + "\n y :"+ std::to_string(GetPosition().y), GetCameraEffectPosition() + float4(0, -90));
+			std::to_string(GetPosition().x) + "\n y :"+ std::to_string(GetPosition().y), GetCameraEffectPosition() + float4(-90, 90));
 	}
 
 }

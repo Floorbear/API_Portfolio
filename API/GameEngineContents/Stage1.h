@@ -2,9 +2,11 @@
 #include <GameEngine/GameEngineLevel.h>
 #include <GameEngine/GameEngineImage.h>
 #include <GameEngineBase/GameEngineSound.h>
+#include "RockManEnum.h"
+#include "RockmanStage.h"
 
 class BackGround;
-class Stage1 : public GameEngineLevel
+class Stage1 : public RockmanStage
 {
 public:
 	Stage1();
@@ -16,20 +18,9 @@ public:
 	Stage1& operator=(const Stage1& _Ohter) = delete;
 	Stage1& operator=(const Stage1&& _Other) noexcept = delete;
 
-protected:
-	void Loading() override;
-	void Update() override;
-	void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
-	void LevelChangeEnd(GameEngineLevel* _NextLevel) override;
+protected: 
+	void InitColPosNScale() override;
 
-private:
-	void InitBackground();
-
-private:
-	GameEngineSoundPlayer Bgm_;
-	std::vector<GameEngineImage*> AllBackgroundImages_[2];
-	std::vector<GameEngineImage*> AllBackgroundColImages_[2];
-	std::vector<BackGround*> AllBackground_[2];
 	
 };
 

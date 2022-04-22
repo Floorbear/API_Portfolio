@@ -176,6 +176,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="RockManEnum.h" />
+    <ClInclude Include="RockmanStage.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="RockmanUtility.h">
       <SubType>
       </SubType>
@@ -241,6 +245,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="RockmanInit.cpp" />
+    <ClCompile Include="RockmanStage.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RockmanUtility.cpp">
       <SubType>
       </SubType>

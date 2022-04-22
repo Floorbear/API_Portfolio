@@ -20,7 +20,6 @@ public:
 	BackGround& operator=(const BackGround&& _Other) noexcept = delete;
 
 public:
-	void SetBackGroundImage(GameEngineImage* _Map, GameEngineImage* _ColMap);
 
 	inline float4 GetScale()
 	{
@@ -38,7 +37,10 @@ protected:
 	void Start() override;
 
 private:
+	GameEngineRenderer* Renderer_;
 	GameEngineImage* BackGroundImage_;
 	GameEngineImage* BackGroundColImage_;
+
+
 };
 

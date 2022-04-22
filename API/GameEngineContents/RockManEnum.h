@@ -26,3 +26,10 @@ enum class BossName
 	Max
 };
 
+enum class BackgroundDir
+{
+	Prev,
+	Next,
+	Max
+};
+

@@ -7,52 +7,25 @@
 #include "GameManager.h"
 #include "HPBar.h"
 #include "Scoreboard.h"
-
+#include "RockManEnum.h"
 Stage1::Stage1()
 {
+
 }
 
 Stage1::~Stage1()
 {
 }
 
-void Stage1::Loading()
+void Stage1::InitColPosNScale()
 {
-	
+	AllMoveUPColScale_[0] = { 50,10 };
+	AllMoveUPColPos_[0] = { 3939,0 };
+
+
+	AllMoveUPColScale_[1] = { 100,100 };
+	AllMoveUPColPos_[1] = { 3500,-600 };
 
 }
 
-
-void Stage1::Update()
-{
-}
-
-void Stage1::LevelChangeStart(GameEngineLevel* _PrevLevel)
-{
-	//Bgm 셋팅
-	Bgm_ = GameEngineSound::SoundPlayControl("CutMan.mp3", 30);
-
-	//백그라운드 셋팅
-	BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "BackGround_Stage1");
-	GameEngineRenderer* Render = BackGround_->CreateRenderer("Stage1_1.bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
-	GameEngineImage* ColImage = GameEngineImageManager::GetInst()->Find("Stage1_1_Col.bmp");
-	BackGround_->SetBackGroundImage(Render->GetImage(), ColImage);
-	GameManager::GetInst()->SetCurrentBackGround(BackGround_);
-
-	//UI 셋팅
-	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
-	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
-
-	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
-}
-
-void Stage1::LevelChangeEnd(GameEngineLevel* _NextLevel)
-{
-}
-
-void Stage1::InitBackground()
-{
-	//모든 백그라운드 이미지 찾기
-
-}
 

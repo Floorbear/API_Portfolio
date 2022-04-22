@@ -47,6 +47,9 @@
     <ClInclude Include="Bullet.h">
       <Filter>Actor\Player</Filter>
     </ClInclude>
+    <ClInclude Include="RockmanStage.h">
+      <Filter>Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
       <Filter>Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="RockmanStage.cpp">
+      <Filter>Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

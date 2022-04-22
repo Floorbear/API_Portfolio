@@ -45,7 +45,7 @@ GameEngineCollision::~GameEngineCollision()
 
 bool GameEngineCollision::CollisionCheck(
 	const std::string& _TargetGroup,
-	CollisionType _This /*= CollisionType::Circle*/,
+	CollisionType _This /*= CollisionType::Rect*/,
 	CollisionType _Target /*= CollisionType::Rect*/
 )
 {

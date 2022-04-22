@@ -82,6 +82,14 @@ private:
 	float AttackTickTime_;
 	float MaxAttackTickTime_; //연속 공격까지 기다려주는 시간
 
+	//충돌체
+	GameEngineCollision* PlayerCol_;
+
+	//카메라
+	float CameraPosY_;
+
+	//테트스
+
 public:
 	Player();
 	~Player();
