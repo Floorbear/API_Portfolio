@@ -22,6 +22,7 @@ protected:
 	void InitColPosNScale() override;
 	void InitBackground() override;
 	void ConnectBackground() override;
+	void InitMonster() override;
 
 	
 };

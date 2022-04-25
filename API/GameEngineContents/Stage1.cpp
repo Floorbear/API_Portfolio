@@ -69,6 +69,11 @@ void Stage1::ConnectBackground()
 		AllBackground_[1]->DownBackground_ = AllBackground_[0];
 	}
 
+
+}
+
+void Stage1::InitMonster()
+{
 	//디버그용 스폰
 	CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
 }

@@ -86,6 +86,9 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	//플레이어 로드
 	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
 	GameManager::GetInst()->SetPlayer(RockMan);
+
+	//몬스터 로드
+	InitMonster();
 }
 
 void RockmanStage::LevelChangeEnd(GameEngineLevel* _NextLevel)

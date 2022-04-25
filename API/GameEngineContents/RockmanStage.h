@@ -28,6 +28,7 @@ protected:
 	virtual void InitColPosNScale() = 0;
 	virtual void InitBackground() = 0;
 	virtual void ConnectBackground() = 0;
+	virtual void InitMonster() = 0;
 
 private:
 

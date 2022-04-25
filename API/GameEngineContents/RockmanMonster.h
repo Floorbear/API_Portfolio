@@ -32,7 +32,24 @@ protected:
 	void AttackUpdate();
 
 private:
+	float Speed_;
+	float AttackStartRange_; // 공격이 시작하는 사정거리
+	float VerSpeed_;
+	float AttCoolTime_; //공격 쿨타임
+	float CurAttTime_; // 공격하고 나서 흐르는 시간
+
+	float4 WantHoriDir_;
+	float4 CurHoriDir_;
+
+	float4 InitVerDir_;
+	float4 CurVerDir_;
+
+	float4 AttackPos_;
+	float4 AttackStartPos_;
+
+	std::string StateStr_[static_cast<int>(MonsterState::Max)];
 	MonsterState CurState_;
+
 	GameEngineRenderer* MonsterRenderer_;
 	Player* Player_;
 };
