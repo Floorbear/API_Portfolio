@@ -159,6 +159,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="BunbyHeli.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameManager.h">
       <SubType>
       </SubType>
@@ -176,6 +180,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="RockManEnum.h" />
+    <ClInclude Include="RockmanMonster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="RockmanStage.h">
       <SubType>
       </SubType>
@@ -226,6 +234,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="BunbyHeli.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <SubType>
       </SubType>
@@ -245,6 +257,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="RockmanInit.cpp" />
+    <ClCompile Include="RockmanMonster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RockmanStage.cpp">
       <SubType>
       </SubType>

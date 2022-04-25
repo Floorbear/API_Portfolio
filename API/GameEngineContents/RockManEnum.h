@@ -26,10 +26,10 @@ enum class BossName
 	Max
 };
 
-enum class BackgroundDir
+enum class MonsterState
 {
-	Prev,
-	Next,
+	Chase,
+	Attack,
 	Max
 };
 

@@ -174,7 +174,7 @@ void Player::Update()
 		CameraPosY_ += VerDir.y * 800 * GameEngineTime::GetDeltaTime();
 
 		//플레이어의 y좌표를 조금씩 이동
-		SetMove(VerDir * GameEngineTime::GetDeltaTime()*150.0f);
+		SetMove(VerDir * GameEngineTime::GetDeltaTime()*100.0f);
 
 		//약간의 오차가 일어나면 조절해준다.
 		VerDir = { 0,CameraPosY_ - CameraDesY_ };

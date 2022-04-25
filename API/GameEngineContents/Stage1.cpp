@@ -8,6 +8,7 @@
 #include "HPBar.h"
 #include "Scoreboard.h"
 #include "RockManEnum.h"
+#include "RockmanMonster.h"
 Stage1::Stage1()
 {
 
@@ -67,6 +68,9 @@ void Stage1::ConnectBackground()
 	{
 		AllBackground_[1]->DownBackground_ = AllBackground_[0];
 	}
+
+	//디버그용 스폰
+	CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
 }
 
 

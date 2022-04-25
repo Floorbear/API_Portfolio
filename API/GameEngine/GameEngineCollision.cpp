@@ -50,6 +50,10 @@ bool GameEngineCollision::CollisionCheck(
 	CollisionType _Target /*= CollisionType::Rect*/
 )
 {
+	if (false ==IsUpdate() || true == IsDeath())
+	{
+		return false;
+	}
 	std::map<std::string, std::list<GameEngineCollision*>>::iterator FindTargetGroup = GetActor()->GetLevel()->AllCollision_.find(_TargetGroup);
 
 	if (FindTargetGroup == GetActor()->GetLevel()->AllCollision_.end())
@@ -71,6 +75,10 @@ bool GameEngineCollision::CollisionCheck(
 
 	for (; StartIter != EndIter; ++StartIter)
 	{
+		if ((*StartIter)->IsUpdate() == false || (*StartIter)->IsDeath() == true)
+		{
+			continue;
+		}
 		if (CollisionCheckArray[static_cast<int>(_This)][static_cast<int>(_Target)](this, *StartIter))
 		{
 			return true;

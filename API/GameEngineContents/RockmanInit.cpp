@@ -169,6 +169,16 @@ void RockMan::InitImage()
 			CutmanImage = GameEngineImageManager::GetInst()->Find("Cutman_Left.bmp");
 			CutmanImage->Cut({ 256,256 });
 		}
+
+		//BunbyHeli
+		{
+			GameEngineImage* BunbyHeli;
+			BunbyHeli = GameEngineImageManager::GetInst()->Find("BunbyHeli_Left.bmp");
+			BunbyHeli->Cut({ 256,256 });
+
+			BunbyHeli = GameEngineImageManager::GetInst()->Find("BunbyHeli_Right.bmp");
+			BunbyHeli->Cut({ 256,256 });
+		}
 	}
 }
 
