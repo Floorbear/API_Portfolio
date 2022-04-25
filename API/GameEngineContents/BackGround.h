@@ -7,9 +7,13 @@
 
 class GameEngineImage;
 class GameEngineRenderer;
+class RockmanStage;
+class Stage1;
 class BackGround : public GameEngineActor
 {
 public:
+	friend RockmanStage;
+	friend Stage1;
 	BackGround();
 	~BackGround();
 
@@ -35,12 +39,18 @@ public:
 
 protected:
 	void Start() override;
+	void Update() override;
 
 private:
 	GameEngineRenderer* Renderer_;
 	GameEngineImage* BackGroundImage_;
 	GameEngineImage* BackGroundColImage_;
 
+	BackGround* DownBackground_;
+	BackGround* UpBackground_;
+
+	std::vector<GameEngineCollision*> AllMoveUPCol_;
+	std::vector<GameEngineCollision*> AllMoveDownCol_;
 
 };
 

@@ -60,6 +60,19 @@ void Player::StateChange(PlayerState _State)
 	CurState_ = _State;
 }
 
+void Player::GoToVer(float4 _VerDir)
+{
+	if (_VerDir.CompareInt2D(float4::UP) == false && _VerDir.CompareInt2D(float4::DOWN) == false)
+	{
+		MsgBoxAssert("잘못된 _VerDir");
+	}
+	CanActivate = false;
+	PlayerCol_->Off();
+	CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
+	MoveToLadderPos();
+
+}
+
 bool Player::IsMoveVerKeyPress()
 {
 	if (GameEngineInput::GetInst()->IsPress("MoveUp") == true)
@@ -105,32 +118,8 @@ void Player::Attack(const float4& _Dir,const float4& _AttackPos)
 }
 
 Player::Player()
-	:
-	CurSpeed_(0.0f),
-	CurState_(PlayerState::Idle),
-	AccSpeed_(800.0f),
-	MaxSpeed_(350.0),
-	CurHoriDir_(float4::RIGHT),
-	WantVerDir_(float4::ZERO),
-	PlayerRenderer_(nullptr),
-	Gravity_(500.0),
-	AccGravity_(5000),
-	MaxGravity_(800),
-	JumpStrength_(-600),
-	IsColHori(false),
-	IsColVer(false),
-	CurJumpTime_(0),
-	MaxJumpTime_(0.25f),
-	CanJump_(true),
-	IsAttacking(false),
-	IsAttackEnd_(false),
-	AttackTickTime_(0.0f),
-	MaxAttackTickTime_(0.45f),
-	AttackCount_(0),
-	MaxAttackCount_(3),
-	PlayerCol_(nullptr),
-	CameraPosY_(0)
 {
+	InitPlayerPara();
 	PlayerStateStr_[static_cast<int>(PlayerState::Idle)] = "Idle";
 	PlayerStateStr_[static_cast<int>(PlayerState::Move)] = "Move";
 	PlayerStateStr_[static_cast<int>(PlayerState::Jump)] = "Jump";
@@ -152,42 +141,64 @@ void Player::Start()
 	
 	LoadAnimation();
 	PlayerCol_ = CreateCollision("Player", { 60,80 });
+	CameraDesY_ = CameraPosY_;
 	StateChange(PlayerState::Idle);
 }
 
 void Player::Update()
 {
-	StateUpdate();
-
-	//충돌 체크
-	if (PlayerCol_->CollisionCheck("MoveUP", CollisionType::Rect, CollisionType::Rect) == true )
+	if (CanActivate == true)
 	{
-		printf("dfdf");
-		RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
-		CurrentStage->ChangeBackground(BackgroundDir::Next, float4::UP);
-		CameraPosY_ = -1024;
-		SetMove({ 0,-100 }); //test
-		MoveToLadderPos();
-	}
+		StateUpdate();
 
-	//공격 딜레이 체크
-	if (IsAttacking == true)
-	{
-		AttackTickTime_ += GameEngineTime::GetDeltaTime();
-		if (AttackTickTime_ >= MaxAttackTickTime_)
+		//공격 딜레이 체크
+		if (IsAttacking == true)
 		{
-			IsAttacking = false;
-			AttackTickTime_ = 0.0f;
-			AttackCount_ = 0;
-			IsAttackEnd_ = true;
+			AttackTickTime_ += GameEngineTime::GetDeltaTime();
+			if (AttackTickTime_ >= MaxAttackTickTime_)
+			{
+				IsAttacking = false;
+				AttackTickTime_ = 0.0f;
+				AttackCount_ = 0;
+				IsAttackEnd_ = true;
+			}
 		}
 	}
-	
+
+	//맵 변경이 일어날때 카메라와 플레이어를 부드럽게 이동
+	if (CameraDesY_ != CameraPosY_)
+	{
+		float VerDirY = CameraDesY_ - CameraPosY_;
+		float4 VerDir = { 0,VerDirY };
+		VerDir.Normal2D();
+		CameraPosY_ += VerDir.y * 800 * GameEngineTime::GetDeltaTime();
+
+		//플레이어의 y좌표를 조금씩 이동
+		SetMove(VerDir * GameEngineTime::GetDeltaTime()*150.0f);
+
+		//약간의 오차가 일어나면 조절해준다.
+		VerDir = { 0,CameraPosY_ - CameraDesY_ };
+		if (VerDir.Len2D() < 0.5f)
+		{
+			CameraPosY_ = CameraDesY_;
+		}
+
+
+	}
+	else //맵 변경이 종료되면
+	{
+		CanActivate = true;
+		PlayerCol_->On();
+
+	}
+
 
 	//카메라 체크
 	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,CameraPosY_ };
 	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x + GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
 
+
+	//카메라가 화면 밖으로 벗어나지 못하게 한다
 	if (CameraPos.x <= GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
 	{
 		CameraPos.x = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
@@ -198,6 +209,7 @@ void Player::Update()
 	}
 
 	GetLevel()->SetCameraPos(CameraPos);
+
 }
 
 
@@ -236,15 +248,6 @@ bool Player::CheckPixelCol(float4 _Dir, unsigned long _RGB, bool _CheckOnlyMid)
 		BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
 		
-		//float Sign = 0; //Gravity의 부호
-		//if (Gravity_ >= 0)
-		//{
-		//	Sign = 1.0f;
-		//}
-		//else
-		//{
-		//	Sign = -1.0f;
-		//}
 		float4 CheckPos_Left = GetPosition() + float4(-GetScale().Half().x+20, _Dir.y*( GetScale().Half().y +1));//그래비티는 무조건 float4::down이 들어가니 (속력이 아닌 속도라서) Gravity로 부호를 체크해야한다
 		float4 CheckPos_Mid = GetPosition() + float4(0, _Dir.y  *(GetScale().Half().y+1));
 		float4 CheckPos_Right = GetPosition() + float4(GetScale().Half().x-20, _Dir.y *(GetScale().Half().y +1));
@@ -302,10 +305,8 @@ void Player::Move(float4 _Dir, float _Speed)
 		return;
 	}
 
-	IsColVer = false;
 	SetMove(_Dir * GameEngineTime::GetDeltaTime() * _Speed);
 }
-
 
 
 
@@ -318,5 +319,39 @@ void Player::Render()
 			std::to_string(GetPosition().x) + "\n y :"+ std::to_string(GetPosition().y), GetCameraEffectPosition() + float4(-90, 90));
 	}
 
+}
+
+void Player::InitPlayerPara()
+{
+	CurSpeed_ = 0.0f;
+	CurState_ = PlayerState::Idle;
+	AccSpeed_ = 800.0f;
+	MaxSpeed_ = 350.0;
+
+	Gravity_ = 500.0;
+	AccGravity_ = 5000;
+	MaxGravity_ = 800;
+	JumpStrength_ = -600;
+
+	CurHoriDir_ = float4::RIGHT;
+	WantVerDir_=float4::ZERO;
+
+	PlayerRenderer_=nullptr;
+
+	IsColHori=false;
+	IsColUP=false;
+	IsColDown = false;
+	CurJumpTime_=0;
+	MaxJumpTime_ = 0.25f;
+	CanJump_=true;
+	IsAttacking = false;
+	IsAttackEnd_=false;
+	AttackTickTime_ = 0.0f;
+	MaxAttackTickTime_=0.45f;
+	AttackCount_=0;
+	MaxAttackCount_ = 3;
+	PlayerCol_=nullptr;
+	CameraPosY_ = 0;
+	CanActivate = true;
 }
 

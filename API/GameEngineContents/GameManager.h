@@ -3,6 +3,7 @@
 #include <GameEngineBase/GameEngineDebug.h>
 
 class BackGround;
+class Player;
 class GameManager
 {
 public:
@@ -38,7 +39,25 @@ public:
 
 	inline void SetCurrentBackGround(BackGround* _Other)
 	{
+		if (_Other == nullptr)
+		{
+			MsgBoxAssert("Background 인자가 nullptr입니다 !");
+		}
 		CurrentBackGround_ = _Other;
+	}
+
+	inline Player* GetPlayer()
+	{
+		if (CurPlayer_ == nullptr)
+		{
+			MsgBoxAssert("CurPlayer가 셋팅되지 않았습니다");
+		}
+		return CurPlayer_;
+	}
+
+	inline void SetPlayer(Player* _Player)
+	{
+		CurPlayer_ = _Player;
 	}
 
 
@@ -46,6 +65,7 @@ private:
 
 	std::string ChangeLevelName_;
 	BackGround* CurrentBackGround_;
+	Player*  CurPlayer_;
 
 	//싱글톤
 public:

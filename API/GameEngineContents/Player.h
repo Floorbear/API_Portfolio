@@ -9,6 +9,7 @@ class Player : public GameEngineActor
 public:
 	void StateUpdate();
 	void StateChange(PlayerState _State);
+	void GoToVer(float4 _VerDir);
 
 private:
 	void IdleStart();
@@ -40,6 +41,8 @@ private:
 
 
 
+
+
 private:
 	PlayerState CurState_;
 	std::string PlayerStateStr_[static_cast<int>(PlayerState::Max)];
@@ -55,7 +58,8 @@ private:
 	//스테이터스
 private:
 	bool IsColHori; //수평 픽셀 충돌을 했냐
-	bool IsColVer; //수직 픽셀 충돌을 했냐
+	bool IsColUP; // 윗 픽셀 충돌읠 했냐
+	bool IsColDown; // 아랫 픽셀 충돌을 했냐
 
 	float CurSpeed_; //"속력"
 	float AccSpeed_; // 가속력
@@ -87,8 +91,11 @@ private:
 
 	//카메라
 	float CameraPosY_;
+	float CameraDesY_; //Y축 맵 이동이 일어날 경우 이동할 맵의 Y좌표
 
-	//테트스
+	//활성화
+	bool CanActivate;
+
 
 public:
 	Player();
@@ -101,6 +108,7 @@ public:
 	Player& operator=(const Player&& _Other) noexcept = delete;
 
 private:
+	void InitPlayerPara();
 	void Start() override;
 	void Update() override;
 	void Render() override;

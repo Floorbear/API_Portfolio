@@ -18,7 +18,7 @@ public:
 	RockmanStage& operator=(const RockmanStage&& _Other) noexcept = delete;
 
 public:
-	void ChangeBackground(BackgroundDir _Dir, const float4& _MoveDir); //_Dir : 이동하고 싶은 백그라운드가 이전, 다음인지를 셋팅, _MoveDir : 이동하고 싶은 백그라운드가 위, 아래에 있는지 셋팅
+	//void ChangeBackground(BackgroundDir _Dir, const float4& _MoveDir); //_Dir : 이동하고 싶은 백그라운드가 이전, 다음인지를 셋팅, _MoveDir : 이동하고 싶은 백그라운드가 위, 아래에 있는지 셋팅
 
 protected:
 	virtual void Loading() override;
@@ -26,20 +26,16 @@ protected:
 	virtual void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
 	virtual void LevelChangeEnd(GameEngineLevel* _NextLevel) override;
 	virtual void InitColPosNScale() = 0;
+	virtual void InitBackground() = 0;
+	virtual void ConnectBackground() = 0;
 
 private:
 
 protected:
-	int CurBackgroundIndex_;
-	int MaxBackgroundIndex_;
 	GameEngineSoundPlayer Bgm_;
-	//std::vector<GameEngineImage*> AllBackgroundImages_;
-	//std::vector<GameEngineImage*> AllBackgroundColImages_;
 	std::vector<BackGround*> AllBackground_;
-	std::vector<float4> AllMoveUPColPos_;
-	std::vector<float4> AllMoveDOWNColPos_;
-	std::vector<float4> AllMoveUPColScale_;
-	std::vector<float4> AllMoveDOWNColScale_;
-	std::vector<std::map<std::string,std::vector<float4>>> AllRockmanCol_;
+
+	BackGround* StartBackground_;
+
 };
 

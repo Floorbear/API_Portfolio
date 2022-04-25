@@ -32,7 +32,7 @@ void Player::IdleUpdate()
 		else
 		{
 			CanJump_ = false;
-			Gravity_ = MaxGravity_;
+			Gravity_ = 0;
 			StateChange(PlayerState::Jump);
 			return;
 		}
@@ -42,6 +42,11 @@ void Player::IdleUpdate()
 	{
 		if (CheckPixelCol(WantVerDir_, LadderColor, true) == true)
 		{
+			//아래쪽 사다리로 이동할 경우 위치를 살짝 아래로 조정해준다
+			if (WantVerDir_.CompareInt2D(float4::DOWN) == true)
+			{
+				SetMove({ 0,50 });
+			}
 			StateChange(PlayerState::Climb);
 			return;
 		}
@@ -112,6 +117,10 @@ void Player::MoveUpdate()
 	{
 		if (CheckPixelCol(WantVerDir_, LadderColor, true) == true)
 		{
+			if (WantVerDir_.CompareInt2D(float4::DOWN) == true)
+			{
+				SetMove({ 0,50 });
+			}
 			StateChange(PlayerState::Climb);
 			return;
 		}
@@ -136,7 +145,7 @@ void Player::MoveUpdate()
 		else
 		{
 			CanJump_ = false;
-			Gravity_ = MaxGravity_;
+			Gravity_ = 0;
 			StateChange(PlayerState::Jump);
 			return;
 		}
@@ -182,6 +191,7 @@ void Player::MoveUpdate()
 void Player::JumpStart()
 {
 	ResetAttackPara();
+	IsColDown = false;
 	PlayerRenderer_->SetPivot({ 0,50 });
 	PlayerRenderer_->ChangeAnimation("RockMan_Jump_"+ RockmanUtility::DirToStr(CurHoriDir_));
 	PlayerRenderer_->PauseOff();
@@ -284,37 +294,40 @@ void Player::JumpUpdate()
 				}
 				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 				SetMove(WantMovePos);
-				IsColVer = true;
+				IsColDown = true;
 				//착지 사운드
 				GameEngineSound::SoundPlayOneShot("Landing.mp3");
 		}
 		else
 		{
-			IsColVer = false;
+			IsColDown = false;
 		}
 		
 	}
 	else //반대면 ( == 중력이 0 이하이면) 점프 상태
 	{
 		Move(float4::UP, -Gravity_);
-		if (CheckPixelCol(float4::UP) == true)
+		if (CheckPixelCol(float4::UP) == true) //머리에 충돌체를 박은 상태
 		{
-			IsColVer = true;
+			IsColUP = true;
+			Gravity_ = 0;
+			CanJump_ = false;
 		}
 		else
 		{
-			IsColVer = false;
+			IsColUP = false;
 		}
 	}
 
 
 
-	//땅이나 머리 WallPixel이 닿았어
-	if (IsColVer == true)
+	//땅에 닿았어 
+	if (IsColDown == true)
 	{
-		Gravity_ = MaxGravity_;
+		Gravity_ = 0;
 		CanJump_ = true; //점프를 다시 할 수 있더
 		CurJumpTime_ = 0.0f;
+		IsColUP = false;
 		StateChange(PlayerState::Idle);
 		return;
 		
@@ -424,6 +437,7 @@ void Player::MoveToLadderPos()
 	}
 	SetMove(float4(MoveSize, 0));
 }
+
 void Player::ResetAttackPara()
 {
 	IsAttacking = false;

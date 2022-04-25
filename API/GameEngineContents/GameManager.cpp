@@ -36,7 +36,8 @@ GameManager::GameManager()
 	:CurrentBackGround_(nullptr),
 	ChangeLevelName_(),
 	IsChangeLevel_(false),
-	IsDebugMode_(false)
+	IsDebugMode_(false),
+	CurPlayer_(nullptr)
 {
 }
 

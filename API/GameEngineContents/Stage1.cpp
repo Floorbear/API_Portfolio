@@ -19,13 +19,54 @@ Stage1::~Stage1()
 
 void Stage1::InitColPosNScale()
 {
-	AllMoveUPColScale_[0] = { 50,10 };
-	AllMoveUPColPos_[0] = { 3939,0 };
+	// Map index = 0
+	{
+		GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,0 });
+		{
+			AllBackground_[0]->AllMoveUPCol_.push_back(NewMoveUpCol);
+		}
+	}
+
+	// Map index = 1
+	{
+		GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10}, { 3939,-30});
+		AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+
+		NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 135,10 }, { 3735,-30 });
+		AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+	}
 
 
-	AllMoveUPColScale_[1] = { 100,100 };
-	AllMoveUPColPos_[1] = { 3500,-600 };
 
+	
+
+
+}
+
+void Stage1::InitBackground()
+{
+	//백그라운드 로드
+
+	// Map index = 1
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_1");
+		NewBackground->SetPosition({ 3072,-1024 });
+		AllBackground_.push_back(NewBackground);
+
+	}
+}
+
+void Stage1::ConnectBackground()
+{
+	//Map Index = 0
+	{
+		AllBackground_[0]->UpBackground_ = AllBackground_[1];
+	}
+
+	//Map Index = 1
+	{
+		AllBackground_[1]->DownBackground_ = AllBackground_[0];
+	}
 }
 
 
