@@ -48,9 +48,17 @@ void Stage1::InitBackground()
 {
 	//백그라운드 로드
 
+	// Map Index = 0
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_0");
+		NewBackground->SetIndex(0);
+		StartBackground_ = NewBackground;
+		AllBackground_.push_back(NewBackground);
+	}
 	// Map index = 1
 	{
 		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_1");
+		NewBackground->SetIndex(1);
 		NewBackground->SetPosition({ 3072,-1024 });
 		AllBackground_.push_back(NewBackground);
 

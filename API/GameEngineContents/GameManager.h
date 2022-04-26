@@ -61,6 +61,7 @@ public:
 	}
 
 
+
 private:
 
 	std::string ChangeLevelName_;

@@ -34,6 +34,16 @@ public:
 		return BackGroundImage_->GetScale();
 	}
 
+	inline size_t GetIndex() const
+	{
+		return Index_;
+	}
+
+	inline void SetIndex(size_t _Index)
+	{
+		Index_ = _Index;
+	}
+
 	//_Pos에서 BackGroundCol의 픽셀값이 검정인지 확인하는 함수
 	bool IsBlocked(const float4& _Pos , unsigned long _RGB = RGB(0,0,0));
 
@@ -51,6 +61,8 @@ private:
 
 	std::vector<GameEngineCollision*> AllMoveUPCol_;
 	std::vector<GameEngineCollision*> AllMoveDownCol_;
+
+	size_t Index_;
 
 };
 

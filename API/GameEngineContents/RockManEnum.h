@@ -33,3 +33,9 @@ enum class MonsterState
 	Max
 };
 
+enum class BulletType
+{
+	Normal,
+	Max
+};
+

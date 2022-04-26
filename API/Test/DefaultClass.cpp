@@ -1,1 +1,0 @@
-int Statica = 3;

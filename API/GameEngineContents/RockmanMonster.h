@@ -19,6 +19,9 @@ protected:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void Render() override;
+	virtual void InitMonster();
+	virtual void InitRenderer();
+	virtual void SetMonster();
 
 	//fsm
 protected:
@@ -32,11 +35,23 @@ protected:
 	void AttackUpdate();
 
 private:
+	//Col Check
+	void HitByBulletCheck();
+
+	void Hit(BulletType _BulletType);
+	void Die();
+
+private:
+	size_t Index_;
+	float DeathTimer_;
+
+	float Default_Speed_;
 	float Speed_;
 	float AttackStartRange_; // 공격이 시작하는 사정거리
 	float VerSpeed_;
-	float AttCoolTime_; //공격 쿨타임
-	float CurAttTime_; // 공격하고 나서 흐르는 시간
+
+	int CurHealth_;
+	int MaxHealth_;
 
 	float4 WantHoriDir_;
 	float4 CurHoriDir_;
@@ -50,6 +65,7 @@ private:
 	std::string StateStr_[static_cast<int>(MonsterState::Max)];
 	MonsterState CurState_;
 
+	GameEngineCollision* MonsterContactCol_;
 	GameEngineRenderer* MonsterRenderer_;
 	Player* Player_;
 };

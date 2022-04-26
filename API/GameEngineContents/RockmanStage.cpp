@@ -59,14 +59,8 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	//Bgm 셋팅
 	Bgm_ = GameEngineSound::SoundPlayControl(GetNameConstRef()+".mp3", 30);
 
-	//처음 백그라운드 셋팅
-	BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), GetNameCopy() + "_0");
-	StartBackground_ = BackGround_;
-	AllBackground_.push_back(BackGround_);
-
 	//모든 백그라운드 생성
 	InitBackground();
-	AllBackground_.push_back(BackGround_);
 
 	//모든 충돌체 생성
 	InitColPosNScale();
@@ -74,10 +68,8 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	//백그라운드 간 관계 셋팅
 	ConnectBackground();
 
-
-
-	//게임 매니저에 현재 백그라운드 등록
-	GameManager::GetInst()->SetCurrentBackGround(BackGround_);
+	//게임 매니저에 시작 백그라운드 등록
+	GameManager::GetInst()->SetCurrentBackGround(StartBackground_);
 
 	//UI 셋팅
 	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");

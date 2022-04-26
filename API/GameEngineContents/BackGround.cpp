@@ -48,8 +48,11 @@ void BackGround::Update()
 		if(MoveUpCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
 		{
 			Player* CurPlayer = GameManager::GetInst()->GetPlayer();
-			GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
-			CurPlayer->GoToVer(float4::UP);
+			if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
+			{
+				GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
+				CurPlayer->GoToVer(float4::UP);
+			}
 		}
 	}
 

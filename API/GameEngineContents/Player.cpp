@@ -112,7 +112,7 @@ void Player::Attack(const float4& _Dir,const float4& _AttackPos)
 		AttackTickTime_ = 0.0f;
 		IsAttacking = true;
 		Bullet* NewBullet = GetLevel()->CreateActor<Bullet>(static_cast<int>(GameLayer::Bullet), "Bullet");
-		NewBullet->SetDir(GetPosition()+float4(_Dir.x*_AttackPos.x,_AttackPos.y), _Dir);
+		NewBullet->SetBullet(GetPosition()+float4(_Dir.x*_AttackPos.x,_AttackPos.y), _Dir);
 		AttackCount_++;
 	}
 }
@@ -176,7 +176,7 @@ void Player::Update()
 		//플레이어의 y좌표를 조금씩 이동
 		SetMove(VerDir * GameEngineTime::GetDeltaTime()*100.0f);
 
-		//약간의 오차가 일어나면 조절해준다.
+		//약간의 오차(카메라 무브시 델타타임으로 일어나는 오차값)가 일어나면 조절해준다.
 		VerDir = { 0,CameraPosY_ - CameraDesY_ };
 		if (VerDir.Len2D() < 0.5f)
 		{

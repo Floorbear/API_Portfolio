@@ -4,18 +4,14 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include "GameManager.h"
 #include "Player.h"
+#include "BackGround.h"
+#include <GameEngine/GameEngineCollision.h>
+#include "Bullet.h"
 
 RockmanMonster::RockmanMonster()
-	:MonsterRenderer_(nullptr),
-	CurState_(MonsterState::Chase),
-	Player_(nullptr),
-	CurHoriDir_(float4::ZERO),
-	WantHoriDir_(float4::ZERO),
-	Speed_(100.0f),
-	AttackStartRange_(200.0f),
-	AttCoolTime_(0.8f),
-	CurAttTime_(0.0f)
 {
+	InitMonster();
+
 	StateStr_[static_cast<int>(MonsterState::Chase)] = "Chase";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
 }
@@ -28,20 +24,28 @@ void RockmanMonster::Start()
 {
 	//디버그용 테스트 포지션
 	SetPosition({ 3300,100 });
-
-	MonsterRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Monster), RenderPivot::CENTER);
-	MonsterRenderer_->SetTransColor(TransColor);
-	MonsterRenderer_->CreateAnimation("BunbyHeli_Left.bmp", "BunbyHeli_Left", 0, 1, 0.05f);
-	MonsterRenderer_->CreateAnimation("BunbyHeli_Right.bmp", "BunbyHeli_Right", 0, 1, 0.05f);
-
-	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
-
-	Player_ = GameManager::GetInst()->GetPlayer();
+	SetScale({ 70,80 });
+	InitRenderer();
+	SetMonster();
 }
 
 void RockmanMonster::Update()
 {
-	UpdateState();
+	//맵의 변경을 계속 감시해서 일어나면 몬스터를 죽인다
+	size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
+	if (Index_ == Background_Index && CurHealth_ > 0)
+	{
+		UpdateState();
+	}
+	else
+	{
+		DeathTimer_ -= GameEngineTime::GetDeltaTime();
+	}
+
+	if (DeathTimer_ <= 0)
+	{
+		Death();
+	}
 
 }
 
@@ -52,6 +56,48 @@ void RockmanMonster::Render()
 		RockmanUtility::DebugText(StateStr_[static_cast<int>(CurState_)], GetCameraEffectPosition() + float4(0, 50));
 	}
 
+}
+
+void RockmanMonster::InitMonster()
+{
+	MonsterRenderer_ = nullptr;
+	MonsterContactCol_ = nullptr;
+	CurState_ = MonsterState::Chase;
+	Player_ = nullptr;
+	CurHoriDir_=float4::ZERO;
+	WantHoriDir_=float4::ZERO;
+	Speed_=100.0f;
+	Default_Speed_ = 100.0f;
+	AttackStartRange_=230.0f;
+	DeathTimer_ = 1.0f;
+	MaxHealth_ = 1;
+		
+}
+
+void RockmanMonster::InitRenderer()
+{
+	//렌더러 애니메이션 셋팅
+	MonsterRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Monster), RenderPivot::CENTER);
+	MonsterRenderer_->SetTransColor(TransColor);
+	MonsterRenderer_->CreateAnimation("BunbyHeli_Left.bmp", "BunbyHeli_Left", 0, 1, 0.05f);
+	MonsterRenderer_->CreateAnimation("BunbyHeli_Right.bmp", "BunbyHeli_Right", 0, 1, 0.05f);
+
+	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
+}
+
+void RockmanMonster::SetMonster()
+{
+	//파라미터 셋팅
+	CurHealth_ = MaxHealth_;
+
+	//콜리전 생성
+	MonsterContactCol_ = CreateCollision(GetNameCopy() + "_Col", GetScale());
+
+	//플레이어 참조
+	Player_ = GameManager::GetInst()->GetPlayer();
+
+	//생성될 때 백그라운드의 인덱스를 자기 인덱스로
+	Index_ = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
 }
 
 void RockmanMonster::ChangeState(MonsterState _State)
@@ -94,6 +140,7 @@ void RockmanMonster::UpdateState()
 void RockmanMonster::ChaseStart()
 {
 	SetPosition(float4(GetPosition().x, AttackStartPos_.y));
+	Speed_ = Default_Speed_;
 }
 
 void RockmanMonster::ChaseUpdate()
@@ -134,27 +181,89 @@ void RockmanMonster::AttackStart()
 
 void RockmanMonster::AttackUpdate()
 {
-	float Distance = float4(0, AttackPos_.y - GetPosition().y).Len2D();		//공격목표점과의 거리
 
-	//포물선 꼭지점에 도달하면 Vertical 방향전환
-	if (Distance < 20.0f)
+	if (InitVerDir_.CompareInt2D(CurVerDir_) == true) 
 	{
-		CurVerDir_ = -CurVerDir_;
+		if (CurVerDir_.CompareInt2D(float4::UP) == true) //위로볼록 상태인 경우
+		{
+			if (GetPosition().y <= AttackPos_.y)
+			{
+				CurVerDir_ = -CurVerDir_;
+			}
+		}
+		else if (CurVerDir_.CompareInt2D(float4::DOWN) == true) //아래로볼록 상태인 경우
+		{
+			if (GetPosition().y >= AttackPos_.y+20.0f)
+			{
+				CurVerDir_ = -CurVerDir_;
+			}
+		}
 	}
 
 	//Vertical 방향전환이 일어난 상태에서 처음 공격 시작한 지점의 y좌표까지 도달한다면
 	if (InitVerDir_.CompareInt2D(CurVerDir_) == false)
 	{
-		float InitDistance = float4(0, AttackStartPos_.y - GetPosition().y).Len2D();
-		if (InitDistance < 20.0f)
+		if (CurVerDir_.CompareInt2D(float4::UP) == true) //아래로볼록 상태인 경우
 		{
-			ChangeState(MonsterState::Chase);
-			return;
+			if (GetPosition().y <= AttackStartPos_.y)
+			{
+				ChangeState(MonsterState::Chase);
+				return;
+			}
+		}
+		else if (CurVerDir_.CompareInt2D(float4::DOWN) == true) //위로볼록 상태인 경우
+		{
+			if (GetPosition().y >= AttackStartPos_.y)
+			{
+				CurVerDir_ = -CurVerDir_;
+				ChangeState(MonsterState::Chase);
+				return;
+			}
 		}
 	}
 
-	VerSpeed_ += 200.0f * GameEngineTime::GetDeltaTime();
+	VerSpeed_ += VerSpeed_* GameEngineTime::GetDeltaTime();
+	Speed_ += 1300.0f * GameEngineTime::GetDeltaTime();
 
-	//가속도 적용해주기!!
-	SetMove(float4(CurHoriDir_.x * Speed_*4.3f * GameEngineTime::GetDeltaTime(),CurVerDir_.y*VerSpeed_*GameEngineTime::GetDeltaTime()));
+	SetMove(float4(CurHoriDir_.x * Speed_ * GameEngineTime::GetDeltaTime(),CurVerDir_.y*VerSpeed_*1.1f*GameEngineTime::GetDeltaTime()));
+}
+
+void RockmanMonster::HitByBulletCheck()
+{
+	std::vector<GameEngineCollision*> BulletColList;
+	if (MonsterContactCol_->CollisionResult("Bullet", BulletColList, CollisionType::Rect, CollisionType::Rect) == true)
+	{
+		BulletType Type = BulletType::Normal;
+		//히트된 총알을 제거한다.
+		for (GameEngineCollision* Col : BulletColList)
+		{
+			Bullet* HitBullet = dynamic_cast<Bullet*>(Col->GetActor());
+			Type = HitBullet->GetBulletType();
+			HitBullet->Death();
+		}
+		Hit(Type);
+	}
+}
+
+void RockmanMonster::Hit(BulletType _BulletType)
+{
+	switch (_BulletType)
+	{
+	case BulletType::Normal:
+		--CurHealth_;
+		break;
+	default:
+		break;
+	}
+
+	//체력이 0보다 작다면 
+	if (CurHealth_ <= 0)
+	{
+		Die();
+	}
+}
+
+void RockmanMonster::Die()
+{
+
 }

@@ -6,10 +6,15 @@
 class Player : public GameEngineActor
 {
 	//Fsm
-public:
+private:
 	void StateUpdate();
 	void StateChange(PlayerState _State);
+public:
 	void GoToVer(float4 _VerDir);
+	inline PlayerState GetCurPlayerState()
+	{
+		return CurState_;
+	}
 
 private:
 	void IdleStart();

@@ -16,8 +16,9 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::SetDir(const float4& _Pos,const float4& _Dir)
+void Bullet::SetBullet(const float4& _Pos,const float4& _Dir, BulletType _BulletType /*=BulletType::Normal*/)
 {
+	Type_ = _BulletType;
 	if (_Dir.CompareInt2D(float4::RIGHT) || _Dir.CompareInt2D(float4::LEFT))
 	{
 		Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Bullet), RenderPivot::CENTER);

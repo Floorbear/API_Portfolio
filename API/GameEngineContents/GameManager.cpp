@@ -32,6 +32,7 @@ void GameManager::ResetLevelInfo()
 	IsChangeLevel_ = false;
 }
 
+
 GameManager::GameManager()
 	:CurrentBackGround_(nullptr),
 	ChangeLevelName_(),
