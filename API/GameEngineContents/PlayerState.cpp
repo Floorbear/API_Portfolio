@@ -8,7 +8,60 @@
 #include "Bullet.h"
 #include <GameEngineBase/GameEngineSound.h>
 
+void Player::StateUpdate()
+{
+	switch (CurState_)
+	{
+	case PlayerState::Idle:
+		IdleUpdate();
+		break;
+	case PlayerState::Move:
+		MoveUpdate();
+		break;
+	case PlayerState::Jump:
+		JumpUpdate();
+		break;
+	case PlayerState::Climb:
+		ClimbUpdate();
+		break;
+	case PlayerState::Hit:
+		HitUpdate();
+		break;
+	default:
+		break;
+	}
+}
 
+void Player::StateChange(PlayerState _State)
+{
+	if (CurState_ == _State)
+	{
+		return;
+	}
+
+
+	switch (_State)
+	{
+	case PlayerState::Idle:
+		IdleStart();
+		break;
+	case PlayerState::Move:
+		MoveStart();
+		break;
+	case PlayerState::Jump:
+		JumpStart();
+		break;
+	case PlayerState::Climb:
+		ClimbStart();
+		break;
+	case PlayerState::Hit:
+		HitStart();
+		break;
+	default:
+		break;
+	}
+	CurState_ = _State;
+}
 
 void Player::IdleStart()
 {
@@ -344,6 +397,8 @@ void Player::ClimbStart()
 	PlayerRenderer_->PauseOn();
 }
 
+
+
 void Player::ClimbUpdate()
 {
 	if (IsMoveVerKeyPress() == true && IsAttacking == false) // W or S를 눌렀다면
@@ -403,6 +458,93 @@ void Player::ClimbUpdate()
 	}
 }
 
+void Player::HitStart()
+{
+	ResetAttackPara();
+	PlayerRenderer_->SetPivot({ 0,50 });
+	PlayerRenderer_->ChangeAnimation("RockMan_Hit_" + RockmanUtility::DirToStr(CurHoriDir_));
+	PlayerRenderer_->PauseOff();
+	CurSpeed_ = MaxSpeed_*0.7f;
+	CurHitTimer_ = 0.01; //CurHitTimer의 값을 살짝 건드려서 Update에서 타이머가 작동하게 한다.
+}
+
+void Player::HitUpdate()
+{
+	if (CurHitTimer_ < GetOutHitTimer_)
+	{
+		CurSpeed_ -= CurSpeed_ * GameEngineTime::GetDeltaTime();
+		//중력가속도
+		Gravity_ += AccGravity_ * GameEngineTime::GetDeltaTime();
+
+		if (Gravity_ >= MaxGravity_)
+		{
+			Gravity_ = MaxGravity_;
+		}
+		if (CurSpeed_ < 0.5f)
+		{
+			CurSpeed_ = 0;
+		}
+
+		if (Gravity_ >= 0) //중력이 0이상이면 떨어진다
+		{
+			Move(float4::DOWN, Gravity_);
+
+			//땅에 닿은 상태
+			if (CheckPixelCol(float4::DOWN, WallColor) == true
+				|| ((CheckPixelCol(float4::DOWN, LadderColor) == true) && (CheckPixelCol(float4::ZERO, LadderColor) == false)))
+			{
+				BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
+
+				float4 NextPos = float4(0, (GetScale().Half().y + 1));
+				float4 CheckPos_Mid = GetPosition() + float4(0, (GetScale().Half().y + 1));
+				float Len = NextPos.Len2D();
+
+				while (
+					true == CurBackGround->IsBlocked(CheckPos_Mid, WallColor))
+				{
+					NextPos.Normal2D();
+					Len -= 1.0f;
+					NextPos *= Len;
+					CheckPos_Mid = GetPosition() += NextPos;
+
+					//무한루프 탈출을 위한 안전장치
+					if (1.0f >= NextPos.Len2D())
+					{
+						break;
+					}
+				}
+				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
+				SetMove(WantMovePos);
+				IsColDown = true;
+				//착지 사운드
+				GameEngineSound::SoundPlayOneShot("Landing.mp3");
+			}
+		}
+		Move(-CurHoriDir_, CurSpeed_);
+	}
+	else //Hit상태에서 탈출하는 경우
+	{
+		//아래 발판이 없을 경우
+		if (CheckPixelCol(float4::DOWN, WallColor) == false)
+		{
+			//사다리 윗 끝부분인경우 발판으로 고려
+			if (CheckPixelCol(float4::DOWN, LadderColor) == true
+				&& CheckPixelCol(float4::UP, LadderColor) == false)
+			{
+
+			}
+			else
+			{
+				CanJump_ = false;
+				StateChange(PlayerState::Jump);
+				return;
+			}
+		}
+		StateChange(PlayerState::Idle);
+		return;
+	}
+}
+
 void Player::MoveToLadderPos()
 {
 	//일단 이 코드에서 전제는 "사다리 픽셀"을 발견 했다는 것
@@ -437,6 +579,7 @@ void Player::MoveToLadderPos()
 	}
 	SetMove(float4(MoveSize, 0));
 }
+
 
 void Player::ResetAttackPara()
 {

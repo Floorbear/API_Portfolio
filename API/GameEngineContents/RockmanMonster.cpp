@@ -33,9 +33,10 @@ void RockmanMonster::Update()
 {
 	//맵의 변경을 계속 감시해서 일어나면 몬스터를 죽인다
 	size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
-	if (Index_ == Background_Index && CurHealth_ > 0)
+	if (Index_ == Background_Index && IsDead == false)
 	{
 		UpdateState();
+		HitByBulletCheck();
 	}
 	else
 	{
@@ -60,6 +61,7 @@ void RockmanMonster::Render()
 
 void RockmanMonster::InitMonster()
 {
+	AttackDamage_ = 3;
 	MonsterRenderer_ = nullptr;
 	MonsterContactCol_ = nullptr;
 	CurState_ = MonsterState::Chase;
@@ -70,7 +72,8 @@ void RockmanMonster::InitMonster()
 	Default_Speed_ = 100.0f;
 	AttackStartRange_=230.0f;
 	DeathTimer_ = 1.0f;
-	MaxHealth_ = 1;
+	MaxHP_ = 2;
+	IsDead = false;
 		
 }
 
@@ -82,16 +85,19 @@ void RockmanMonster::InitRenderer()
 	MonsterRenderer_->CreateAnimation("BunbyHeli_Left.bmp", "BunbyHeli_Left", 0, 1, 0.05f);
 	MonsterRenderer_->CreateAnimation("BunbyHeli_Right.bmp", "BunbyHeli_Right", 0, 1, 0.05f);
 
+	//사망 애니메이션
+	MonsterRenderer_->CreateAnimation("Explosion.bmp", "Explosion", 0, 4, 0.05f, false);
+
 	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
 }
 
 void RockmanMonster::SetMonster()
 {
 	//파라미터 셋팅
-	CurHealth_ = MaxHealth_;
+	CurHP_ = MaxHP_;
 
 	//콜리전 생성
-	MonsterContactCol_ = CreateCollision(GetNameCopy() + "_Col", GetScale());
+	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
 
 	//플레이어 참조
 	Player_ = GameManager::GetInst()->GetPlayer();
@@ -250,14 +256,14 @@ void RockmanMonster::Hit(BulletType _BulletType)
 	switch (_BulletType)
 	{
 	case BulletType::Normal:
-		--CurHealth_;
+		--CurHP_;
 		break;
 	default:
 		break;
 	}
 
 	//체력이 0보다 작다면 
-	if (CurHealth_ <= 0)
+	if (CurHP_ <= 0 && IsDead == false)
 	{
 		Die();
 	}
@@ -265,5 +271,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 
 void RockmanMonster::Die()
 {
-
+	IsDead = true;
+	MonsterRenderer_->ChangeAnimation("Explosion");
+	MonsterContactCol_->Off();
 }

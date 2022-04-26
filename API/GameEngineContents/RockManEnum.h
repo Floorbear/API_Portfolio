@@ -6,6 +6,8 @@ enum class PlayerState
 	Move,
 	Jump,
 	Climb,
+	Hit,
+	Die,
 	Max
 };
 

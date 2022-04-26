@@ -146,10 +146,30 @@ void RockMan::InitImage()
 		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_ClimbAttack.bmp");
 		PlayerImage->Cut({ 256,256 });
 
-		PlayerImage = GameEngineImageManager::GetInst()->Find("Bullet.bmp");
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Hit_Left.bmp");
 		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Hit_Right.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+
 	}
 
+	//기타 오브젝트 초기화
+	{
+		GameEngineImage* ObjectImage;
+		ObjectImage = GameEngineImageManager::GetInst()->Find("Bullet.bmp");
+		ObjectImage->Cut({ 256,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("Explosion.bmp");
+		ObjectImage->Cut({ 256,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("HitEffect_Center.bmp");
+		ObjectImage->Cut({ 256,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("HitEffect_Top.bmp");
+		ObjectImage->Cut({ 256,256 });
+	}
 
 	//UI비트맵 초기화
 	{

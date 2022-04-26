@@ -2,6 +2,7 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include "RockManEnum.h"
 #include <GameEngine/GameEngineRenderer.h>
+#include <GameEngine/GameEngineCollision.h>
 
 Bullet::Bullet()
 	:HaveDir_(false),
@@ -45,7 +46,8 @@ void Bullet::SetBullet(const float4& _Pos,const float4& _Dir, BulletType _Bullet
 
 void Bullet::Start()
 {
-
+	SetScale({ 30,30 });
+	CreateCollision("Bullet", GetScale());
 }
 
 void Bullet::Update()

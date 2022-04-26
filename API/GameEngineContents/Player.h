@@ -21,11 +21,13 @@ private:
 	void MoveStart();
 	void JumpStart();
 	void ClimbStart();
+	void HitStart();
 
 	void IdleUpdate();
 	void MoveUpdate();
 	void JumpUpdate();
 	void ClimbUpdate();
+	void HitUpdate();
 
 
 	//충돌체가 있으면 true, 없으면 false
@@ -44,6 +46,9 @@ private:
 
 	void MoveToLadderPos(); //사다리로 찰싹 붙게하는 함수
 
+	//ColCheck
+	void CheckMonsterCol();
+
 
 
 
@@ -58,10 +63,12 @@ private:
 
 private:
 	GameEngineRenderer* PlayerRenderer_;
+	GameEngineRenderer* HitEffect_Center_Renderer_;
+	GameEngineRenderer* HitEffect_Top_Renderer_;
 
 
-	//스테이터스
 private:
+	//기하 관련
 	bool IsColHori; //수평 픽셀 충돌을 했냐
 	bool IsColUP; // 윗 픽셀 충돌읠 했냐
 	bool IsColDown; // 아랫 픽셀 충돌을 했냐
@@ -71,8 +78,7 @@ private:
 	float MaxSpeed_; //최대 속력
 	float4 WantHoriDir_;//내가 실제로 바꾸고 싶은 방향
 	float4 CurHoriDir_; //플레이어의 방향
-
-	float4 WantVerDir_; //플레이어의 수직 방향
+	float4 WantVerDir_; //눌른 키값 플레이어의 수직 방향
 
 	//중력 관련
 	float Gravity_; // 중력 양수이면 떨어지는 상태
@@ -90,6 +96,15 @@ private:
 	bool IsAttackEnd_;
 	float AttackTickTime_;
 	float MaxAttackTickTime_; //연속 공격까지 기다려주는 시간
+
+	//히트 관련
+	float CurHitTimer_; //현재 히트 상태 지속시간
+	float GetOutHitTimer_; //이 시간이 되면 Hit상태를 벗어납니다
+	float MaxHitTimer_; //이 시간이 되면 무적상태를 벗어납니다.
+
+	//스텟
+	int MaxHP_;
+	int CurHP_;
 
 	//충돌체
 	GameEngineCollision* PlayerCol_;

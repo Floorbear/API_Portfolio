@@ -15,6 +15,12 @@ public:
 	RockmanMonster& operator=(const RockmanMonster& _Ohter) = delete;
 	RockmanMonster& operator=(const RockmanMonster&& _Other) noexcept = delete;
 
+public:
+	inline int GetAttackDmg() const
+	{
+		return AttackDamage_;
+	}
+
 protected:
 	virtual void Start() override;
 	virtual void Update() override;
@@ -33,7 +39,6 @@ protected:
 
 	void AttackStart();
 	void AttackUpdate();
-
 private:
 	//Col Check
 	void HitByBulletCheck();
@@ -42,16 +47,20 @@ private:
 	void Die();
 
 private:
+	//스테이터스
+	int CurHP_;
+	int MaxHP_;
+	int AttackDamage_;
+
 	size_t Index_;
 	float DeathTimer_;
+	bool IsDead;
 
 	float Default_Speed_;
 	float Speed_;
 	float AttackStartRange_; // 공격이 시작하는 사정거리
 	float VerSpeed_;
 
-	int CurHealth_;
-	int MaxHealth_;
 
 	float4 WantHoriDir_;
 	float4 CurHoriDir_;
