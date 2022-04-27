@@ -406,17 +406,19 @@ void Player::ClimbUpdate()
 		PlayerRenderer_->PauseOff();
 		Move(WantVerDir_, 170.0f);//Climb Speed
 		if (CheckPixelCol(float4::DOWN, LadderColor, true) == false
-		|| (WantVerDir_.CompareInt2D(float4::UP) &&(CheckPixelCol(float4::ZERO, LadderColor, true) == false))) //사다리가 끝나는 조건 Base 개념 : 내 발 아래 사다리 픽셀이 없으면 Climb종료
+		|| (WantVerDir_.CompareInt2D(float4::UP) &&(CheckPixelCol(float4::ZERO, LadderColor, true) == false))) //윗쪽사다리가 끝나는 조건 Base 개념 : 내 발 아래 사다리 픽셀이 없으면 Climb종료
 		{
 			if (CheckPixelCol(float4::UP, LadderColor, true) == false) //윗쪽에서 사다리를 다오르면 사다리 픽셀 체크를 중심에서 함. 이렇게 안하면 사다리 애니메이션이 위에서 마칠 때 되게 어색해짐
 			{
 				SetMove(float4::UP * 46);
 				StateChange(PlayerState::Idle);
-			}
-			else
-			{
-				StateChange(PlayerState::Idle);
+				return;
 			}		
+		}
+		if (WantVerDir_.CompareInt2D(float4::DOWN) && (CheckPixelCol(float4::ZERO, LadderColor) == false) || CheckPixelCol(float4::DOWN, WallColor, true) == true)
+		{
+			StateChange(PlayerState::Idle);
+			return;
 		}
 	}
 	else //수직 키를 누르지 않았다면 애니메이션 정지
@@ -486,14 +488,21 @@ void Player::HitUpdate()
 		{
 			CurSpeed_ = 0;
 		}
-
-		if (Gravity_ >= 0) //중력이 0이상이면 떨어진다
+		if (Gravity_ >= 0) //중력이 0이상이면 떨어진다wd
 		{
-			Move(float4::DOWN, Gravity_);
+
+			if (((CheckPixelCol(float4::DOWN, LadderColor) == true) && (CheckPixelCol(float4::UP, LadderColor) == false)))//사다리 픽셀 추가 검사
+			{
+
+			}
+			else
+			{
+				Move(float4::DOWN, Gravity_);
+			}
 
 			//땅에 닿은 상태
 			if (CheckPixelCol(float4::DOWN, WallColor) == true
-				|| ((CheckPixelCol(float4::DOWN, LadderColor) == true) && (CheckPixelCol(float4::ZERO, LadderColor) == false)))
+				|| ((CheckPixelCol(float4::DOWN, LadderColor) == true) && (CheckPixelCol(float4::UP, LadderColor) == false)))
 			{
 				BackGround* CurBackGround = GameManager::GetInst()->GetCurrentBackGround();
 
@@ -502,7 +511,7 @@ void Player::HitUpdate()
 				float Len = NextPos.Len2D();
 
 				while (
-					true == CurBackGround->IsBlocked(CheckPos_Mid, WallColor))
+					true == CurBackGround->IsBlocked(CheckPos_Mid, WallColor) || true == CurBackGround->IsBlocked(CheckPos_Mid, LadderColor))
 				{
 					NextPos.Normal2D();
 					Len -= 1.0f;
@@ -521,8 +530,10 @@ void Player::HitUpdate()
 				//착지 사운드
 				GameEngineSound::SoundPlayOneShot("Landing.mp3");
 			}
+
 		}
-		Move(-CurHoriDir_, CurSpeed_);
+
+		Move(-CurHoriDir_, CurSpeed_); //히트 시 뒤로 밀려나는 이동량
 	}
 	else //Hit상태에서 탈출하는 경우
 	{

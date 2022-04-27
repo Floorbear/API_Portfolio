@@ -83,7 +83,7 @@ void Stage1::ConnectBackground()
 void Stage1::InitMonster()
 {
 	//디버그용 스폰
-	CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
+	//CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
 }
 
 
