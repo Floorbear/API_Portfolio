@@ -176,6 +176,9 @@ void RockMan::InitImage()
 		GameEngineImage* UIImage;
 		UIImage = GameEngineImageManager::GetInst()->Find("Title.bmp");
 		UIImage->Cut({ 1024,960 });
+
+		UIImage = GameEngineImageManager::GetInst()->Find("PerHP.bmp");
+		UIImage->Cut({ 32,32 });
 	}
 
 	//몬스터 미트맵 초기화

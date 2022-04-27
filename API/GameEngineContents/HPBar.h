@@ -19,7 +19,11 @@ protected:
 	void Render() override;
 
 private:
-	GameEngineRenderer* HPBar_;//이거 나중에 변경해야함
+	
+private:
+	int CurHP_;
+	int HPIndex_[7];
+	GameEngineRenderer* PerHPRenderer_[7];
 
 };
 

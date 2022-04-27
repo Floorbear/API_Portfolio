@@ -27,6 +27,9 @@ void Player::StateUpdate()
 	case PlayerState::Hit:
 		HitUpdate();
 		break;
+	case PlayerState::Die:
+		DieUpdate();
+		break;
 	default:
 		break;
 	}
@@ -57,6 +60,7 @@ void Player::StateChange(PlayerState _State)
 		HitEnd();
 		break;
 	case PlayerState::Die:
+		DieEnd();
 		break;
 	default:
 		break;
@@ -79,6 +83,9 @@ void Player::StateChange(PlayerState _State)
 		break;
 	case PlayerState::Hit:
 		HitStart();
+		break;
+	case PlayerState::Die:
+		DieStart();
 		break;
 	default:
 		break;
@@ -590,6 +597,25 @@ void Player::HitUpdate()
 		StateChange(PlayerState::Idle);
 		return;
 	}
+}
+
+void Player::DieStart()
+{
+
+}
+
+void Player::DieUpdate()
+{
+	DieTimer_ -= GameEngineTime::GetDeltaTime();
+	if (DieTimer_ <= 0)
+	{
+		StateChange(PlayerState::Idle);
+	}
+}
+
+void Player::DieEnd()
+{
+	SetMove({ 0,3000 });
 }
 
 void Player::MoveToLadderPos()

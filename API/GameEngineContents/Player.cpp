@@ -27,7 +27,7 @@ Player::Player()
 
 void Player::InitPlayerPara()
 {
-	MaxHP_ = 28;
+	MaxHP_ = 4;
 	CurHP_ = MaxHP_;
 	CurSpeed_ = 0.0f;
 	CurState_ = PlayerState::Idle;
@@ -49,6 +49,8 @@ void Player::InitPlayerPara()
 	CurBlinkTimer_ = 0;
 	MaxBlinkTimer_ =0.12f;//이 시간이 지나면 알파값이 변화함
 	IsHitAlphaOn_ = false;
+
+	DieTimer_ = 1.5f; //이시간이 지나면 죽는 이펙트가 활성화됨
 
 	PlayerRenderer_ = nullptr;
 
@@ -365,15 +367,15 @@ void Player::CheckMonsterCol()
 			break;
 		}
 
-		StateChange(PlayerState::Hit);
-		/*if (CurHP_ <= 0)
+		if (CurHP_ <= 0)
 		{
 			CurHP_ = 0;
+			StateChange(PlayerState::Die);
 		}
 		else
 		{
 			StateChange(PlayerState::Hit);
-		}*/
+		}
 }
 }
 

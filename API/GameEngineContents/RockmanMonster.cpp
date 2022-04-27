@@ -35,8 +35,11 @@ void RockmanMonster::Update()
 	size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
 	if (Index_ == Background_Index && IsDead == false)
 	{
-		UpdateState();
-		HitByBulletCheck();
+		if (Player_->GetCurPlayerState() != PlayerState::Die) //플레이어가 Die상태일경우 잠시 몬스터가 멈춘다.
+		{
+			UpdateState();
+			HitByBulletCheck();
+		}
 	}
 	else
 	{
@@ -165,8 +168,13 @@ void RockmanMonster::ChaseUpdate()
 	float Distance = float4(Player_->GetPosition().x - GetPosition().x, 0).Len2D();
 	if (Distance <= AttackStartRange_)
 	{
-		ChangeState(MonsterState::Attack);
-		return;
+		//Y축 거리차가 너무나면 공격을 중지한다.
+		float DistanceY = float4(0, Player_->GetPosition().y - GetPosition().y).Len2D();
+		if (DistanceY < 1200)
+		{
+			ChangeState(MonsterState::Attack);
+			return;
+		}
 	}
 	SetMove(CurHoriDir_ * Speed_*GameEngineTime::GetDeltaTime());
 }

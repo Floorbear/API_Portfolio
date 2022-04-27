@@ -16,6 +16,11 @@ public:
 		return CurState_;
 	}
 
+	inline int GetPlayerHP()
+	{
+		return CurHP_;
+	}
+
 private:
 	void IdleStart();
 	void IdleEnd();
@@ -27,12 +32,15 @@ private:
 	void ClimbEnd();
 	void HitStart();
 	void HitEnd();
+	void DieStart();
+	void DieEnd();
 
 	void IdleUpdate();
 	void MoveUpdate();
 	void JumpUpdate();
 	void ClimbUpdate();
 	void HitUpdate();
+	void DieUpdate();
 
 
 	//충돌체가 있으면 true, 없으면 false
@@ -124,6 +132,7 @@ private:
 
 	//활성화
 	bool CanActivate;
+	float DieTimer_;
 
 
 public:

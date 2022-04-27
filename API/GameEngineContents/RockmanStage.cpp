@@ -71,13 +71,13 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	//게임 매니저에 시작 백그라운드 등록
 	GameManager::GetInst()->SetCurrentBackGround(StartBackground_);
 
-	//UI 셋팅
-	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
-	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
-
 	//플레이어 로드
 	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
 	GameManager::GetInst()->SetPlayer(RockMan);
+
+	//UI 셋팅
+	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
+	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
 
 	//몬스터 로드
 	InitMonster();
