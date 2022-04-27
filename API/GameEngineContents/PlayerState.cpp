@@ -463,6 +463,8 @@ void Player::HitStart()
 	ResetAttackPara();
 	PlayerRenderer_->SetPivot({ 0,50 });
 	PlayerRenderer_->ChangeAnimation("RockMan_Hit_" + RockmanUtility::DirToStr(CurHoriDir_));
+	HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_On");
+	HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_On");
 	PlayerRenderer_->PauseOff();
 	CurSpeed_ = MaxSpeed_*0.7f;
 	CurHitTimer_ = 0.01; //CurHitTimer의 값을 살짝 건드려서 Update에서 타이머가 작동하게 한다.

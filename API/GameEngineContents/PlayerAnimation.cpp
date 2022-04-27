@@ -4,11 +4,12 @@
 
 void Player::LoadAnimation()
 {
-	//애니메이션 초기화
-	
-	PlayerRenderer_ = CreateRenderer(2, RenderPivot::CENTER, float4{ 0,50 });
+	//렌더러 초기화
+	PlayerRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Player), RenderPivot::CENTER, float4{0,50});
+	HitEffect_Center_Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Player), RenderPivot::CENTER);
+	HitEffect_Top_Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Player), RenderPivot::CENTER,float4(0,-50));
+	//
 
-	//Idle
 	PlayerRenderer_->CreateAnimation("RockMan_Idle_Left.bmp", "RockMan_Idle_Left", 0, 11, 0.3f);
 	PlayerRenderer_->CreateAnimation("RockMan_Idle_Right.bmp", "RockMan_Idle_Right", 0, 11, 0.3f);
 
@@ -35,10 +36,19 @@ void Player::LoadAnimation()
 	PlayerRenderer_->CreateAnimation("RockMan_Hit_Right.bmp", "RockMan_Hit_Right", 0, 0, 0.3f, false);
 	PlayerRenderer_->CreateAnimation("RockMan_Hit_Left.bmp", "RockMan_Hit_Left", 0, 0, 0.3f, false);
 
+	HitEffect_Center_Renderer_->CreateAnimation("HitEffect_Center.bmp", "HitEffect_Center_On", 0, 0, 0.05f, true);
+	HitEffect_Center_Renderer_->CreateAnimation("HitEffect_Center.bmp", "HitEffect_Center_Off", 1, 1, 0.05f, false);
+	HitEffect_Top_Renderer_->CreateAnimation("HitEffect_Top.bmp", "HitEffect_Top_On", 0, 3, 0.07f, false);
+	HitEffect_Top_Renderer_->CreateAnimation("HitEffect_Top.bmp", "HitEffect_Top_Off", 3, 3, 0.07f, false);
 
 	PlayerRenderer_->ChangeAnimation("RockMan_Idle_Right");
+	HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+	HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 
 
 	PlayerRenderer_->SetTransColor(RGB(255, 255, 255));
+	HitEffect_Center_Renderer_->SetTransColor(RGB(255, 255, 255));
+	HitEffect_Top_Renderer_->SetTransColor(RGB(255, 255, 255));
 
+	HitEffect_Center_Renderer_->SetAlpha(140);
 }
