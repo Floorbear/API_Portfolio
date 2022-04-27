@@ -50,7 +50,7 @@ public:
 	{
 		if (CurPlayer_ == nullptr)
 		{
-			MsgBoxAssert("CurPlayer가 셋팅되지 않았습니다");
+			return nullptr;
 		}
 		return CurPlayer_;
 	}
@@ -61,6 +61,8 @@ public:
 	}
 
 
+public:
+	bool IsGameStart; //이 변수가 True가 되는것을 레벨이 감지하고 플레이어를 생성한다.
 
 private:
 

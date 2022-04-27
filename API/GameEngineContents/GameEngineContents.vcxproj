@@ -175,6 +175,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="PlayerDieEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ReadyUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="RockMan.h">
       <SubType>
       </SubType>
@@ -251,7 +259,15 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="PlayerAnimation.cpp" />
+    <ClCompile Include="PlayerDieEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="ReadyUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RockMan.cpp">
       <SubType>
       </SubType>

@@ -53,6 +53,7 @@ void Stage1::InitBackground()
 		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_0");
 		NewBackground->SetIndex(0);
 		StartBackground_ = NewBackground;
+		NewBackground->SetSpawnPoint({ 508,589.43 });
 		AllBackground_.push_back(NewBackground);
 	}
 	// Map index = 1

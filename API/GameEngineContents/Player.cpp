@@ -73,6 +73,7 @@ void Player::InitPlayerPara()
 	PlayerRenderer_ = nullptr;
 	HitEffect_Center_Renderer_ = nullptr;
 	HitEffect_Top_Renderer_ = nullptr;
+	PlayerSpawnRenderer_ = nullptr;
 }
 
 Player::~Player()
@@ -81,9 +82,6 @@ Player::~Player()
 
 void Player::Start()
 {
-
-	//SetPosition(GameEngineWindow::GetScale().Half()+float4::UP*200+float4::RIGHT*-300);
-	SetPosition({ 3500,700 });
 	SetScale({ 100,100 });
 	
 	LoadAnimation();
@@ -94,6 +92,12 @@ void Player::Start()
 
 void Player::Update()
 {
+	if (PlayerSpawnRenderer_->IsEndAnimation() == true)
+	{
+		PlayerRenderer_->On();
+		PlayerSpawnRenderer_->Off();
+	}
+
 	if (CanActivate == true)
 	{
 		StateUpdate();
@@ -172,13 +176,17 @@ void Player::Update()
 		PlayerCol_->On();
 	}
 
+	//플레이어가 화면 밖으로 벗어나지 못하게
+	if (GetPosition().x < GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
+	{
+		SetPosition(float4(GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x, GetPosition().y));
+	}
 
-	//카메라 체크
+	//카메라가 화면 밖으로 벗어나지 못하게 한다
 	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,CameraPosY_ };
 	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x + GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
 
 
-	//카메라가 화면 밖으로 벗어나지 못하게 한다
 	if (CameraPos.x <= GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
 	{
 		CameraPos.x = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;

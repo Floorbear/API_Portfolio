@@ -44,6 +44,16 @@ public:
 		Index_ = _Index;
 	}
 
+	inline float4 GetSpawnPoint()
+	{
+		return SpawnPoint_;
+	}
+
+	inline void SetSpawnPoint(const float4& _Pos)
+	{
+		SpawnPoint_ = _Pos;
+	}
+
 	//_Pos에서 BackGroundCol의 픽셀값이 검정인지 확인하는 함수
 	bool IsBlocked(const float4& _Pos , unsigned long _RGB = RGB(0,0,0));
 
@@ -61,6 +71,8 @@ private:
 
 	std::vector<GameEngineCollision*> AllMoveUPCol_;
 	std::vector<GameEngineCollision*> AllMoveDownCol_;
+
+	float4 SpawnPoint_;
 
 	size_t Index_;
 

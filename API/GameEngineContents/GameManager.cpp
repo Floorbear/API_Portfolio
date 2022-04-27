@@ -38,7 +38,8 @@ GameManager::GameManager()
 	ChangeLevelName_(),
 	IsChangeLevel_(false),
 	IsDebugMode_(false),
-	CurPlayer_(nullptr)
+	CurPlayer_(nullptr),
+	IsGameStart(false)
 {
 }
 

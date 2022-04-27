@@ -152,6 +152,12 @@ void RockMan::InitImage()
 		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Hit_Right.bmp");
 		PlayerImage->Cut({ 256,256 });
 
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Die.bmp");
+		PlayerImage->Cut({ 256,256 });
+
+		PlayerImage = GameEngineImageManager::GetInst()->Find("RockMan_Spawn.bmp");
+		PlayerImage->Cut({ 256,256 });
+
 
 	}
 

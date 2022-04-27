@@ -36,32 +36,54 @@ void HPBar::Start()
 
 void HPBar::Update()
 {
-	CurHP_ = GameManager::GetInst()->GetPlayer()->GetPlayerHP();
-
-	//아래서부터 HPIndex의 값을 최신화
-	int TempHP = CurHP_;
-	for (int i = 6; i >= 0; i--)
+	Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+	if (CurPlayer != nullptr)
 	{
-		if (TempHP >= 4)
+		for (int i = 0; i < 7; i++)
 		{
-			HPIndex_[i] = 4;
-			TempHP -= 4;
-			continue;
+			PerHPRenderer_[i]->On();
+
 		}
-		else // 3,2,1,0
+		CurHP_ = CurPlayer->GetPlayerHP();
+		//아래서부터 HPIndex의 값을 최신화
+		int TempHP = CurHP_;
+		for (int i = 6; i >= 0; i--)
 		{
-			HPIndex_[i] = TempHP;
-			TempHP -= TempHP;
-			continue;
+			if (TempHP >= 4)
+			{
+				HPIndex_[i] = 4;
+				TempHP -= 4;
+				continue;
+			}
+			else // 3,2,1,0
+			{
+				HPIndex_[i] = TempHP;
+				TempHP -= TempHP;
+				continue;
+			}
 		}
 	}
+	else //게임이 시작하지 않았다면 HP바를 감춘다
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			PerHPRenderer_[i]->Off();
+
+		}
+	}
+
 }
 
 //HP바 렌더
 void HPBar::Render()
 {
-	for (int i = 0; i < 7; i++)
+	Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+	if (CurPlayer != nullptr)
 	{
-		PerHPRenderer_[i]->SetIndex(HPIndex_[i]);
+		for (int i = 0; i < 7; i++)
+		{
+			PerHPRenderer_[i]->SetIndex(HPIndex_[i]);
+		}
 	}
+
 }

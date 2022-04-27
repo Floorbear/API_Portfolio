@@ -31,21 +31,27 @@ void RockmanMonster::Start()
 
 void RockmanMonster::Update()
 {
-	//맵의 변경을 계속 감시해서 일어나면 몬스터를 죽인다
-	size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
-	if (Index_ == Background_Index && IsDead == false)
+	//플레이어 참조
+	Player_ = GameManager::GetInst()->GetPlayer();
+	if (Player_ != nullptr)
 	{
-		if (Player_->GetCurPlayerState() != PlayerState::Die) //플레이어가 Die상태일경우 잠시 몬스터가 멈춘다.
+		//맵의 변경을 계속 감시해서 일어나면 몬스터를 죽인다
+		size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
+		if (Index_ == Background_Index && IsDead == false)
 		{
-			UpdateState();
-			HitByBulletCheck();
+			if (Player_->GetCurPlayerState() != PlayerState::Die) //플레이어가 Die상태일경우 잠시 몬스터가 멈춘다.
+			{
+				UpdateState();
+				HitByBulletCheck();
+			}
 		}
+		else
+		{
+			DeathTimer_ -= GameEngineTime::GetDeltaTime();
+		}
+		
 	}
-	else
-	{
-		DeathTimer_ -= GameEngineTime::GetDeltaTime();
-	}
-
+	
 	if (DeathTimer_ <= 0)
 	{
 		Death();
@@ -102,8 +108,6 @@ void RockmanMonster::SetMonster()
 	//콜리전 생성
 	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
 
-	//플레이어 참조
-	Player_ = GameManager::GetInst()->GetPlayer();
 
 	//생성될 때 백그라운드의 인덱스를 자기 인덱스로
 	Index_ = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
@@ -160,8 +164,11 @@ void RockmanMonster::ChaseUpdate()
 	//방향 전환이 일어난다면 애니메이션을 바꿔라
 	if (WantHoriDir_.CompareInt2D(CurHoriDir_) == false)
 	{
-		MonsterRenderer_->ChangeAnimation("BunbyHeli_" + RockmanUtility::DirToStr(WantHoriDir_));
-		CurHoriDir_ = WantHoriDir_;
+		if (WantHoriDir_.CompareInt2D(float4::ZERO) == false) //플레이어가 죽고 위치에 고정될때
+		{
+			MonsterRenderer_->ChangeAnimation("BunbyHeli_" + RockmanUtility::DirToStr(WantHoriDir_));
+			CurHoriDir_ = WantHoriDir_;
+		}
 	}
 
 	//사정거리 내에 도달하면 공격을 한다.

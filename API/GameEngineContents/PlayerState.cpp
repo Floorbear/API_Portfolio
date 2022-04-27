@@ -7,7 +7,7 @@
 #include "RockmanUtility.h"
 #include "Bullet.h"
 #include <GameEngineBase/GameEngineSound.h>
-
+#include "PlayerDieEffect.h"
 void Player::StateUpdate()
 {
 	switch (CurState_)
@@ -615,6 +615,8 @@ void Player::DieUpdate()
 
 void Player::DieEnd()
 {
+	PlayerDieEffect* DieEffect = GetLevel()->CreateActor<PlayerDieEffect>(static_cast<int>(GameLayer::Player), "DieEffect");
+	DieEffect->SetPosition(GetPosition());
 	SetMove({ 0,3000 });
 }
 

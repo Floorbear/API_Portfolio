@@ -56,6 +56,12 @@
     <ClInclude Include="RockmanMonster.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerDieEffect.h">
+      <Filter>Actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadyUI.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -116,6 +122,12 @@
     </ClCompile>
     <ClCompile Include="RockmanMonster.cpp">
       <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDieEffect.cpp">
+      <Filter>Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadyUI.cpp">
+      <Filter>Actor\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

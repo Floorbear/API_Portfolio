@@ -31,6 +31,7 @@ protected:
 	virtual void InitMonster() = 0;
 
 private:
+	bool IsPlayerSpawn_;
 
 protected:
 	GameEngineSoundPlayer Bgm_;

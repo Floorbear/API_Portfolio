@@ -75,6 +75,7 @@ private:
 	void LoadAnimation();
 
 private:
+	GameEngineRenderer* PlayerSpawnRenderer_;
 	GameEngineRenderer* PlayerRenderer_;
 	GameEngineRenderer* HitEffect_Center_Renderer_;
 	GameEngineRenderer* HitEffect_Top_Renderer_;

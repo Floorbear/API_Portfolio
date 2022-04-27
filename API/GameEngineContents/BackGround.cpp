@@ -13,7 +13,8 @@ BackGround::BackGround()
 	UpBackground_(nullptr),
 	Renderer_(nullptr),
 	BackGroundImage_(nullptr),
-	BackGroundColImage_(nullptr)
+	BackGroundColImage_(nullptr),
+	SpawnPoint_(float4::ZERO)
 {
 	AllMoveDownCol_.reserve(5);
 	AllMoveUPCol_.reserve(5);

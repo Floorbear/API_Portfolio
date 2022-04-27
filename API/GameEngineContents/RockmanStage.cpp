@@ -8,10 +8,11 @@
 #include "HPBar.h"
 #include "Scoreboard.h"
 #include "RockManEnum.h"
-
+#include "ReadyUI.h"
 RockmanStage::RockmanStage()
 	:
-	StartBackground_(nullptr)
+	StartBackground_(nullptr),
+	IsPlayerSpawn_(false)
 {
 	AllBackground_.reserve(30);
 }
@@ -52,6 +53,14 @@ void RockmanStage::Loading()
 
 void RockmanStage::Update()
 {
+	if (GameManager::GetInst()->IsGameStart == true && IsPlayerSpawn_ == false)
+	{
+		//플레이어 로드
+		Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
+		GameManager::GetInst()->SetPlayer(RockMan);
+		RockMan->SetPosition(GameManager::GetInst()->GetCurrentBackGround()->GetSpawnPoint());
+		IsPlayerSpawn_ = true;
+	}
 }
 
 void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
@@ -68,16 +77,17 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	//백그라운드 간 관계 셋팅
 	ConnectBackground();
 
-	//게임 매니저에 시작 백그라운드 등록
+	//게임 매니저에 시작 백그라운드 등록 << 이거 수정필요 if(checkPointBackgournd != nullptr) > SetCurrentBackGround(체크포인트)
 	GameManager::GetInst()->SetCurrentBackGround(StartBackground_);
 
-	//플레이어 로드
-	Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
-	GameManager::GetInst()->SetPlayer(RockMan);
+	//카메라 셋팅
+	SetCameraPos(GameManager::GetInst()->GetCurrentBackGround()->GetPosition());
 
 	//UI 셋팅
 	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
 	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
+	CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI");
+
 
 	//몬스터 로드
 	InitMonster();
