@@ -538,10 +538,14 @@ void Player::HitUpdate()
 			else
 			{
 				CanJump_ = false;
+				HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+				HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 				StateChange(PlayerState::Jump);
 				return;
 			}
 		}
+		HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+		HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 		StateChange(PlayerState::Idle);
 		return;
 	}
