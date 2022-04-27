@@ -284,9 +284,9 @@ bool Player::CheckPixelCol(float4 _Dir, unsigned long _RGB, bool _CheckOnlyMid)
 	return false;
 }
 
-void Player::Move(float4 _Dir, float _Speed)
+void Player::Move(float4 _Dir, float _Speed, unsigned long _RGB, bool _CheckOnlyMid )
 {
-	if (CheckPixelCol(_Dir) == true)
+	if (CheckPixelCol(_Dir,_RGB,_CheckOnlyMid) == true)
 	{
 		return;
 	}

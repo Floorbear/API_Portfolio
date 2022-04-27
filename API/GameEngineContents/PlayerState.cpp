@@ -39,6 +39,29 @@ void Player::StateChange(PlayerState _State)
 		return;
 	}
 
+	switch (CurState_)
+	{
+	case PlayerState::Idle:
+		IdleEnd();
+		break;
+	case PlayerState::Move:
+		MoveEnd();
+		break;
+	case PlayerState::Jump:
+		JumpEnd();
+		break;
+	case PlayerState::Climb:
+		ClimbEnd();
+		break;
+	case PlayerState::Hit:
+		HitEnd();
+		break;
+	case PlayerState::Die:
+		break;
+	default:
+		break;
+	}
+
 
 	switch (_State)
 	{
@@ -65,10 +88,12 @@ void Player::StateChange(PlayerState _State)
 
 void Player::IdleStart()
 {
-	PlayerRenderer_->SetPivot({ 0,50 });
-	ResetAttackPara();
 	PlayerRenderer_->ChangeAnimation(std::string("RockMan_Idle_" + RockmanUtility::DirToStr(CurHoriDir_)));
-	PlayerRenderer_->PauseOff();
+}
+
+void Player::IdleEnd()
+{
+	ResetAttackPara();
 }
 
 void Player::IdleUpdate()
@@ -148,12 +173,12 @@ void Player::IdleUpdate()
 
 void Player::MoveStart()
 {
-	PlayerRenderer_->SetPivot({ 0,50 });
-	ResetAttackPara();
-
 	PlayerRenderer_->ChangeAnimation("RockMan_Move_"+RockmanUtility::DirToStr(CurHoriDir_));
+}
 
-	PlayerRenderer_->PauseOff();
+void Player::MoveEnd()
+{
+	ResetAttackPara();
 }
 
 void Player::MoveUpdate()
@@ -226,7 +251,6 @@ void Player::MoveUpdate()
 		return;
 	}
 
-
 	CurHoriDir_ = WantHoriDir_;
 
 	CurSpeed_ += GameEngineTime::GetDeltaTime() * AccSpeed_;
@@ -237,17 +261,21 @@ void Player::MoveUpdate()
 		CurSpeed_ = MaxSpeed_;
 	}
 
-
 	Move(CurHoriDir_, CurSpeed_);
 }
 
 void Player::JumpStart()
 {
-	ResetAttackPara();
 	IsColDown = false;
-	PlayerRenderer_->SetPivot({ 0,50 });
 	PlayerRenderer_->ChangeAnimation("RockMan_Jump_"+ RockmanUtility::DirToStr(CurHoriDir_));
-	PlayerRenderer_->PauseOff();
+}
+
+void Player::JumpEnd()
+{
+	ResetAttackPara();
+	Gravity_ = 0;
+	CurJumpTime_ = 0.0f;
+	IsColUP = false;
 }
 
 void Player::JumpUpdate()
@@ -377,24 +405,24 @@ void Player::JumpUpdate()
 	//땅에 닿았어 
 	if (IsColDown == true)
 	{
-		Gravity_ = 0;
-		CanJump_ = true; //점프를 다시 할 수 있더
-		CurJumpTime_ = 0.0f;
-		IsColUP = false;
 		StateChange(PlayerState::Idle);
 		return;
-		
 	}
 
 }
 
 void Player::ClimbStart()
 {
-	PlayerRenderer_->SetPivot({ 0,50 });
-	ResetAttackPara();
 	MoveToLadderPos();
 	PlayerRenderer_->ChangeAnimation("RockMan_Climb");
 	PlayerRenderer_->PauseOn();
+}
+
+void Player::ClimbEnd()
+{
+	PlayerRenderer_->SetPivot({ 0,50 });
+	ResetAttackPara();
+	PlayerRenderer_->PauseOff();
 }
 
 
@@ -404,7 +432,7 @@ void Player::ClimbUpdate()
 	if (IsMoveVerKeyPress() == true && IsAttacking == false) // W or S를 눌렀다면
 	{
 		PlayerRenderer_->PauseOff();
-		Move(WantVerDir_, 170.0f);//Climb Speed
+		Move(WantVerDir_, 170.0f,WallColor,true);//Climb Speed
 		if (CheckPixelCol(float4::DOWN, LadderColor, true) == false
 		|| (WantVerDir_.CompareInt2D(float4::UP) &&(CheckPixelCol(float4::ZERO, LadderColor, true) == false))) //윗쪽사다리가 끝나는 조건 Base 개념 : 내 발 아래 사다리 픽셀이 없으면 Climb종료
 		{
@@ -470,6 +498,13 @@ void Player::HitStart()
 	PlayerRenderer_->PauseOff();
 	CurSpeed_ = MaxSpeed_*0.7f;
 	CurHitTimer_ = 0.01; //CurHitTimer의 값을 살짝 건드려서 Update에서 타이머가 작동하게 한다.
+}
+
+void Player::HitEnd()
+{
+	CanJump_ = false;
+	HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+	HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 }
 
 void Player::HitUpdate()
@@ -548,15 +583,10 @@ void Player::HitUpdate()
 			}
 			else
 			{
-				CanJump_ = false;
-				HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
-				HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 				StateChange(PlayerState::Jump);
 				return;
 			}
 		}
-		HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
-		HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 		StateChange(PlayerState::Idle);
 		return;
 	}

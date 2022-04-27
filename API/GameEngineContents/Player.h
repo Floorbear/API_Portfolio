@@ -18,10 +18,15 @@ public:
 
 private:
 	void IdleStart();
+	void IdleEnd();
 	void MoveStart();
+	void MoveEnd();
 	void JumpStart();
+	void JumpEnd();
 	void ClimbStart();
+	void ClimbEnd();
 	void HitStart();
+	void HitEnd();
 
 	void IdleUpdate();
 	void MoveUpdate();
@@ -34,7 +39,7 @@ private:
 	//플레이어의 가상 PixelCollision을 만들고 _Dir 방향 픽셀 충돌 검사
 	bool CheckPixelCol(float4 _Dir,unsigned long _RGB = RGB(0,0,0),bool _CheckOnlyMid = false);
 
-	void Move(float4 _Dir, float _Speed); //픽셀충돌체크하고 이동해주는 함수, 픽셀충돌할 경우 방향에 맞춰 IsCol, IsVerti 를 On한다
+	void Move(float4 _Dir, float _Speed, unsigned long _RGB = RGB(0, 0, 0), bool _CheckOnlyMid = false); //픽셀충돌체크하고 이동해주는 함수
 
 	bool IsMoveHoriKeyPress(); //A or D 키가 눌렸는지 감지하고, 눌린 키값을 WantHoriDir_에 셋팅
 
