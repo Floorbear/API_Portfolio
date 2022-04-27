@@ -101,6 +101,10 @@ private:
 	float CurHitTimer_; //현재 히트 상태 지속시간
 	float GetOutHitTimer_; //이 시간이 되면 Hit상태를 벗어납니다
 	float MaxHitTimer_; //이 시간이 되면 무적상태를 벗어납니다.
+	int HitAlpha_; //히트 시에 셋될 알파값
+	bool IsHitAlphaOn_;
+	float CurBlinkTimer_;
+	float MaxBlinkTimer_;//이 시간이 지나면 알파값이 변화함
 
 	//스텟
 	int MaxHP_;

@@ -43,8 +43,12 @@ void Player::InitPlayerPara()
 	WantVerDir_ = float4::ZERO;
 
 	CurHitTimer_ = 0;
-	GetOutHitTimer_ = 0.3f;
+	GetOutHitTimer_ = 0.45f;
 	MaxHitTimer_ = 1.5f;
+	HitAlpha_ = 40; //히트 시에 셋될 알파값
+	CurBlinkTimer_ = 0;
+	MaxBlinkTimer_ =0.12f;//이 시간이 지나면 알파값이 변화함
+	IsHitAlphaOn_ = false;
 
 	PlayerRenderer_ = nullptr;
 
@@ -93,14 +97,35 @@ void Player::Update()
 		StateUpdate();
 		if (CurHitTimer_ == 0)
 		{
+			IsHitAlphaOn_ = false;
+			CurBlinkTimer_ = 0;
 			CheckMonsterCol();
 		}
-		else
+		else //히트 시 MaxHitTimer_시간동안 몬스터와의 충돌체크를 하지않는다. == 무적상태가 된다. & 무적상태일때 알파값 이펙트를 보여준다
 		{
+			CurBlinkTimer_ += GameEngineTime::GetDeltaTime();
 			CurHitTimer_ += GameEngineTime::GetDeltaTime();
+
+			if (CurBlinkTimer_ > MaxBlinkTimer_) //무적상태일때 깜박거림
+			{
+				if (IsHitAlphaOn_ == false)
+				{
+					IsHitAlphaOn_ = true;
+					PlayerRenderer_->SetAlpha(HitAlpha_);
+					HitEffect_Center_Renderer_->SetAlpha(HitAlpha_);
+				}
+				else
+				{
+					IsHitAlphaOn_ = false;
+					PlayerRenderer_->SetAlpha(255);
+					HitEffect_Center_Renderer_->SetAlpha(200);
+				}
+			}
+
 			if (CurHitTimer_ >= MaxHitTimer_)
 			{
 				CurHitTimer_ = 0;
+				PlayerRenderer_->SetAlpha(255);
 			}
 		}
 		
@@ -143,7 +168,6 @@ void Player::Update()
 	{
 		CanActivate = true;
 		PlayerCol_->On();
-
 	}
 
 
