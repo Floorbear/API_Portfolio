@@ -12,8 +12,8 @@ GameEngineImageManager::GameEngineImageManager()
 GameEngineImageManager::~GameEngineImageManager()
 {
 	{
-		std::map<std::string, GameEngineImage*>::iterator StartIter = AllRes.begin();
-		std::map<std::string, GameEngineImage*>::iterator EndIter = AllRes.end();
+		std::map<std::string, GameEngineFolderImage*>::iterator StartIter = AllFolderRes.begin();
+		std::map<std::string, GameEngineFolderImage*>::iterator EndIter = AllFolderRes.end();
 
 		for (; StartIter != EndIter; ++StartIter)
 		{
