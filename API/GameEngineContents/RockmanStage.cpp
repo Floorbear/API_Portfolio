@@ -28,9 +28,7 @@ void RockmanStage::PlayerRespawn()
 	Player* CurPlayer = GameManager::GetInst()->GetPlayer();
 	if (CurPlayer != nullptr)
 	{
-		//기존 초기화
-		CurPlayer->Death();
-		GameManager::GetInst()->SetPlayer(nullptr);
+
 		IsPlayerSpawn_ = false;
 		GameManager::GetInst()->IsGameStart = false;
 

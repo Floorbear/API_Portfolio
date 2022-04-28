@@ -607,6 +607,7 @@ void Player::DieStart()
 void Player::DieUpdate()
 {
 	DieTimer_ -= GameEngineTime::GetDeltaTime();
+	PlayerRenderer_->PauseOn();
 	if (DieTimer_ <= 0)
 	{
 		StateChange(PlayerState::Idle);
@@ -618,6 +619,10 @@ void Player::DieEnd()
 	PlayerDieEffect* DieEffect = GetLevel()->CreateActor<PlayerDieEffect>(static_cast<int>(GameLayer::Player), "DieEffect");
 	DieEffect->SetPosition(GetPosition());
 	SetMove({ 0,3000 });
+	//기존 초기화
+	GameManager::GetInst()->SetPlayer(nullptr);
+	Death();
+
 }
 
 void Player::MoveToLadderPos()
