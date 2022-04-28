@@ -62,6 +62,9 @@
     <ClInclude Include="ReadyUI.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="RockmanItem.h">
+      <Filter>Actor\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -129,6 +132,9 @@
     <ClCompile Include="ReadyUI.cpp">
       <Filter>Actor\UI</Filter>
     </ClCompile>
+    <ClCompile Include="RockmanItem.cpp">
+      <Filter>Actor\ETC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Level">
@@ -154,6 +160,9 @@
     </Filter>
     <Filter Include="Actor\Monster">
       <UniqueIdentifier>{87dfbb49-cdc0-40d4-9e1b-eb9b2418edfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\ETC">
+      <UniqueIdentifier>{8678b520-1f76-4b35-adde-0a83458c975b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

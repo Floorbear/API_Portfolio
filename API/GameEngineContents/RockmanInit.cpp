@@ -175,6 +175,12 @@ void RockMan::InitImage()
 
 		ObjectImage = GameEngineImageManager::GetInst()->Find("HitEffect_Top.bmp");
 		ObjectImage->Cut({ 256,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("BonusBall.bmp");
+		ObjectImage->Cut({ 32,32 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("RecoveryItem.bmp");
+		ObjectImage->Cut({ 64,64 });
 	}
 
 	//UI비트맵 초기화

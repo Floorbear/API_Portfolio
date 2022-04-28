@@ -14,8 +14,8 @@ enum class PlayerState
 enum class GameLayer
 {
 	Background,
-	Object,
 	Monster,
+	Object,
 	Bullet,
 	Player,
 	UI,
@@ -38,6 +38,14 @@ enum class MonsterState
 enum class BulletType
 {
 	Normal,
+	Max
+};
+
+enum class ItemType
+{
+	SmallEnergy,
+	BigEnergy,
+	RedBonusBall,
 	Max
 };
 

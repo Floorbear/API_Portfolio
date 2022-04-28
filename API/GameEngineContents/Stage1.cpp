@@ -92,9 +92,9 @@ void Stage1::InitMonster()
 {
 	//Map Index : 1
 	{
-		//RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0);
-		//NewMonster->SetSpawnPos({ 1100, 250 });
+		RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		NewMonster->SetSpawnPos({ 1100, 250 });
 
 		//NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		//NewMonster->SetIndex(0);

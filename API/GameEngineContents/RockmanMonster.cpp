@@ -8,6 +8,8 @@
 #include <GameEngine/GameEngineCollision.h>
 #include "Bullet.h"
 #include <GameEngineBase/GameEngineSound.h>
+#include "RockmanItem.h"
+#include <GameEngineBase/GameEngineRandom.h>
 
 RockmanMonster::RockmanMonster()
 	:DeletePos_(float4(-1000,-1000)),
@@ -332,5 +334,20 @@ void RockmanMonster::Die()
 	CanActivate = false;
 	MonsterRenderer_->ChangeAnimation("Explosion");
 	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
+	DropItem();
 	MonsterContactCol_->Off();
+	ChangeState(MonsterState::Chase);
+	Speed_ = Default_Speed_;
+}
+
+void RockmanMonster::DropItem()
+{
+	GameEngineRandom NewRandom;
+	int RandomValue = NewRandom.RandomInt(0, 100);
+	if (RandomValue > 50)
+	{
+		RockmanItem* NewItem = GetLevel()->CreateActor<RockmanItem>(static_cast<int>(GameLayer::Object), "Item");
+		NewItem->SetPosition(GetPosition());
+	}
+
 }

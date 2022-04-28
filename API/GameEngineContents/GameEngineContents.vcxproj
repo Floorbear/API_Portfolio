@@ -188,6 +188,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="RockManEnum.h" />
+    <ClInclude Include="RockmanItem.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="RockmanMonster.h">
       <SubType>
       </SubType>
@@ -273,6 +277,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="RockmanInit.cpp" />
+    <ClCompile Include="RockmanItem.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RockmanMonster.cpp">
       <SubType>
       </SubType>

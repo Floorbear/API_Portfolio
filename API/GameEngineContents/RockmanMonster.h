@@ -59,6 +59,8 @@ private:
 	void Hit(BulletType _BulletType);
 	void Die();
 
+	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수
+
 private:
 	//스테이터스
 	int CurHP_;
