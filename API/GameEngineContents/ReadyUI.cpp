@@ -15,6 +15,7 @@ ReadyUI::~ReadyUI()
 
 void ReadyUI::Start()
 {
+	GameManager::GetInst()->IsGameStart = false;
 	SetPosition(GameEngineWindow::GetScale().Half()-float4(0,150));
 	ReadyRenderer_ = CreateRenderer(static_cast<int>(GameLayer::UI));
 	ReadyRenderer_->SetImage("Ready.bmp");

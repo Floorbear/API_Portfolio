@@ -2,6 +2,8 @@
 #include "RockmanUtility.h"
 #include <GameEngineBase/GameEngineDebug.h>
 #include "GameManager.h"
+#include "Player.h"
+#include "RockmanStage.h"
 
 PlayerDieEffect::PlayerDieEffect()
 	:CenterRenderer_(nullptr),
@@ -99,7 +101,9 @@ void PlayerDieEffect::Update()
 
 	LevelChangeTimer_ -= GameEngineTime::GetDeltaTime();
 	if (LevelChangeTimer_ <= 0)
-	{
-		
-	}
+	{	
+		RockmanStage* CurStage = dynamic_cast<RockmanStage*>(GetLevel());
+		CurStage->PlayerRespawn();
+		Death();
+	}		
 }

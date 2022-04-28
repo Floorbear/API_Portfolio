@@ -21,31 +21,25 @@ RockmanStage::~RockmanStage()
 {
 }
 
-//void RockmanStage::ChangeBackground(BackgroundDir _Dir, const float4& _MoveDir)
-//{
-//	if (_Dir == BackgroundDir::Next)
-//	{
-//		CurBackgroundIndex_++;
-//	}
-//	else if (_Dir == BackgroundDir::Prev)
-//	{
-//		CurBackgroundIndex_--;
-//	}
-//
-//	//현재 인덱스가 맥스 인덱스 보다 크다면 (즉 다음 백그라운드로 이동했다면), 맥스 인덱스를 늘려주고, 백그라운드를 동적 생성해준다.
-//	if (CurBackgroundIndex_ > MaxBackgroundIndex_)
-//	{
-//		MaxBackgroundIndex_ = CurBackgroundIndex_;
-//		BackGround* BackGround_ = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), GetNameCopy()+"_" + std::to_string(CurBackgroundIndex_));
-//		float4 SetPos = GetCameraPos() + float4(0, _MoveDir.y * (BackGround_->GetScale().y)); //카메라 좌표를 이용해서 상대좌표로 백그라운드가 생성될 위치를 계산한다.
-//		BackGround_->SetPosition(SetPos);
-//
-//
-//		AllBackground_.push_back(BackGround_);
-//
-//		GameManager::GetInst()->SetCurrentBackGround(BackGround_);
-//	}
-//}
+
+
+void RockmanStage::PlayerRespawn()
+{
+	Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+	if (CurPlayer != nullptr)
+	{
+		//기존 초기화
+		CurPlayer->Death();
+		GameManager::GetInst()->SetPlayer(nullptr);
+		IsPlayerSpawn_ = false;
+		GameManager::GetInst()->IsGameStart = false;
+
+		//렌더러 순서
+		CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI");
+		//카메라 셋팅
+		SetCameraPos(GameManager::GetInst()->GetCurrentBackGround()->GetPosition()); //나중에 GetCheckPointBackground
+	}
+}
 
 void RockmanStage::Loading()
 {

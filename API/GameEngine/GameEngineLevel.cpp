@@ -339,6 +339,7 @@ void GameEngineLevel::ActorRelease()
 				if (true == (*StartActor)->IsDeath())
 				{
 					delete* StartActor;
+					(*StartActor) = nullptr;
 					StartActor = Group.erase(StartActor);
 					continue;
 				}

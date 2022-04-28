@@ -57,6 +57,10 @@ void HPBar::Update()
 			}
 			else // 3,2,1,0
 			{
+				if (TempHP <= 0)
+				{
+					TempHP = 0;
+				}
 				HPIndex_[i] = TempHP;
 				TempHP -= TempHP;
 				continue;
@@ -83,6 +87,14 @@ void HPBar::Render()
 		for (int i = 0; i < 7; i++)
 		{
 			PerHPRenderer_[i]->SetIndex(HPIndex_[i]);
+		}
+	}
+	else //게임이 시작하지 않았다면 HP바를 감춘다
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			PerHPRenderer_[i]->Off();
+
 		}
 	}
 
