@@ -22,10 +22,12 @@ void Stage1::InitColPosNScale()
 {
 	// Map index = 0
 	{
-		GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,0 });
+		//맵이동 충돌체
 		{
+			GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,0 });
 			AllBackground_[0]->AllMoveUPCol_.push_back(NewMoveUpCol);
 		}
+
 	}
 
 	// Map index = 1
@@ -53,7 +55,8 @@ void Stage1::InitBackground()
 		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_0");
 		NewBackground->SetIndex(0);
 		StartBackground_ = NewBackground;
-		NewBackground->SetSpawnPoint({ 508,589.43 });
+		//NewBackground->SetSpawnPoint({ 508,589.43 });
+		NewBackground->SetSpawnPoint({ 3608,589.43 });
 		AllBackground_.push_back(NewBackground);
 	}
 	// Map index = 1
@@ -83,8 +86,14 @@ void Stage1::ConnectBackground()
 
 void Stage1::InitMonster()
 {
+	{
+		RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 1100, 250 });
+		NewMonster->SetSpawnPos({ 3600, 250 });
+	}
 	//디버그용 스폰
-	CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
+	//CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
 }
 
 

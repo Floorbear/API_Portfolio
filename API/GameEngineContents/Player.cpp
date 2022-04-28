@@ -27,7 +27,7 @@ Player::Player()
 
 void Player::InitPlayerPara()
 {
-	MaxHP_ = 4;
+	MaxHP_ = 28;
 	CurHP_ = MaxHP_;
 	CurSpeed_ = 0.0f;
 	CurState_ = PlayerState::Idle;

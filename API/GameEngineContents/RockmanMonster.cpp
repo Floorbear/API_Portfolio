@@ -9,9 +9,17 @@
 #include "Bullet.h"
 
 RockmanMonster::RockmanMonster()
+	:DeletePos_(float4(-1000,-1000)),
+	MonsterRenderer_(nullptr),
+	MonsterContactCol_(nullptr),
+	Player_ (nullptr),
+	CurHoriDir_(float4::ZERO),
+	WantHoriDir_(float4::ZERO),
+	CanActivate(true),
+	SpawnPos_({ -1000, -1000 }),
+	Index_(0)
 {
 	InitMonster();
-
 	StateStr_[static_cast<int>(MonsterState::Chase)] = "Chase";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
 }
@@ -22,8 +30,6 @@ RockmanMonster::~RockmanMonster()
 
 void RockmanMonster::Start()
 {
-	//디버그용 테스트 포지션
-	SetPosition({ 3300,100 });
 	SetScale({ 70,80 });
 	InitRenderer();
 	SetMonster();
@@ -31,32 +37,59 @@ void RockmanMonster::Start()
 
 void RockmanMonster::Update()
 {
-	//플레이어 참조
-	Player_ = GameManager::GetInst()->GetPlayer();
-	if (Player_ != nullptr)
+	if (CanActivate == true)
 	{
-		//맵의 변경을 계속 감시해서 일어나면 몬스터를 죽인다
-		size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
-		if (Index_ == Background_Index && IsDead == false)
+		if ((GetLevel()->GetCameraPos().x - 30 < GetPosition().x && GetPosition().x < GetLevel()->GetCameraPos().x + 1060) &&
+			(GetLevel()->GetCameraPos().y < GetPosition().y && GetPosition().y < GetLevel()->GetCameraPos().y + 960)) //카메라 안(살짝 카메라보다 큰 카메라)에 있어야 활동을 한다.
 		{
-			if (Player_->GetCurPlayerState() != PlayerState::Die) //플레이어가 Die상태일경우 잠시 몬스터가 멈춘다.
+			//플레이어 참조
+			Player_ = GameManager::GetInst()->GetPlayer();
+			if (Player_ != nullptr)
 			{
-				UpdateState();
-				HitByBulletCheck();
+				//맵의 변경을 계속 감시해서 맵변경이 일어나면 몬스터의 활동을 중지시킨다.
+				size_t Background_Index = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
+				if (Index_ == Background_Index && Player_->GetCanActivate() == true )
+				{
+					if (Player_->GetCurPlayerState() != PlayerState::Die) //플레이어가 Die상태일경우 잠시 몬스터가 멈춘다.
+					{
+						UpdateState();
+						HitByBulletCheck();
+					}
+				}
 			}
 		}
-		else
-		{
-			DeathTimer_ -= GameEngineTime::GetDeltaTime();
+		else //몬스터가 카메라 밖에 활동을 중지시킨다 (== 몬스터의 Pos를 -1000,-1000으로 옮긴다). , 몬스터의 위치를 SpawnPos로 옴긴다.
+		{	
+			//카메라가 스폰포인트 위치 밖에 있으면, 몬스터의 위치를 SpawnPos로 옮긴다
+			if ((GetLevel()->GetCameraPos().x - 30 < SpawnPos_.x && SpawnPos_.x < GetLevel()->GetCameraPos().x + 1060) &&
+				(GetLevel()->GetCameraPos().y < SpawnPos_.y && SpawnPos_.y < GetLevel()->GetCameraPos().y + 960)) //카메라 안(살짝 카메라보다 큰 카메라)에 있어야 활동을 한다.
+			{
+				SetPosition(DeletePos_);
+			}
+			else //카메라 밖에 있을 때
+			{
+				//스폰포스가 먼저 셋팅됬는데, 이시간뒤에 DeletePos로 가는 거야
+				SetPosition(SpawnPos_);
+			}
 		}
-		
 	}
 	
-	if (DeathTimer_ <= 0)
-	{
-		Death();
-	}
 
+	//몬스터가 죽었을경우 일정시간 이후 몬스터를 DeletePos_로 옮긴다.
+	if (CanActivate == false && DeathTimer_ >= 0)
+	{
+		DeathTimer_ -= GameEngineTime::GetDeltaTime();
+		if (DeathTimer_ <= 0)
+		{
+			SetPosition(DeletePos_);
+			ChangeIdleAni();
+			MonsterContactCol_->On();
+			CanActivate = true;
+			CurHP_ = MaxHP_;
+			DeathTimer_ = Default_DeathTimer_;
+		}
+	}
+	
 }
 
 void RockmanMonster::Render()
@@ -70,19 +103,20 @@ void RockmanMonster::Render()
 
 void RockmanMonster::InitMonster()
 {
+	//스테이터스
 	AttackDamage_ = 3;
-	MonsterRenderer_ = nullptr;
-	MonsterContactCol_ = nullptr;
+
 	CurState_ = MonsterState::Chase;
-	Player_ = nullptr;
-	CurHoriDir_=float4::ZERO;
-	WantHoriDir_=float4::ZERO;
+
 	Speed_=100.0f;
 	Default_Speed_ = 100.0f;
 	AttackStartRange_=230.0f;
-	DeathTimer_ = 1.0f;
+
+	Default_DeathTimer_ = 1.0f;
+	DeathTimer_ = Default_DeathTimer_;
 	MaxHP_ = 2;
-	IsDead = false;
+	CurHP_ = MaxHP_;
+
 		
 }
 
@@ -100,17 +134,18 @@ void RockmanMonster::InitRenderer()
 	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
 }
 
+void RockmanMonster::ChangeIdleAni()
+{
+	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
+}
+
 void RockmanMonster::SetMonster()
 {
-	//파라미터 셋팅
-	CurHP_ = MaxHP_;
+
 
 	//콜리전 생성
 	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
 
-
-	//생성될 때 백그라운드의 인덱스를 자기 인덱스로
-	Index_ = GameManager::GetInst()->GetCurrentBackGround()->GetIndex();
 }
 
 void RockmanMonster::ChangeState(MonsterState _State)
@@ -278,7 +313,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 	}
 
 	//체력이 0보다 작다면 
-	if (CurHP_ <= 0 && IsDead == false)
+	if (CurHP_ <= 0 && CanActivate == true)
 	{
 		Die();
 	}
@@ -286,7 +321,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 
 void RockmanMonster::Die()
 {
-	IsDead = true;
+	CanActivate = false;
 	MonsterRenderer_->ChangeAnimation("Explosion");
 	MonsterContactCol_->Off();
 }

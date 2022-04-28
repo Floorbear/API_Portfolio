@@ -21,6 +21,11 @@ public:
 		return CurHP_;
 	}
 
+	inline bool GetCanActivate()
+	{
+		return CanActivate;
+	}
+
 private:
 	void IdleStart();
 	void IdleEnd();

@@ -48,7 +48,8 @@ void RockmanStage::Loading()
 	//UI 셋팅
 	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
 	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
-	CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI");
+	//CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI"); //릴리즈 상태에선 주석 해제
+	GameManager::GetInst()->IsGameStart = true;//릴리즈 상태에선 주석
 
 
 	//몬스터 로드
@@ -81,7 +82,7 @@ void RockmanStage::UserResetEnd()
 	AllBackground_.clear();
 	StartBackground_ = nullptr;
 	IsPlayerSpawn_ = false;
-	GameManager::GetInst()->IsGameStart == false;
+	GameManager::GetInst()->IsGameStart = false;
 	RockmanStage::Loading();
 }
 
