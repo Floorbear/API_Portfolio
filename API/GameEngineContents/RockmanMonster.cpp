@@ -23,7 +23,7 @@ RockmanMonster::RockmanMonster()
 	Index_(0)
 {
 	InitMonster();
-	StateStr_[static_cast<int>(MonsterState::Chase)] = "Chase";
+	StateStr_[static_cast<int>(MonsterState::Idle)] = "Chase";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
 }
 
@@ -90,6 +90,7 @@ void RockmanMonster::Update()
 			CanActivate = true;
 			CurHP_ = MaxHP_;
 			DeathTimer_ = Default_DeathTimer_;
+			ChangeState(MonsterState::Idle);
 		}
 	}
 	
@@ -107,9 +108,10 @@ void RockmanMonster::Render()
 void RockmanMonster::InitMonster()
 {
 	//스테이터스
-	AttackDamage_ = 3;
+	//AttackDamage_ = 3;//Default
+	AttackDamage_ = 10;
 
-	CurState_ = MonsterState::Chase;
+	CurState_ = MonsterState::Idle;
 
 
 	Default_Speed_ = 200.0f;
@@ -163,7 +165,7 @@ void RockmanMonster::ChangeState(MonsterState _State)
 
 	switch (_State)
 	{
-	case MonsterState::Chase:
+	case MonsterState::Idle:
 		ChaseStart();
 		break;
 	case MonsterState::Attack:
@@ -180,7 +182,7 @@ void RockmanMonster::UpdateState()
 {
 	switch (CurState_)
 	{
-	case MonsterState::Chase:
+	case MonsterState::Idle:
 		ChaseUpdate();
 		break;
 	case MonsterState::Attack:
@@ -273,7 +275,7 @@ void RockmanMonster::AttackUpdate()
 		{
 			if (GetPosition().y <= AttackStartPos_.y)
 			{
-				ChangeState(MonsterState::Chase);
+				ChangeState(MonsterState::Idle);
 				return;
 			}
 		}
@@ -282,7 +284,7 @@ void RockmanMonster::AttackUpdate()
 			if (GetPosition().y >= AttackStartPos_.y)
 			{
 				CurVerDir_ = -CurVerDir_;
-				ChangeState(MonsterState::Chase);
+				ChangeState(MonsterState::Idle);
 				return;
 			}
 		}
@@ -336,7 +338,6 @@ void RockmanMonster::Die()
 	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 	DropItem();
 	MonsterContactCol_->Off();
-	ChangeState(MonsterState::Chase);
 	Speed_ = Default_Speed_;
 }
 
@@ -347,7 +348,7 @@ void RockmanMonster::DropItem()
 	if (RandomValue > 50)
 	{
 		RockmanItem* NewItem = GetLevel()->CreateActor<RockmanItem>(static_cast<int>(GameLayer::Object), "Item");
-		NewItem->SetPosition(GetPosition());
+		NewItem->SetItem(GetPosition());
 	}
-
+	
 }

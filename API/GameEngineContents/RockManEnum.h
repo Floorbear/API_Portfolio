@@ -30,7 +30,7 @@ enum class BossName
 
 enum class MonsterState
 {
-	Chase,
+	Idle,
 	Attack,
 	Max
 };

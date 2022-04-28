@@ -30,7 +30,7 @@ void BunbyHeli::ChangeState(MonsterState _State)
 
 	switch (CurState_)
 	{
-	case MonsterState::Chase:
+	case MonsterState::Idle:
 		ChaseStart();
 		break;
 	case MonsterState::Attack:
@@ -45,7 +45,7 @@ void BunbyHeli::UpdateState()
 {
 	switch (CurState_)
 	{
-	case MonsterState::Chase:
+	case MonsterState::Idle:
 		break;
 	case MonsterState::Attack:
 		break;

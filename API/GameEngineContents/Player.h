@@ -21,6 +21,20 @@ public:
 		return CurHP_;
 	}
 
+	inline void AddPlayerHP(int _Value) //Value만큼 HP를 증감시켜주는 함수
+	{
+		CurHP_ += _Value;
+		if (CurHP_ >= 28)
+		{
+			CurHP_ = 28;
+		}
+
+		if (CurHP_ <= 0)
+		{
+			CurHP_ = 0;
+		}
+	}
+
 	inline bool GetCanActivate()
 	{
 		return CanActivate;
