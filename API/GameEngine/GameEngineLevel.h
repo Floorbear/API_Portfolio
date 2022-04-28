@@ -87,6 +87,11 @@ public:
 		return CameraPos_;
 	}
 
+	inline void ResetOn()
+	{
+		IsReset = true;
+	}
+
 	inline void MoveCameraPos(const float4& _Value)
 	{
 		CameraPos_ += _Value;
@@ -122,8 +127,14 @@ protected:
 
 	void ObjectLevelMoveCheck(GameEngineLevel* _NextLevel);
 
+	void Reset();
+
+	virtual void UserResetEnd() {}
+
 private:
 	static bool IsDebug;
+
+	bool IsReset;
 
 	// std::vector로 관리하는게 더 좋다고 생각..
 	std::map<int, std::list<GameEngineActor*>> AllActor_;

@@ -117,6 +117,13 @@ void GameEngine::EngineLoop()
 
     CurrentLevel_->ActorRelease();
 
+    if (true == CurrentLevel_->IsReset)
+    {
+        CurrentLevel_->Reset();
+        CurrentLevel_->UserResetEnd();
+        CurrentLevel_->IsReset = false;
+    }
+
 }
 
 void GameEngine::EngineEnd()

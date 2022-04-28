@@ -19,8 +19,6 @@ public:
 
 public:
 
-	void PlayerRespawn();
-
 public:
 	//void ChangeBackground(BackgroundDir _Dir, const float4& _MoveDir); //_Dir : 이동하고 싶은 백그라운드가 이전, 다음인지를 셋팅, _MoveDir : 이동하고 싶은 백그라운드가 위, 아래에 있는지 셋팅
 
@@ -33,6 +31,8 @@ protected:
 	virtual void InitBackground() = 0;
 	virtual void ConnectBackground() = 0;
 	virtual void InitMonster() = 0;
+
+	void UserResetEnd() override;
 
 private:
 	bool IsPlayerSpawn_;

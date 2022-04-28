@@ -8,7 +8,8 @@
 PlayerDieEffect::PlayerDieEffect()
 	:CenterRenderer_(nullptr),
 	Speed_(180.0f),
-	LevelChangeTimer_(3.0f)
+	LevelChangeTimer_(3.0f),
+	IsDie_(false)
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -100,10 +101,11 @@ void PlayerDieEffect::Update()
 	}
 
 	LevelChangeTimer_ -= GameEngineTime::GetDeltaTime();
-	if (LevelChangeTimer_ <= 0)
+	if (LevelChangeTimer_ <= 0 && IsDie_ == false)
 	{	
 		RockmanStage* CurStage = dynamic_cast<RockmanStage*>(GetLevel());
-		CurStage->PlayerRespawn();
+		CurStage->ResetOn();
+		IsDie_ = true;
 		Death();
 	}		
 }

@@ -36,5 +36,7 @@ private:
 	float4 Dir8Vector_[8];
 
 	float Speed_;
+
+	bool IsDie_;
 };
 

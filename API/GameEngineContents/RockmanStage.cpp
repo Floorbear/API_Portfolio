@@ -23,42 +23,12 @@ RockmanStage::~RockmanStage()
 
 
 
-void RockmanStage::PlayerRespawn()
-{
-	Player* CurPlayer = GameManager::GetInst()->GetPlayer();
-	if (CurPlayer != nullptr)
-	{
 
-		IsPlayerSpawn_ = false;
-		GameManager::GetInst()->IsGameStart = false;
-
-		//렌더러 순서
-		CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI");
-		//카메라 셋팅
-		SetCameraPos(GameManager::GetInst()->GetCurrentBackGround()->GetPosition()); //나중에 GetCheckPointBackground
-	}
-}
 
 void RockmanStage::Loading()
 {
-}
-
-void RockmanStage::Update()
-{
-	if (GameManager::GetInst()->IsGameStart == true && IsPlayerSpawn_ == false)
-	{
-		//플레이어 로드
-		Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
-		GameManager::GetInst()->SetPlayer(RockMan);
-		RockMan->SetPosition(GameManager::GetInst()->GetCurrentBackGround()->GetSpawnPoint());
-		IsPlayerSpawn_ = true;
-	}
-}
-
-void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
-{
 	//Bgm 셋팅
-	Bgm_ = GameEngineSound::SoundPlayControl(GetNameConstRef()+".mp3", 30);
+	Bgm_ = GameEngineSound::SoundPlayControl(GetNameConstRef() + ".mp3", 30);
 
 	//모든 백그라운드 생성
 	InitBackground();
@@ -85,7 +55,33 @@ void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
 	InitMonster();
 }
 
+void RockmanStage::Update()
+{
+	if (GameManager::GetInst()->IsGameStart == true && IsPlayerSpawn_ == false)
+	{
+		//플레이어 로드
+		Player* RockMan = CreateActor<Player>(static_cast<int>(GameLayer::Player), "Player");
+		GameManager::GetInst()->SetPlayer(RockMan);
+		RockMan->SetPosition(GameManager::GetInst()->GetCurrentBackGround()->GetSpawnPoint());
+		IsPlayerSpawn_ = true;
+	}
+}
+
+void RockmanStage::LevelChangeStart(GameEngineLevel* _PrevLevel)
+{
+
+}
+
 void RockmanStage::LevelChangeEnd(GameEngineLevel* _NextLevel)
 {
+}
+
+void RockmanStage::UserResetEnd()
+{
+	AllBackground_.clear();
+	StartBackground_ = nullptr;
+	IsPlayerSpawn_ = false;
+	GameManager::GetInst()->IsGameStart == false;
+	RockmanStage::Loading();
 }
 
