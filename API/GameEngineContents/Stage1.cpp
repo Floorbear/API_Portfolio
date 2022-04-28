@@ -27,6 +27,10 @@ void Stage1::InitColPosNScale()
 			GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,0 });
 			AllBackground_[0]->AllMoveUPCol_.push_back(NewMoveUpCol);
 		}
+		//낭떨어지 , 가시 충돌체
+		{
+			GameEngineCollision* NewObstacleCol = StartBackground_->CreateCollision("ObstacleCol", { 150,10 }, { 2753 ,950 });
+		}
 
 	}
 
@@ -55,8 +59,8 @@ void Stage1::InitBackground()
 		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_0");
 		NewBackground->SetIndex(0);
 		StartBackground_ = NewBackground;
-		//NewBackground->SetSpawnPoint({ 508,589.43 });
-		NewBackground->SetSpawnPoint({ 3608,589.43 });
+		NewBackground->SetSpawnPoint({ 508,589.43 });
+		//NewBackground->SetSpawnPoint({ 3608,589.43 });
 		AllBackground_.push_back(NewBackground);
 	}
 	// Map index = 1
@@ -86,14 +90,28 @@ void Stage1::ConnectBackground()
 
 void Stage1::InitMonster()
 {
+	//Map Index : 1
 	{
-		RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
+		//RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
 		//NewMonster->SetSpawnPos({ 1100, 250 });
-		NewMonster->SetSpawnPos({ 3600, 250 });
+
+		//NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 1259, 574 });
+
+		//NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 1320 , 415 });
+
+		//NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({2259, 314 });
+
+		//NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 2525 , 589 });
 	}
-	//디버그용 스폰
-	//CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli_0");
 }
 
 

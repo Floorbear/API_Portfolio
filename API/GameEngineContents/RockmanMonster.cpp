@@ -109,13 +109,14 @@ void RockmanMonster::InitMonster()
 
 	CurState_ = MonsterState::Chase;
 
-	Speed_=100.0f;
-	Default_Speed_ = 100.0f;
-	AttackStartRange_=230.0f;
+
+	Default_Speed_ = 200.0f;
+	Speed_ = Default_Speed_;
+	AttackStartRange_=200.0f;
 
 	Default_DeathTimer_ = 1.0f;
 	DeathTimer_ = Default_DeathTimer_;
-	MaxHP_ = 2;
+	MaxHP_ = 1;
 	CurHP_ = MaxHP_;
 
 		
@@ -137,7 +138,9 @@ void RockmanMonster::InitRenderer()
 
 void RockmanMonster::ChangeIdleAni()
 {
-	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
+	CurHoriDir_ = float4(Player_->GetPosition().x - GetPosition().x, 0);
+	CurHoriDir_.Normal2D();
+	MonsterRenderer_->ChangeAnimation("BunbyHeli_" + RockmanUtility::DirToStr(CurHoriDir_));
 }
 
 void RockmanMonster::SetMonster()
@@ -190,6 +193,10 @@ void RockmanMonster::ChaseStart()
 {
 	SetPosition(float4(GetPosition().x, AttackStartPos_.y));
 	Speed_ = Default_Speed_;
+	CurHoriDir_ = float4(Player_->GetPosition().x - GetPosition().x, 0);
+	CurHoriDir_.Normal2D();
+	MonsterRenderer_->ChangeAnimation("BunbyHeli_" + RockmanUtility::DirToStr(CurHoriDir_));
+
 }
 
 void RockmanMonster::ChaseUpdate()

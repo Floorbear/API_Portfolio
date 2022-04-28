@@ -103,6 +103,7 @@ void Player::Update()
 	if (CanActivate == true)
 	{
 		StateUpdate();
+		CheckObstacleCol();
 		if (CurHitTimer_ == 0)
 		{
 			IsHitAlphaOn_ = false;
@@ -387,5 +388,17 @@ void Player::CheckMonsterCol()
 			StateChange(PlayerState::Hit);
 		}
 }
+}
+
+void Player::CheckObstacleCol()
+{
+	if (PlayerCol_->CollisionCheck("ObstacleCol", CollisionType::Rect, CollisionType::Rect) == true)
+	{
+		if (CurHP_ > 0)
+		{
+			CurHP_ = 0;
+			StateChange(PlayerState::Die);
+		}
+	}
 }
 

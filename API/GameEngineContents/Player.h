@@ -66,6 +66,7 @@ private:
 
 	//ColCheck
 	void CheckMonsterCol();
+	void CheckObstacleCol();
 
 
 
