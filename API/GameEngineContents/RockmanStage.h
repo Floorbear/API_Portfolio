@@ -20,7 +20,7 @@ public:
 public:
 
 public:
-	//void ChangeBackground(BackgroundDir _Dir, const float4& _MoveDir); //_Dir : 이동하고 싶은 백그라운드가 이전, 다음인지를 셋팅, _MoveDir : 이동하고 싶은 백그라운드가 위, 아래에 있는지 셋팅
+	GameEngineSoundPlayer Bgm_;
 
 protected:
 	virtual void Loading() override;
@@ -38,7 +38,7 @@ private:
 	bool IsPlayerSpawn_;
 
 protected:
-	GameEngineSoundPlayer Bgm_;
+
 	std::vector<BackGround*> AllBackground_;
 
 	BackGround* StartBackground_;

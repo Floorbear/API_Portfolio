@@ -88,6 +88,8 @@ void Player::Start()
 	PlayerCol_ = CreateCollision("Player", { 60,80 });
 	CameraDesY_ = CameraPosY_;
 	StateChange(PlayerState::Idle);
+	//시작했을때 스폰 소리
+	GameEngineSound::SoundPlayOneShot("PlayerTeleportIn.mp3");
 }
 
 void Player::Update()

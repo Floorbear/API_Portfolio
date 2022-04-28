@@ -7,6 +7,7 @@
 #include "BackGround.h"
 #include <GameEngine/GameEngineCollision.h>
 #include "Bullet.h"
+#include <GameEngineBase/GameEngineSound.h>
 
 RockmanMonster::RockmanMonster()
 	:DeletePos_(float4(-1000,-1000)),
@@ -323,5 +324,6 @@ void RockmanMonster::Die()
 {
 	CanActivate = false;
 	MonsterRenderer_->ChangeAnimation("Explosion");
+	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 	MonsterContactCol_->Off();
 }

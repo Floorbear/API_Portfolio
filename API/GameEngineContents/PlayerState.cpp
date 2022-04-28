@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include <GameEngineBase/GameEngineSound.h>
 #include "PlayerDieEffect.h"
+#include "RockmanStage.h"
 void Player::StateUpdate()
 {
 	switch (CurState_)
@@ -279,6 +280,8 @@ void Player::JumpStart()
 
 void Player::JumpEnd()
 {
+	//착지 사운드
+	GameEngineSound::SoundPlayOneShot("Landing.mp3");
 	ResetAttackPara();
 	Gravity_ = 0;
 	CurJumpTime_ = 0.0f;
@@ -383,8 +386,7 @@ void Player::JumpUpdate()
 				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 				SetMove(WantMovePos);
 				IsColDown = true;
-				//착지 사운드
-				GameEngineSound::SoundPlayOneShot("Landing.mp3");
+
 		}
 		else
 		{
@@ -505,6 +507,8 @@ void Player::HitStart()
 	PlayerRenderer_->PauseOff();
 	CurSpeed_ = MaxSpeed_*0.7f;
 	CurHitTimer_ = 0.01; //CurHitTimer의 값을 살짝 건드려서 Update에서 타이머가 작동하게 한다.
+	std::cout << "Hi" << std::endl;
+	GameEngineSound::SoundPlayOneShot("PlayerHit.mp3");
 }
 
 void Player::HitEnd()
@@ -569,8 +573,6 @@ void Player::HitUpdate()
 				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 				SetMove(WantMovePos);
 				IsColDown = true;
-				//착지 사운드
-				GameEngineSound::SoundPlayOneShot("Landing.mp3");
 			}
 
 		}
@@ -601,7 +603,8 @@ void Player::HitUpdate()
 
 void Player::DieStart()
 {
-
+	RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
+	CurrentStage->Bgm_.Stop();
 }
 
 void Player::DieUpdate()

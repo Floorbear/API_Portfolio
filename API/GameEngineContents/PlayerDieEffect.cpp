@@ -29,6 +29,8 @@ PlayerDieEffect::~PlayerDieEffect()
 
 void PlayerDieEffect::Start()
 {
+	//사망 효과음
+	GameEngineSound::SoundPlayOneShot("PlayerDeath.mp3");
 	//플레이어 센터
 	CenterRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Player));
 	CenterRenderer_->CreateAnimation("RockMan_Die.bmp", "RockMan_Die", 0, 1, 0.1f, false);
