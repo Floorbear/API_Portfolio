@@ -159,10 +159,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="BunbyHeli.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <SubType>
       </SubType>
@@ -243,10 +239,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="BunbyHeli.cpp">
       <SubType>
       </SubType>
     </ClCompile>

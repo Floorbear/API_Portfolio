@@ -50,9 +50,6 @@
     <ClInclude Include="RockmanStage.h">
       <Filter>Level</Filter>
     </ClInclude>
-    <ClInclude Include="BunbyHeli.h">
-      <Filter>Actor\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="RockmanMonster.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
@@ -119,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="RockmanStage.cpp">
       <Filter>Level</Filter>
-    </ClCompile>
-    <ClCompile Include="BunbyHeli.cpp">
-      <Filter>Actor\Monster</Filter>
     </ClCompile>
     <ClCompile Include="RockmanMonster.cpp">
       <Filter>Actor\Monster</Filter>

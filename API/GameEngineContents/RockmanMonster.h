@@ -5,6 +5,7 @@
 class Player;
 class RockmanMonster : public GameEngineActor
 {
+	//몬스터를 상속받은 액터가 오버라이드 해야 할 내용 : InitMonster~SetCol , 몬스터의 사망 애니메이션의 이름은 무조건 Die
 public:
 	RockmanMonster();
 	~RockmanMonster();
@@ -37,9 +38,9 @@ protected:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void InitMonster(); //몬스터의 스텟 파라미터를 초기화하는 함수
-	virtual void InitRenderer(); //몬스터의 렌더러를 초기화하는 함수
+	virtual void InitRenderer(); //몬스터의 렌더러를 생성하고, TransColor를 지정해주고,  애니메이션을 생성하고, 초기 애니메이션으로 Change해주는 함수
 	virtual void ChangeIdleAni(); //몬스터의 Idle애니메이션으로 체인지해주는 함수
-	virtual void SetMonster(); //스타트 시점에 초기화 해주는 함수
+	virtual void SetCol(); //스타트 시점에 콜라이더를 생성 해주는 함수
 
 
 	//fsm
@@ -47,16 +48,17 @@ protected:
 	void ChangeState(MonsterState _State);
 	void UpdateState();
 
-	void ChaseStart();
-	void ChaseUpdate();
+	virtual void IdleStart();
+	virtual void IdleUpdate();
 
-	void AttackStart();
-	void AttackUpdate();
+	virtual void AttackStart();
+	virtual void AttackUpdate();
+
+	virtual void Hit(BulletType _BulletType);
 private:
 	//Col Check
-	void HitByBulletCheck();
+	void HitByBulletCheck(); //MonsterContactCol_에 총알이 닿았는지 확인하는 함수
 
-	void Hit(BulletType _BulletType);
 	void Die();
 
 	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수

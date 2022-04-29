@@ -22,8 +22,8 @@ RockmanMonster::RockmanMonster()
 	SpawnPos_({ -1000, -1000 }),
 	Index_(0)
 {
-	InitMonster();
-	StateStr_[static_cast<int>(MonsterState::Idle)] = "Chase";
+	InitMonster(); //몬스터의 기본적인 스테이터스가 초기화된다.
+	StateStr_[static_cast<int>(MonsterState::Idle)] = "Idle";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
 }
 
@@ -35,7 +35,7 @@ void RockmanMonster::Start()
 {
 	SetScale({ 70,80 });
 	InitRenderer();
-	SetMonster();
+	SetCol();
 }
 
 void RockmanMonster::Update()
@@ -109,13 +109,11 @@ void RockmanMonster::Render()
 void RockmanMonster::InitMonster()
 {
 	//스테이터스
-	//AttackDamage_ = 3;//Default
-	AttackDamage_ = 10;
+	AttackDamage_ = 3;//Default
 
 	DropScore_ = 500;
 
 	CurState_ = MonsterState::Idle;
-
 
 	Default_Speed_ = 200.0f;
 	Speed_ = Default_Speed_;
@@ -138,7 +136,7 @@ void RockmanMonster::InitRenderer()
 	MonsterRenderer_->CreateAnimation("BunbyHeli_Right.bmp", "BunbyHeli_Right", 0, 1, 0.05f);
 
 	//사망 애니메이션
-	MonsterRenderer_->CreateAnimation("Explosion.bmp", "Explosion", 0, 4, 0.05f, false);
+	MonsterRenderer_->CreateAnimation("Explosion.bmp", "Die", 0, 4, 0.05f, false);
 
 	MonsterRenderer_->ChangeAnimation("BunbyHeli_Left");
 }
@@ -150,13 +148,10 @@ void RockmanMonster::ChangeIdleAni()
 	MonsterRenderer_->ChangeAnimation("BunbyHeli_" + RockmanUtility::DirToStr(CurHoriDir_));
 }
 
-void RockmanMonster::SetMonster()
+void RockmanMonster::SetCol()
 {
-
-
 	//콜리전 생성
 	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
-
 }
 
 void RockmanMonster::ChangeState(MonsterState _State)
@@ -169,7 +164,7 @@ void RockmanMonster::ChangeState(MonsterState _State)
 	switch (_State)
 	{
 	case MonsterState::Idle:
-		ChaseStart();
+		IdleStart();
 		break;
 	case MonsterState::Attack:
 		AttackStart();
@@ -186,7 +181,7 @@ void RockmanMonster::UpdateState()
 	switch (CurState_)
 	{
 	case MonsterState::Idle:
-		ChaseUpdate();
+		IdleUpdate();
 		break;
 	case MonsterState::Attack:
 		AttackUpdate();
@@ -196,7 +191,7 @@ void RockmanMonster::UpdateState()
 	}
 }
 
-void RockmanMonster::ChaseStart()
+void RockmanMonster::IdleStart()
 {
 	SetPosition(float4(GetPosition().x, AttackStartPos_.y));
 	Speed_ = Default_Speed_;
@@ -206,7 +201,7 @@ void RockmanMonster::ChaseStart()
 
 }
 
-void RockmanMonster::ChaseUpdate()
+void RockmanMonster::IdleUpdate()
 {
 	WantHoriDir_= float4(Player_->GetPosition().x-GetPosition().x, 0);
 	WantHoriDir_.Normal2D();
@@ -337,7 +332,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 void RockmanMonster::Die()
 {
 	CanActivate = false;
-	MonsterRenderer_->ChangeAnimation("Explosion");
+	MonsterRenderer_->ChangeAnimation("Die");
 	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 	DropItem();
 	GameManager::GetInst()->AddScore(DropScore_);
