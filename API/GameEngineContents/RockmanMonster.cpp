@@ -354,5 +354,6 @@ void RockmanMonster::DropItem()
 		RockmanItem* NewItem = GetLevel()->CreateActor<RockmanItem>(static_cast<int>(GameLayer::Object), "Item");
 		NewItem->SetItem(GetPosition());
 	}
+
 	
 }

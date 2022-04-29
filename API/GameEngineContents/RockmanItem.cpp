@@ -4,6 +4,7 @@
 #include "BackGround.h"
 #include "Player.h"
 #include <GameEngineBase/GameEngineSound.h>
+#include <GameEngineBase/GameEngineRandom.h>
 
 RockmanItem::RockmanItem()
 	:ItemRenderer_(nullptr),
@@ -31,8 +32,10 @@ void RockmanItem::SetItem(const float4& _Pos)
 		SetScale({ 64,64 });
 		break;
 	case ItemType::BigEnergy:
+		SetScale({ 64,64 });
 		break;
 	case ItemType::RedBonusBall:
+		SetScale({ 32,32 });
 		break;
 	case ItemType::Max:
 		break;
@@ -64,7 +67,43 @@ void RockmanItem::Start()
 	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "SmallEnergy", 0, 0, 1, false);
 	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "BigEnergy", 1, 2, 1, true);
 
-	ItemRenderer_->ChangeAnimation("SmallEnergy");
+	//여기서 확률로 아이템타입이 결정남
+	GameEngineRandom NewRandom;
+	int RandomValue = NewRandom.RandomInt(0, 100);
+	if (RandomValue<70)
+	{
+		CurItemType_ = ItemType::RedBonusBall;
+
+	}
+	else if (RandomValue >= 70 && RandomValue < 90)
+	{
+		CurItemType_ = ItemType::SmallEnergy;
+	}
+	else
+	{
+		CurItemType_ = ItemType::BigEnergy;
+	}
+
+	//아이템타입에 따른 이미지 변경
+	switch (CurItemType_)
+	{
+	case ItemType::SmallEnergy:
+		ItemRenderer_->ChangeAnimation("SmallEnergy");
+		break;
+	case ItemType::BigEnergy:
+		ItemRenderer_->ChangeAnimation("BigEnergy");
+		break;
+	case ItemType::RedBonusBall:
+		ItemRenderer_->ChangeAnimation("RedBonusBall");
+		break;
+	case ItemType::Max:
+		break;
+	default:
+		break;
+	}
+	
+	
+
 }
 
 void RockmanItem::Update()
@@ -102,6 +141,7 @@ void RockmanItem::Update()
 	{
 		Player* CurPlayer = GameManager::GetInst()->GetPlayer();
 		
+		//아이템을 먹으면 효과
 		switch (CurItemType_)
 		{
 		case ItemType::SmallEnergy:
@@ -110,8 +150,11 @@ void RockmanItem::Update()
 
 			break;
 		case ItemType::BigEnergy:
+			GameEngineSound::SoundPlayOneShot("HPEnergy.mp3");
+			CurPlayer->AddPlayerHP(10);
 			break;
 		case ItemType::RedBonusBall:
+			GameManager::GetInst()->AddScore(1000);
 			break;
 		case ItemType::Max:
 			break;
