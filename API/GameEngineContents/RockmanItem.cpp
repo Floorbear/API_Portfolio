@@ -23,7 +23,7 @@ RockmanItem::~RockmanItem()
 
 void RockmanItem::SetItem(const float4& _Pos)
 {
-	//여기에 확률 변수
+
 
 	//여기에 스케일
 	switch (CurItemType_)
@@ -60,17 +60,10 @@ void RockmanItem::SetItem(const float4& _Pos)
 
 void RockmanItem::Start()
 {
-	ItemRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Object));
-
-	ItemRenderer_->SetTransColor(TransColor);
-	ItemRenderer_->CreateAnimation("BonusBall.bmp", "RedBonusBall", 0, 0, 1, false);
-	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "SmallEnergy", 0, 0, 1, false);
-	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "BigEnergy", 1, 2, 1, true);
-
-	//여기서 확률로 아이템타입이 결정남
+	//여기에 확률 변수
 	GameEngineRandom NewRandom;
 	int RandomValue = NewRandom.RandomInt(0, 100);
-	if (RandomValue<70)
+	if (RandomValue < 70)
 	{
 		CurItemType_ = ItemType::RedBonusBall;
 
@@ -83,6 +76,14 @@ void RockmanItem::Start()
 	{
 		CurItemType_ = ItemType::BigEnergy;
 	}
+
+	ItemRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Object));
+
+	ItemRenderer_->SetTransColor(TransColor);
+	ItemRenderer_->CreateAnimation("BonusBall.bmp", "RedBonusBall", 0, 0, 1, false);
+	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "SmallEnergy", 0, 0, 1, false);
+	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "BigEnergy", 1, 2, 1, true);
+
 
 	//아이템타입에 따른 이미지 변경
 	switch (CurItemType_)

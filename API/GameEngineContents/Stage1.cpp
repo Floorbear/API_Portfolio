@@ -9,6 +9,7 @@
 #include "Scoreboard.h"
 #include "RockManEnum.h"
 #include "RockmanMonster.h"
+#include "BunbyHeli.h"
 Stage1::Stage1()
 {
 
@@ -91,23 +92,23 @@ void Stage1::InitMonster()
 {
 	//Map Index : 1
 	{
-		RockmanMonster* NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0);
 		NewMonster->SetSpawnPos({ 1100, 270 });
 
-		NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0);
 		NewMonster->SetSpawnPos({ 1259, 574 });
 
-		NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0);
 		NewMonster->SetSpawnPos({ 1320 , 415 });
 
-		NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0);
 		NewMonster->SetSpawnPos({2259, 314 });
 
-		NewMonster = CreateActor<RockmanMonster>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0);
 		NewMonster->SetSpawnPos({ 2525 , 589 });
 	}

@@ -37,10 +37,10 @@ protected:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void Render() override;
-	virtual void InitMonster(); //몬스터의 스텟 파라미터를 초기화하는 함수
-	virtual void InitRenderer(); //몬스터의 렌더러를 생성하고, TransColor를 지정해주고,  애니메이션을 생성하고, 초기 애니메이션으로 Change해주는 함수
-	virtual void ChangeIdleAni(); //몬스터의 Idle애니메이션으로 체인지해주는 함수
-	virtual void SetCol(); //스타트 시점에 콜라이더를 생성 해주는 함수
+	virtual void InitMonster() = 0; //몬스터의 스텟 파라미터를 초기화하는 함수
+	virtual void InitRenderer() = 0; //몬스터의 렌더러를 생성하고, TransColor를 지정해주고,  애니메이션을 생성하고, 초기 애니메이션으로 Change해주는 함수
+	virtual void ChangeIdleAni() = 0; //몬스터의 Idle애니메이션으로 체인지해주는 함수
+	virtual void SetMonster() = 0; //스타트 시점에 실행되는 함수
 
 
 	//fsm
@@ -48,11 +48,11 @@ protected:
 	void ChangeState(MonsterState _State);
 	void UpdateState();
 
-	virtual void IdleStart();
-	virtual void IdleUpdate();
+	virtual void IdleStart() =0;
+	virtual void IdleUpdate() = 0;
 
-	virtual void AttackStart();
-	virtual void AttackUpdate();
+	virtual void AttackStart() {};
+	virtual void AttackUpdate() {};
 
 	virtual void Hit(BulletType _BulletType);
 private:
@@ -63,7 +63,8 @@ private:
 
 	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수
 
-private:
+
+protected:
 	//스테이터스
 	int CurHP_;
 	int MaxHP_;

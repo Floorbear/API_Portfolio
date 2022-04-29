@@ -62,6 +62,9 @@
     <ClInclude Include="RockmanItem.h">
       <Filter>Actor\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="BunbyHeli.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -128,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="RockmanItem.cpp">
       <Filter>Actor\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="BunbyHeli.cpp">
+      <Filter>Actor\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
