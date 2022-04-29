@@ -66,6 +66,7 @@ private:
 	int CurHP_;
 	int MaxHP_;
 	int AttackDamage_;
+	int DropScore_; //이 몬스터가 죽을경우 얻는 점수
 
 	//스폰 관련
 	size_t Index_;

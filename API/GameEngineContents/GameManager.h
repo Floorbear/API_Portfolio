@@ -60,15 +60,31 @@ public:
 		CurPlayer_ = _Player;
 	}
 
+	inline int GetScore() const
+	{
+		return Score_;
+	}
+
+	inline void AddScore(int _Value)
+	{
+		Score_ += _Value;
+		if (Score_ > 9999999)
+		{
+			Score_ = 9999999;
+		}
+	}
+
 
 public:
 	bool IsGameStart; //이 변수가 True가 되는것을 레벨이 감지하고 플레이어를 생성한다.
+
 
 private:
 
 	std::string ChangeLevelName_;
 	BackGround* CurrentBackGround_;
 	Player*  CurPlayer_;
+	int Score_; //스코어점수
 
 	//싱글톤
 public:

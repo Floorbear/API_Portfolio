@@ -39,7 +39,8 @@ GameManager::GameManager()
 	IsChangeLevel_(false),
 	IsDebugMode_(false),
 	CurPlayer_(nullptr),
-	IsGameStart(false)
+	IsGameStart(false),
+	Score_(0)
 {
 }
 

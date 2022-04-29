@@ -19,7 +19,8 @@ protected:
 	void Render() override;
 
 private:
-	GameEngineRenderer* Scoreboard_;
+	GameEngineRenderer* ScoreNumberRenderer_[7];
+	int NumberIndex[7];
 
 };
 

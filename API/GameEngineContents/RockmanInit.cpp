@@ -25,7 +25,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Title");
+	ChangeLevel("Stage1");
 }
 
 void RockMan::LoadResources()
@@ -190,6 +190,9 @@ void RockMan::InitImage()
 		UIImage->Cut({ 1024,960 });
 
 		UIImage = GameEngineImageManager::GetInst()->Find("PerHP.bmp");
+		UIImage->Cut({ 32,32 });
+
+		UIImage = GameEngineImageManager::GetInst()->Find("Numbers.bmp");
 		UIImage->Cut({ 32,32 });
 	}
 
