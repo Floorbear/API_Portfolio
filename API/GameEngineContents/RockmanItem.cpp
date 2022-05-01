@@ -155,6 +155,7 @@ void RockmanItem::Update()
 			CurPlayer->AddPlayerHP(10);
 			break;
 		case ItemType::RedBonusBall:
+			GameEngineSound::SoundPlayOneShot("HPEnergy.mp3");
 			GameManager::GetInst()->AddScore(1000);
 			break;
 		case ItemType::Max:

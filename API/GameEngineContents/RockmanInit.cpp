@@ -25,7 +25,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Stage1");
+	ChangeLevel("Title");
 }
 
 void RockMan::LoadResources()

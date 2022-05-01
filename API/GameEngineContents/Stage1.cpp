@@ -38,17 +38,37 @@ void Stage1::InitColPosNScale()
 
 	// Map index = 1
 	{
-		GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10}, { 3939,-30});
-		AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+		//맵 이동 충돌체
+		{
+			GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10 }, { 3939,-30 });
+			AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
 
-		NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 135,10 }, { 3735,-30 });
-		AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 135,10 }, { 3735,-30 });
+			AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+
+			GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,-1035 });
+			AllBackground_[1]->AllMoveUPCol_.push_back(NewMoveUpCol);
+
+		}
 	}
 
+	// Map Index = 2
+	{
+		//맵 이동 충돌체
+		{
+			GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10 }, { 3939,-1065 });
+			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
+
+			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 200,10 }, { 3485,-1065 });
+			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
+
+			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 100,10 }, { 3100,-1065 });
+			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
 
 
-	
 
+		}
+	}
 
 }
 
@@ -61,7 +81,7 @@ void Stage1::InitBackground()
 		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_0");
 		NewBackground->SetIndex(0);
 		StartBackground_ = NewBackground;
-		NewBackground->SetSpawnPoint({ 508,589.43 });
+		NewBackground->SetSpawnPoint({ 508,589.43 }); //체크포인트
 		AllBackground_.push_back(NewBackground);
 	}
 	// Map index = 1
@@ -70,7 +90,14 @@ void Stage1::InitBackground()
 		NewBackground->SetIndex(1);
 		NewBackground->SetPosition({ 3072,-1024 });
 		AllBackground_.push_back(NewBackground);
+	}
 
+	//Map Index = 2
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_2");
+		NewBackground->SetIndex(2);
+		NewBackground->SetPosition({ 3072,-2048 });
+		AllBackground_.push_back(NewBackground);
 	}
 }
 
@@ -84,6 +111,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 1
 	{
 		AllBackground_[1]->DownBackground_ = AllBackground_[0];
+		AllBackground_[1]->UpBackground_ = AllBackground_[2];
+	}
+
+	//Map Index = 2
+	{
+		AllBackground_[2]->DownBackground_ = AllBackground_[1];
 	}
 
 
@@ -93,37 +126,71 @@ void Stage1::InitMonster()
 {
 	//Map Index : 0
 	{
-		//BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0); //몬스터가 존재하는 백그라운드 인덱스
-		//NewMonster->SetSpawnPos({ 1100, 270 });
+		BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0); //몬스터가 존재하는 백그라운드 인덱스
+		NewMonster->SetSpawnPos({ 1100, 270 });
 
-		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0);
-		//NewMonster->SetSpawnPos({ 1259, 574 });
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		NewMonster->SetSpawnPos({ 1259, 574 });
 
-		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0);
-		//NewMonster->SetSpawnPos({ 1320 , 415 });
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		NewMonster->SetSpawnPos({ 1320 , 415 });
 
-		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0);
-		//NewMonster->SetSpawnPos({2259, 314 });
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		NewMonster->SetSpawnPos({2259, 314 });
 
-		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		//NewMonster->SetIndex(0);
-		//NewMonster->SetSpawnPos({ 2525 , 589 });
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(0);
+		NewMonster->SetSpawnPos({ 2525 , 589 });
 
 		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
 		NewBlaster->SetIndex(0);
 		NewBlaster->SetDir(float4::LEFT);
-		NewBlaster->SetSpawnPos({ 3806, 490 });
+		NewBlaster->SetSpawnPos({ 3815, 490 });
 
 		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
 		NewBlaster->SetIndex(0);
 		NewBlaster->SetDir(float4::LEFT);
-		NewBlaster->SetSpawnPos({ 3312 , 285 });
+		NewBlaster->SetSpawnPos({ 3302 , 285 });
+	}
 
+	//Map Index : 1
+	{
+		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(1);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3946, -419 });
 
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(1);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3560, -669 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(1);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3689, -800 });
+	}
+
+	//Map Index : 2
+	{
+		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(2);
+		NewBlaster->SetDir(float4::RIGHT);
+		NewBlaster->SetSpawnPos({ 3352 ,-1310 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(2);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3560, -1570 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(2);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3815,  -1820 });
 	}
 }
 

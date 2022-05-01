@@ -44,28 +44,32 @@ void BackGround::Start()
 void BackGround::Update()
 {
 	//충돌체크
-	for (GameEngineCollision* MoveUpCol : AllMoveUPCol_)
+	if (Index_ == GameManager::GetInst()->GetCurrentBackGround()->GetIndex()) //현재 백그라운드 일때만 충돌체크
 	{
-		if(MoveUpCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
+		for (GameEngineCollision* MoveUpCol : AllMoveUPCol_)
 		{
-			Player* CurPlayer = GameManager::GetInst()->GetPlayer();
-			if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
+			if (MoveUpCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
 			{
-				GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
-				CurPlayer->GoToVer(float4::UP);
+				Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+				if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
+				{
+					GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
+					CurPlayer->GoToVer(float4::UP);
+				}
+			}
+		}
+
+		for (GameEngineCollision* MoveDownCol : AllMoveDownCol_)
+		{
+			if (MoveDownCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
+			{
+				Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+				GameManager::GetInst()->SetCurrentBackGround(DownBackground_);
+				CurPlayer->GoToVer(float4::DOWN);
 			}
 		}
 	}
-
-	for (GameEngineCollision* MoveDownCol : AllMoveDownCol_)
-	{
-		if (MoveDownCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
-		{
-			Player* CurPlayer = GameManager::GetInst()->GetPlayer();
-			GameManager::GetInst()->SetCurrentBackGround(DownBackground_);
-			CurPlayer->GoToVer(float4::DOWN);
-		}
-	}
+	
 }
 
 
