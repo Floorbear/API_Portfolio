@@ -41,6 +41,13 @@ enum class BulletType
 	Max
 };
 
+enum class MonsterBulletType
+{
+	Red,
+	Orange,
+	Max
+};
+
 enum class ItemType
 {
 	SmallEnergy,

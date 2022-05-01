@@ -68,6 +68,9 @@
     <ClInclude Include="Blaster.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="MonsterBullet.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -139,6 +142,9 @@
       <Filter>Actor\Monster</Filter>
     </ClCompile>
     <ClCompile Include="Blaster.cpp">
+      <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterBullet.cpp">
       <Filter>Actor\Monster</Filter>
     </ClCompile>
   </ItemGroup>

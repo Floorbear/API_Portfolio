@@ -17,6 +17,11 @@ public:
 	RockmanStage& operator=(const RockmanStage& _Ohter) = delete;
 	RockmanStage& operator=(const RockmanStage&& _Other) noexcept = delete;
 
+	inline 	std::vector<BackGround*> GetAllBackground() const
+	{
+		return AllBackground_;
+	}
+
 public:
 
 public:

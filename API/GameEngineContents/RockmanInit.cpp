@@ -247,6 +247,7 @@ void RockMan::InitKey()
 		GameEngineInput::GetInst()->CreateKey("Jump", 'K');
 		GameEngineInput::GetInst()->CreateKey("Attack", 'J');
 		GameEngineInput::GetInst()->CreateKey("DebugMOde", 'O');
+		GameEngineInput::GetInst()->CreateKey("TeleportKey", 'T');
 	}
 
 }

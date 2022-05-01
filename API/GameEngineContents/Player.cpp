@@ -11,6 +11,7 @@
 #include <GameEngine/GameEngineCollision.h>
 #include "RockmanStage.h"
 #include "RockmanMonster.h"
+#include "MonsterBullet.h"
 
 
 
@@ -179,6 +180,17 @@ void Player::Update()
 		PlayerCol_->On();
 	}
 
+	//디버그용 텔포 키워드
+	if (GameEngineInput::GetInst()->IsDown("TeleportKey") == true)
+	{
+		std::vector<BackGround*> AllBackground = dynamic_cast<RockmanStage*>(GetLevel())->GetAllBackground();
+		//!!주의 Position과 인덱스를 둘다 셋팅해줘야함!!
+		SetPosition({ 3363 , 717 });
+		GameManager::GetInst()->SetCurrentBackGround(AllBackground[0]);
+		CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
+		CameraPosY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
+	}
+
 	//플레이어가 화면 밖으로 벗어나지 못하게
 	if (GetPosition().x < GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
 	{
@@ -198,6 +210,8 @@ void Player::Update()
 	{
 		CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
 	}
+
+
 
 	GetLevel()->SetCameraPos(CameraPos);
 
@@ -365,29 +379,60 @@ void Player::Attack(const float4& _Dir, const float4& _AttackPos)
 }
 void Player::CheckMonsterCol()
 {
-	std::vector<GameEngineCollision*> MonsterColList;
-	RockmanMonster* Monster = nullptr;
-	if (PlayerCol_->CollisionResult("MonsterCol", MonsterColList, CollisionType::Rect, CollisionType::Rect) == true)
 	{
-		for (GameEngineCollision* MonsterCol : MonsterColList)
+		//몬스터에 집적 충돌했을 때 충돌검사
+		std::vector<GameEngineCollision*> MonsterColList;
+		RockmanMonster* Monster = nullptr;
+		if (PlayerCol_->CollisionResult("MonsterCol", MonsterColList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
-			Monster = dynamic_cast<RockmanMonster*>(MonsterCol->GetActor());
-			CurHP_ -= Monster->GetAttackDmg();
-			CurHoriDir_ = float4(Monster->GetPosition().x - GetPosition().x, 0);
-			CurHoriDir_.Normal2D();
-			break;
-		}
+			for (GameEngineCollision* MonsterCol : MonsterColList)
+			{
+				Monster = dynamic_cast<RockmanMonster*>(MonsterCol->GetActor());
+				CurHP_ -= Monster->GetAttackDmg();
+				CurHoriDir_ = float4(Monster->GetPosition().x - GetPosition().x, 0);
+				CurHoriDir_.Normal2D();
+				break;
+			}
 
-		if (CurHP_ <= 0)
-		{
-			CurHP_ = 0;
-			StateChange(PlayerState::Die);
+			if (CurHP_ <= 0)
+			{
+				CurHP_ = 0;
+				StateChange(PlayerState::Die);
+			}
+			else
+			{
+				StateChange(PlayerState::Hit);
+			}
 		}
-		else
+	}
+	
+	{
+		//몬스터 총알에 충돌했을 때 충돌검사
+		std::vector<GameEngineCollision*> MonsterBulletList;
+		MonsterBullet* MonsterBullet_ = nullptr;
+		if (PlayerCol_->CollisionResult("MonsterBullet", MonsterBulletList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
-			StateChange(PlayerState::Hit);
+			for (GameEngineCollision* MonsterBulletCol : MonsterBulletList)
+			{
+				MonsterBullet_ = dynamic_cast<MonsterBullet*>(MonsterBulletCol->GetActor());
+				CurHP_ -= MonsterBullet_->GetBulletDmg();
+				CurHoriDir_ = float4(MonsterBullet_->GetPosition().x - GetPosition().x, 0);
+				CurHoriDir_.Normal2D();
+				break;
+			}
+
+			if (CurHP_ <= 0)
+			{
+				CurHP_ = 0;
+				StateChange(PlayerState::Die);
+			}
+			else
+			{
+				StateChange(PlayerState::Hit);
+			}
 		}
-}
+	}
+
 }
 
 void Player::CheckObstacleCol()

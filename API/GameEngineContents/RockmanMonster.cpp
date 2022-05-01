@@ -63,6 +63,7 @@ void RockmanMonster::Update()
 		else //몬스터가 카메라 밖에 활동을 중지시킨다 (== 몬스터의 Pos를 -1000,-1000으로 옮긴다). , 몬스터의 위치를 SpawnPos로 옴긴다.
 		{	
 			Speed_ = Default_Speed_;
+			ChangeState(MonsterState::Idle);
 			//카메라가 스폰포인트 위치 밖에 있으면, 몬스터의 위치를 SpawnPos로 옮긴다
 			if ((GetLevel()->GetCameraPos().x - 30 < SpawnPos_.x && SpawnPos_.x < GetLevel()->GetCameraPos().x + 1060) &&
 				(GetLevel()->GetCameraPos().y < SpawnPos_.y && SpawnPos_.y < GetLevel()->GetCameraPos().y + 960)) //카메라 안(살짝 카메라보다 큰 카메라)에 있어야 활동을 한다.
@@ -181,6 +182,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 void RockmanMonster::Die()
 {
 	CanActivate = false;
+	MonsterRenderer_->PauseOff();
 	MonsterRenderer_->ChangeAnimation("Die");
 	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 	DropItem();

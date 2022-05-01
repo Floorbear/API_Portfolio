@@ -33,6 +33,9 @@ public:
 		SetPosition(_Pos);
 	}
 
+	virtual void SetDir(const float4& _Dir) {}; //CurDir을 변경하고 추가 조치를 취해주는 함수
+
+
 protected:
 	virtual void Start() override;
 	virtual void Update() override;
@@ -41,6 +44,7 @@ protected:
 	virtual void InitRenderer() = 0; //몬스터의 렌더러를 생성하고, TransColor를 지정해주고,  애니메이션을 생성하고, 초기 애니메이션으로 Change해주는 함수
 	virtual void ChangeIdleAni() = 0; //몬스터의 Idle애니메이션으로 체인지해주는 함수
 	virtual void SetMonster() = 0; //스타트 시점에 실행되는 함수
+
 
 
 	//fsm
@@ -55,11 +59,12 @@ protected:
 	virtual void AttackUpdate() {};
 
 	virtual void Hit(BulletType _BulletType);
+	void Die();
 private:
 	//Col Check
 	void HitByBulletCheck(); //MonsterContactCol_에 총알이 닿았는지 확인하는 함수
 
-	void Die();
+
 
 	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수
 

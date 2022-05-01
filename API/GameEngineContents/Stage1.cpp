@@ -10,6 +10,7 @@
 #include "RockManEnum.h"
 #include "RockmanMonster.h"
 #include "BunbyHeli.h"
+#include "Blaster.h"
 Stage1::Stage1()
 {
 
@@ -90,27 +91,39 @@ void Stage1::ConnectBackground()
 
 void Stage1::InitMonster()
 {
-	//Map Index : 1
+	//Map Index : 0
 	{
-		BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
-		NewMonster->SetSpawnPos({ 1100, 270 });
+		//BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0); //몬스터가 존재하는 백그라운드 인덱스
+		//NewMonster->SetSpawnPos({ 1100, 270 });
 
-		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
-		NewMonster->SetSpawnPos({ 1259, 574 });
+		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 1259, 574 });
 
-		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
-		NewMonster->SetSpawnPos({ 1320 , 415 });
+		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 1320 , 415 });
 
-		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
-		NewMonster->SetSpawnPos({2259, 314 });
+		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({2259, 314 });
 
-		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
-		NewMonster->SetIndex(0);
-		NewMonster->SetSpawnPos({ 2525 , 589 });
+		//NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		//NewMonster->SetIndex(0);
+		//NewMonster->SetSpawnPos({ 2525 , 589 });
+
+		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(0);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3806, 490 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(0);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3312 , 285 });
+
+
 	}
 }
 
