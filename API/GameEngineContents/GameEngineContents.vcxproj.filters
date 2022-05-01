@@ -65,6 +65,9 @@
     <ClInclude Include="BunbyHeli.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="Blaster.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -133,6 +136,9 @@
       <Filter>Actor\ETC</Filter>
     </ClCompile>
     <ClCompile Include="BunbyHeli.cpp">
+      <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Blaster.cpp">
       <Filter>Actor\Monster</Filter>
     </ClCompile>
   </ItemGroup>

@@ -167,6 +167,9 @@ void RockMan::InitImage()
 		ObjectImage = GameEngineImageManager::GetInst()->Find("Bullet.bmp");
 		ObjectImage->Cut({ 256,256 });
 
+		ObjectImage = GameEngineImageManager::GetInst()->Find("EnemyBullet.bmp");
+		ObjectImage->Cut({ 32,32 });
+
 		ObjectImage = GameEngineImageManager::GetInst()->Find("Explosion.bmp");
 		ObjectImage->Cut({ 256,256 });
 
@@ -216,6 +219,19 @@ void RockMan::InitImage()
 
 			BunbyHeli = GameEngineImageManager::GetInst()->Find("BunbyHeli_Right.bmp");
 			BunbyHeli->Cut({ 256,256 });
+		}
+
+		//Blaster
+		{
+			GameEngineImage* Blaster;
+			Blaster = GameEngineImageManager::GetInst()->Find("Blaster_Close_Left.bmp");
+			Blaster->Cut({ 256,256 });
+			Blaster = GameEngineImageManager::GetInst()->Find("Blaster_Close_Right.bmp");
+			Blaster->Cut({ 256,256 });
+			Blaster = GameEngineImageManager::GetInst()->Find("Blaster_Open_Left.bmp");
+			Blaster->Cut({ 256,256 });
+			Blaster = GameEngineImageManager::GetInst()->Find("Blaster_Open_Right.bmp");
+			Blaster->Cut({ 256,256 });
 		}
 	}
 }
