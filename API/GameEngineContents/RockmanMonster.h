@@ -77,7 +77,7 @@ protected:
 	int DropScore_; //이 몬스터가 죽을경우 얻는 점수
 
 	//스폰 관련
-	size_t Index_;
+	int Index_;
 	float4 SpawnPos_;
 	float4 DeletePos_;
 	float Default_DeathTimer_;

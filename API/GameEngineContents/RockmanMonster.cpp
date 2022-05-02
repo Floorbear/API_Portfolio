@@ -146,18 +146,21 @@ void RockmanMonster::UpdateState()
 
 void RockmanMonster::HitByBulletCheck()
 {
-	std::vector<GameEngineCollision*> BulletColList;
-	if (MonsterContactCol_->CollisionResult("Bullet", BulletColList, CollisionType::Rect, CollisionType::Rect) == true)
+	if (MonsterContactCol_ != nullptr) //충돌체가 없는 몬스터가 있을 수 있다(ex 스포너)
 	{
-		BulletType Type = BulletType::Normal;
-		//히트된 총알을 제거한다.
-		for (GameEngineCollision* Col : BulletColList)
+		std::vector<GameEngineCollision*> BulletColList;
+		if (MonsterContactCol_->CollisionResult("Bullet", BulletColList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
-			Bullet* HitBullet = dynamic_cast<Bullet*>(Col->GetActor());
-			Type = HitBullet->GetBulletType();
-			HitBullet->Death();
+			BulletType Type = BulletType::Normal;
+			//히트된 총알을 제거한다.
+			for (GameEngineCollision* Col : BulletColList)
+			{
+				Bullet* HitBullet = dynamic_cast<Bullet*>(Col->GetActor());
+				Type = HitBullet->GetBulletType();
+				HitBullet->Death();
+			}
+			Hit(Type);
 		}
-		Hit(Type);
 	}
 }
 

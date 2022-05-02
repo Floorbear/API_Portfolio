@@ -34,12 +34,12 @@ public:
 		return BackGroundImage_->GetScale();
 	}
 
-	inline size_t GetIndex() const
+	inline int GetIndex() const
 	{
 		return Index_;
 	}
 
-	inline void SetIndex(size_t _Index)
+	inline void SetIndex(int _Index)
 	{
 		Index_ = _Index;
 	}
@@ -74,7 +74,7 @@ private:
 
 	float4 SpawnPoint_;
 
-	size_t Index_;
+	int Index_;
 
 };
 

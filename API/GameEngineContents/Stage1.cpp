@@ -11,6 +11,8 @@
 #include "RockmanMonster.h"
 #include "BunbyHeli.h"
 #include "Blaster.h"
+#include "SuperCutter.h"
+#include "SuperCutterSpawner.h"
 Stage1::Stage1()
 {
 
@@ -88,6 +90,20 @@ void Stage1::InitColPosNScale()
 			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 140,10 }, { 3150,-2080 });
 			AllBackground_[3]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
+			//UP
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 3297,-3080 });
+			AllBackground_[3]->AllMoveNextCol_.push_back(NewMoveNextCol);
+
+		}
+	}
+
+	//Map Index = 4
+	{
+		//맵 이동 충돌체
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 200,10 }, { 3197,-3110 });
+			AllBackground_[4]->AllMovePrevCol_.push_back(NewMovePrevCol);
 		}
 	}
 
@@ -128,6 +144,14 @@ void Stage1::InitBackground()
 		NewBackground->SetPosition({ 3072,-3072 });
 		AllBackground_.push_back(NewBackground);
 	}
+
+	//Map Index = 4
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_4");
+		NewBackground->SetIndex(4);
+		NewBackground->SetPosition({ 3072,-4096 });
+		AllBackground_.push_back(NewBackground);
+	}
 }
 
 void Stage1::ConnectBackground()
@@ -152,6 +176,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 3
 	{
 		AllBackground_[3]->DownBackground_ = AllBackground_[2];
+		AllBackground_[3]->UpBackground_ = AllBackground_[4];
+	}
+
+	//Map Index = 4
+	{
+		AllBackground_[4]->DownBackground_ = AllBackground_[3];
 	}
 
 
@@ -245,6 +275,15 @@ void Stage1::InitMonster()
 		NewBlaster->SetDir(float4::LEFT);
 		NewBlaster->SetSpawnPos({ 3688,-2909 });
 	}
+
+	//Map Index : 4
+	{
+		//SuperCutterSpawner
+		SuperCutterSpawner* NewSuperCutterSpawner = CreateActor<SuperCutterSpawner>(static_cast<int>(GameLayer::Monster), "SuperCutterSpawner");
+		NewSuperCutterSpawner->SetIndex(4);
+		NewSuperCutterSpawner->SetSpawnPos({ 3640, -3450 });
+	}
+
 }
 
 

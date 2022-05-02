@@ -236,6 +236,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="SuperCutter.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="SuperCutterSpawner.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="TitleLevel.h">
       <SubType>
       </SubType>
@@ -330,6 +338,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Stage1.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SuperCutter.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SuperCutterSpawner.cpp">
       <SubType>
       </SubType>
     </ClCompile>

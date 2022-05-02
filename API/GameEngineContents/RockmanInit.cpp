@@ -233,6 +233,16 @@ void RockMan::InitImage()
 			Blaster = GameEngineImageManager::GetInst()->Find("Blaster_Open_Right.bmp");
 			Blaster->Cut({ 256,256 });
 		}
+
+		//SuperCutter
+		{
+			GameEngineImage* SuperCutter;
+			SuperCutter = GameEngineImageManager::GetInst()->Find("SuperCutter_Left.bmp");
+			SuperCutter->Cut({ 256,256 });
+
+			SuperCutter = GameEngineImageManager::GetInst()->Find("SuperCutter_Right.bmp");
+			SuperCutter->Cut({ 256,256 });
+		}
 	}
 }
 
