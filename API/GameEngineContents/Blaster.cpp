@@ -34,12 +34,14 @@ void Blaster::InitMonster()
 	MaxAttackCount_ = 4;
 	CurAttackCount_ = 0;
 	CurAttackTickTime_ = 0;
-	MaxAttackTickTime_ = 0.3f;
+	MaxAttackTickTime_ = 0.8f;
 
 	Default_DeathTimer_ = 1.0f;
 	DeathTimer_ = Default_DeathTimer_;
 	MaxHP_ = 1;
 	CurHP_ = MaxHP_;
+
+	CurWaitTime_ = 0;
 }
 
 void Blaster::InitRenderer()
@@ -95,41 +97,45 @@ void Blaster::IdleUpdate()
 void Blaster::AttackStart()
 {
 	MonsterRenderer_->ChangeAnimation("Blaster_Open_" + RockmanUtility::DirToStr(CurHoriDir_));
+	CurWaitTime_ = 0;
 }
 
 void Blaster::AttackUpdate()
 {
-	//공격 관련 트리거
-	if (MonsterRenderer_->IsEndAnimation() == true && CurAttackCount_ < MaxAttackCount_ )
+	CurWaitTime_ += GameEngineTime::GetDeltaTime();
+	if (CurWaitTime_ > 0.3)
 	{
-		CurAttackTickTime_ += 10*GameEngineTime::GetDeltaTime();
-		if (CurAttackTickTime_ >= MaxAttackTickTime_) //총알발사
+		if (CurAttackCount_ < MaxAttackCount_)
 		{
-			//CurAttCount에 따라 총알을 발사하는 방향이 다름
-			float4 BulletDir = float4(0, 0);
-			switch (CurAttackCount_)
+			CurAttackTickTime_ += GameEngineTime::GetDeltaTime();
+			if (CurAttackTickTime_ >= MaxAttackTickTime_) //총알발사
 			{
-			case 0:
-				BulletDir = float4(1, -1);
-				break;
-			case 1:
-				BulletDir = float4(5, -1);
-				break;
-			case 2:
-				BulletDir = float4(5, 1);
-				break;
-			case 3:
-				BulletDir = float4(1, 1);
-				break;
-			default:
-				break;
+				//CurAttCount에 따라 총알을 발사하는 방향이 다름
+				float4 BulletDir = float4(0, 0);
+				switch (CurAttackCount_)
+				{
+				case 0:
+					BulletDir = float4(1, -1);
+					break;
+				case 1:
+					BulletDir = float4(5, -1);
+					break;
+				case 2:
+					BulletDir = float4(5, 1);
+					break;
+				case 3:
+					BulletDir = float4(1, 1);
+					break;
+				default:
+					break;
+				}
+				BulletDir.Normal2D();
+				CurAttackTickTime_ = 0;
+				MonsterBullet* NewBullet = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "EnemyBullet");
+				NewBullet->SetBullet(GetPosition() + float4(20 * CurHoriDir_.x, 0), float4(BulletDir.x * CurHoriDir_.x, BulletDir.y), 2);//2
+				GameEngineSound::SoundPlayOneShot("MetShoot.mp3");
+				CurAttackCount_++;
 			}
-			BulletDir.Normal2D();
-			CurAttackTickTime_ = 0;
-			MonsterBullet* NewBullet = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "EnemyBullet");
-			NewBullet->SetBullet(GetPosition() + float4(20 * CurHoriDir_.x, 0), float4(BulletDir.x*CurHoriDir_.x,BulletDir.y),2);//2
-			GameEngineSound::SoundPlayOneShot("MetShoot.mp3");
-			CurAttackCount_++;
 		}
 	}
 

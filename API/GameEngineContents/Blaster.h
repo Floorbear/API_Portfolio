@@ -37,5 +37,8 @@ private:
 	int CurAttackCount_;
 	float CurAttackTickTime_;
 	float MaxAttackTickTime_;
+
+	float CurWaitTime_;
+
 };
 

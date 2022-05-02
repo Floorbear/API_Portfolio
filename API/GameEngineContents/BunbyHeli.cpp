@@ -22,7 +22,7 @@ void BunbyHeli::InitMonster()
 
 	CurState_ = MonsterState::Idle;
 
-	Default_Speed_ = 200.0f;
+	Default_Speed_ = 300.0f;
 	Speed_ = Default_Speed_;
 	AttackStartRange_ = 200.0f;
 
@@ -155,7 +155,7 @@ void BunbyHeli::AttackUpdate()
 	}
 
 	VerSpeed_ += VerSpeed_ * GameEngineTime::GetDeltaTime();
-	Speed_ += 1300.0f * GameEngineTime::GetDeltaTime();
+	Speed_ += 500.0f * GameEngineTime::GetDeltaTime();
 
 	SetMove(float4(CurHoriDir_.x * Speed_ * GameEngineTime::GetDeltaTime(), CurVerDir_.y * VerSpeed_ * 1.1f * GameEngineTime::GetDeltaTime()));
 }
