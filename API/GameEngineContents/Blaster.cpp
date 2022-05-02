@@ -77,6 +77,7 @@ void Blaster::IdleStart()
 	ChangeIdleAni();
 	CurAttackTickTime_ = 0;
 	CurAttackCount_ = 0;
+	CurIdleTime_ = DefaultIdleTime_;
 }
 
 void Blaster::IdleUpdate()
@@ -126,7 +127,7 @@ void Blaster::AttackUpdate()
 			BulletDir.Normal2D();
 			CurAttackTickTime_ = 0;
 			MonsterBullet* NewBullet = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "EnemyBullet");
-			NewBullet->SetBullet(GetPosition() + float4(20 * CurHoriDir_.x, 0), float4(BulletDir.x*CurHoriDir_.x,BulletDir.y),5);//2
+			NewBullet->SetBullet(GetPosition() + float4(20 * CurHoriDir_.x, 0), float4(BulletDir.x*CurHoriDir_.x,BulletDir.y),2);//2
 			GameEngineSound::SoundPlayOneShot("MetShoot.mp3");
 			CurAttackCount_++;
 		}
@@ -157,6 +158,7 @@ void Blaster::Hit(BulletType _BulletType)
 		}
 		else
 		{
+			GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 			CurHP_--;
 		}
 		break;

@@ -25,7 +25,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
-	ChangeLevel("Stage1");
+	ChangeLevel("Title");
 }
 
 void RockMan::LoadResources()
@@ -249,6 +249,13 @@ void RockMan::InitImage()
 			GameEngineImage* Flea;
 			Flea = GameEngineImageManager::GetInst()->Find("Flea.bmp");
 			Flea->Cut({ 256,256 });
+		}
+
+		//OctopusBattery
+		{
+			GameEngineImage* OctopusBattery;
+			OctopusBattery = GameEngineImageManager::GetInst()->Find("OctopusBattery.bmp");
+			OctopusBattery->Cut({ 256,256 });
 		}
 	}
 }

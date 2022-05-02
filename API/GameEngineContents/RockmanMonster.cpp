@@ -169,6 +169,7 @@ void RockmanMonster::Hit(BulletType _BulletType)
 	switch (_BulletType)
 	{
 	case BulletType::Normal:
+		GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 		--CurHP_;
 		break;
 	default:
@@ -187,7 +188,6 @@ void RockmanMonster::Die()
 	CanActivate = false;
 	MonsterRenderer_->PauseOff();
 	MonsterRenderer_->ChangeAnimation("Die");
-	GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
 	DropItem();
 	GameManager::GetInst()->AddScore(DropScore_);
 	MonsterContactCol_->Off();

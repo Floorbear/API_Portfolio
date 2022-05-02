@@ -14,6 +14,7 @@
 #include "SuperCutter.h"
 #include "SuperCutterSpawner.h"
 #include "Flea.h"
+#include "OctopusBattery.h"
 Stage1::Stage1()
 {
 
@@ -105,10 +106,24 @@ void Stage1::InitColPosNScale()
 			//Down
 			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 200,10 }, { 3197,-3110 });
 			AllBackground_[4]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
+			//UP
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 5982,-4094 });
+			AllBackground_[4]->AllMoveNextCol_.push_back(NewMoveNextCol);
 		}
 		//³¶¶³¾îÁö , °¡½Ã Ãæµ¹Ã¼
 		{
 			GameEngineCollision* NewObstacleCol = StartBackground_->CreateCollision("ObstacleCol", { 150,10 }, { 4743, -3100});
+		}
+	}
+	
+	//Map Index = 5
+	{
+		//¸Ê ÀÌµ¿ Ãæµ¹Ã¼
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 5982,-4124 });
+			AllBackground_[5]->AllMovePrevCol_.push_back(NewMovePrevCol);
 		}
 	}
 
@@ -157,6 +172,14 @@ void Stage1::InitBackground()
 		NewBackground->SetPosition({ 3072,-4096 });
 		AllBackground_.push_back(NewBackground);
 	}
+
+	//Map Index = 5
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_5");
+		NewBackground->SetIndex(5);
+		NewBackground->SetPosition({ 5120,-5120 });
+		AllBackground_.push_back(NewBackground);
+	}
 }
 
 void Stage1::ConnectBackground()
@@ -187,6 +210,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 4
 	{
 		AllBackground_[4]->DownBackground_ = AllBackground_[3];
+		AllBackground_[4]->UpBackground_ = AllBackground_[5];
+	}
+
+	//Map Index = 5
+	{
+		AllBackground_[5]->DownBackground_ = AllBackground_[4];
 	}
 
 
@@ -300,6 +329,44 @@ void Stage1::InitMonster()
 		NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
 		NewFlea->SetIndex(4);
 		NewFlea->SetSpawnPos({ 4576,-3613 });
+
+		OctopusBattery* NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(4);
+		NewOctopusBattery->SetDir(true);
+		NewOctopusBattery->SetSpawnPos({ 5406,-3435 });
+
+		NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(4);
+		NewOctopusBattery->SetDir(true);
+		NewOctopusBattery->SetSpawnPos({ 5533,-3682 });
+
+		NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(4);
+		NewOctopusBattery->SetDir(false);
+		NewOctopusBattery->SetSpawnPos({ 5860,-3559 });
+	}
+
+	//Map Index : 5
+	{
+		OctopusBattery* NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(5);
+		NewOctopusBattery->SetDir(true);
+		NewOctopusBattery->SetSpawnPos({ 5469,-4591 });
+
+		NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(5);
+		NewOctopusBattery->SetDir(false);
+		NewOctopusBattery->SetSpawnPos({ 5981,-4573 });
+
+		NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(5);
+		NewOctopusBattery->SetDir(false);
+		NewOctopusBattery->SetSpawnPos({ 5606,-4708 });
+
+		NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(5);
+		NewOctopusBattery->SetDir(false);
+		NewOctopusBattery->SetSpawnPos({ 5401,-4840 });
 	}
 
 }

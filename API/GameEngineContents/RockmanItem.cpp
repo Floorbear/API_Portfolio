@@ -8,7 +8,7 @@
 
 RockmanItem::RockmanItem()
 	:ItemRenderer_(nullptr),
-	Gravity_(-400.0f),
+	Gravity_(-600.0f),
 	CurItemType_(ItemType::SmallEnergy),
 	DeathTimer_(4.0f)
 {
@@ -45,7 +45,7 @@ void RockmanItem::SetItem(const float4& _Pos)
 
 	ItemCol_ = CreateCollision("ItemCol", GetScale());
 
-	float4 MovePos = _Pos;
+	float4 MovePos = _Pos+float4(0,-15);
 	BackGround* CurrentBackground = GameManager::GetInst()->GetCurrentBackGround();
 	if (CurrentBackground->IsBlocked(_Pos) == true) //현재 스폰하는 아이템이 블랙 픽셀이면
 	{
@@ -115,11 +115,8 @@ void RockmanItem::Update()
 		Death();
 	}
 
-	Gravity_ += 1000*GameEngineTime::GetDeltaTime();
-	if (Gravity_ > 1400)
-	{
-		Gravity_ = 1400;
-	}
+	Gravity_ += 1500*GameEngineTime::GetDeltaTime();
+
 
 
 	BackGround* CurrentBackground = GameManager::GetInst()->GetCurrentBackGround();
@@ -133,6 +130,7 @@ void RockmanItem::Update()
 	}
 
 	//아랫쪽
+
 	if (CurrentBackground->IsBlocked(CheckDownPos) == false)
 	{
 		SetMove(float4::DOWN * Gravity_ * GameEngineTime::GetDeltaTime());

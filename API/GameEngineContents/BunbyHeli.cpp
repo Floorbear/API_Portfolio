@@ -16,7 +16,7 @@ void BunbyHeli::InitMonster()
 {
 	SetScale({ 70,80 });
 	//스테이터스
-	AttackDamage_ = 5;//Default 3
+	AttackDamage_ = 3;//Default 3
 
 	DropScore_ = 500;
 

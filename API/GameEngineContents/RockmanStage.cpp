@@ -48,11 +48,11 @@ void RockmanStage::Loading()
 	CreateActor<HPBar>(static_cast<int>(GameLayer::UI), "HPBar");
 	CreateActor<Scoreboard>(static_cast<int>(GameLayer::UI), "Scoreboard");
 	{
-		GameManager::GetInst()->IsGameStart = true;//릴리즈 상태에선 주석
+		//GameManager::GetInst()->IsGameStart = true;//릴리즈 상태에선 주석
 	}
 	
 	{
-		//CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI"); //릴리즈 상태에선 주석 해제
+		CreateActor<ReadyUI>(static_cast<int>(GameLayer::UI), "ReadyUI"); //릴리즈 상태에선 주석 해제
 	}
 
 
