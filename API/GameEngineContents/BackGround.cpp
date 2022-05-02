@@ -16,8 +16,8 @@ BackGround::BackGround()
 	BackGroundColImage_(nullptr),
 	SpawnPoint_(float4::ZERO)
 {
-	AllMoveDownCol_.reserve(5);
-	AllMoveUPCol_.reserve(5);
+	AllMovePrevCol_.reserve(5);
+	AllMoveNextCol_.reserve(5);
 }
 
 BackGround::~BackGround()
@@ -44,9 +44,10 @@ void BackGround::Start()
 void BackGround::Update()
 {
 	//충돌체크
+	//맵 방향 체크 >> 업 백그라운드와 좌표값 빼고 그 벡터로 방향을 잡자
 	if (Index_ == GameManager::GetInst()->GetCurrentBackGround()->GetIndex()) //현재 백그라운드 일때만 충돌체크
 	{
-		for (GameEngineCollision* MoveUpCol : AllMoveUPCol_)
+		for (GameEngineCollision* MoveUpCol : AllMoveNextCol_)
 		{
 			if (MoveUpCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
 			{
@@ -59,7 +60,7 @@ void BackGround::Update()
 			}
 		}
 
-		for (GameEngineCollision* MoveDownCol : AllMoveDownCol_)
+		for (GameEngineCollision* MoveDownCol : AllMovePrevCol_)
 		{
 			if (MoveDownCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
 			{

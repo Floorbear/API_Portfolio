@@ -180,16 +180,16 @@ void Player::Update()
 		PlayerCol_->On();
 	}
 
-	//디버그용 텔포 키워드
-	if (GameEngineInput::GetInst()->IsDown("TeleportKey") == true)
-	{
-		std::vector<BackGround*> AllBackground = dynamic_cast<RockmanStage*>(GetLevel())->GetAllBackground();
-		//!!주의 Position과 인덱스를 둘다 셋팅해줘야함!!
-		SetPosition({ 3936, -885 });
-		GameManager::GetInst()->SetCurrentBackGround(AllBackground[1]);
-		CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
-		CameraPosY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
-	}
+	////디버그용 텔포 키워드
+	//if (GameEngineInput::GetInst()->IsDown("TeleportKey") == true)
+	//{
+	//	std::vector<BackGround*> AllBackground = dynamic_cast<RockmanStage*>(GetLevel())->GetAllBackground();
+	//	//!!주의 Position과 인덱스를 둘다 셋팅해줘야함!!
+	//	SetPosition({ 3936, -1910 });
+	//	GameManager::GetInst()->SetCurrentBackGround(AllBackground[2]);
+	//	CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
+	//	CameraPosY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
+	//}
 
 	//플레이어가 화면 밖으로 벗어나지 못하게
 	if (GetPosition().x < GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)

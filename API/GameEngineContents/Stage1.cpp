@@ -26,8 +26,8 @@ void Stage1::InitColPosNScale()
 	{
 		//맵이동 충돌체
 		{
-			GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,0 });
-			AllBackground_[0]->AllMoveUPCol_.push_back(NewMoveUpCol);
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 3939,0 });
+			AllBackground_[0]->AllMoveNextCol_.push_back(NewMoveNextCol);
 		}
 		//낭떨어지 , 가시 충돌체
 		{
@@ -40,14 +40,14 @@ void Stage1::InitColPosNScale()
 	{
 		//맵 이동 충돌체
 		{
-			GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10 }, { 3939,-30 });
-			AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 3939,-30 });
+			AllBackground_[1]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
-			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 135,10 }, { 3735,-30 });
-			AllBackground_[1]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 135,10 }, { 3735,-30 });
+			AllBackground_[1]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
-			GameEngineCollision* NewMoveUpCol = StartBackground_->CreateCollision("MoveUP", { 50,10 }, { 3939,-1035 });
-			AllBackground_[1]->AllMoveUPCol_.push_back(NewMoveUpCol);
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 3939,-1035 });
+			AllBackground_[1]->AllMoveNextCol_.push_back(NewMoveNextCol);
 
 		}
 	}
@@ -56,16 +56,37 @@ void Stage1::InitColPosNScale()
 	{
 		//맵 이동 충돌체
 		{
-			GameEngineCollision* NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 50,10 }, { 3939,-1065 });
-			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 3939,-1065 });
+			AllBackground_[2]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
-			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 200,10 }, { 3485,-1065 });
-			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 200,10 }, { 3485,-1065 });
+			AllBackground_[2]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
-			NewMoveDownCol = StartBackground_->CreateCollision("MoveDOWN", { 100,10 }, { 3100,-1065 });
-			AllBackground_[2]->AllMoveDownCol_.push_back(NewMoveDownCol);
+			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 100,10 }, { 3100,-1065 });
+			AllBackground_[2]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
 
+			//Up
+
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 3939,-2050 });
+			AllBackground_[2]->AllMoveNextCol_.push_back(NewMoveNextCol);
+		}
+	}
+
+	// Map Index = 3
+	{
+		//맵 이동 충돌체
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 3939,-2080});
+			AllBackground_[3]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
+			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 120,10 }, { 3570,-2080 });
+			AllBackground_[3]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
+			NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 140,10 }, { 3150,-2080 });
+			AllBackground_[3]->AllMovePrevCol_.push_back(NewMovePrevCol);
 
 		}
 	}
@@ -99,6 +120,14 @@ void Stage1::InitBackground()
 		NewBackground->SetPosition({ 3072,-2048 });
 		AllBackground_.push_back(NewBackground);
 	}
+
+	//Map Index = 3
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_3");
+		NewBackground->SetIndex(3);
+		NewBackground->SetPosition({ 3072,-3072 });
+		AllBackground_.push_back(NewBackground);
+	}
 }
 
 void Stage1::ConnectBackground()
@@ -117,6 +146,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 2
 	{
 		AllBackground_[2]->DownBackground_ = AllBackground_[1];
+		AllBackground_[2]->UpBackground_ = AllBackground_[3];
+	}
+
+	//Map Index = 3
+	{
+		AllBackground_[3]->DownBackground_ = AllBackground_[2];
 	}
 
 
@@ -191,6 +226,24 @@ void Stage1::InitMonster()
 		NewBlaster->SetIndex(2);
 		NewBlaster->SetDir(float4::LEFT);
 		NewBlaster->SetSpawnPos({ 3815,  -1820 });
+	}
+
+	//Map Index : 3
+	{
+		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(3);
+		NewBlaster->SetDir(float4::RIGHT);
+		NewBlaster->SetSpawnPos({ 3544,-2200 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(3);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3815,-2725 });
+
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(3);
+		NewBlaster->SetDir(float4::LEFT);
+		NewBlaster->SetSpawnPos({ 3688,-2909 });
 	}
 }
 

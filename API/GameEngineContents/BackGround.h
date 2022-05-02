@@ -69,8 +69,8 @@ private:
 	BackGround* DownBackground_;
 	BackGround* UpBackground_;
 
-	std::vector<GameEngineCollision*> AllMoveUPCol_;
-	std::vector<GameEngineCollision*> AllMoveDownCol_;
+	std::vector<GameEngineCollision*> AllMoveNextCol_;
+	std::vector<GameEngineCollision*> AllMovePrevCol_;
 
 	float4 SpawnPoint_;
 
