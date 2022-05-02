@@ -13,6 +13,7 @@
 #include "Blaster.h"
 #include "SuperCutter.h"
 #include "SuperCutterSpawner.h"
+#include "Flea.h"
 Stage1::Stage1()
 {
 
@@ -105,6 +106,10 @@ void Stage1::InitColPosNScale()
 			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 200,10 }, { 3197,-3110 });
 			AllBackground_[4]->AllMovePrevCol_.push_back(NewMovePrevCol);
 		}
+		//낭떨어지 , 가시 충돌체
+		{
+			GameEngineCollision* NewObstacleCol = StartBackground_->CreateCollision("ObstacleCol", { 150,10 }, { 4743, -3100});
+		}
 	}
 
 }
@@ -191,6 +196,7 @@ void Stage1::InitMonster()
 {
 	//Map Index : 0
 	{
+
 		BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
 		NewMonster->SetIndex(0); //몬스터가 존재하는 백그라운드 인덱스
 		NewMonster->SetSpawnPos({ 1100, 270 });
@@ -282,6 +288,18 @@ void Stage1::InitMonster()
 		SuperCutterSpawner* NewSuperCutterSpawner = CreateActor<SuperCutterSpawner>(static_cast<int>(GameLayer::Monster), "SuperCutterSpawner");
 		NewSuperCutterSpawner->SetIndex(4);
 		NewSuperCutterSpawner->SetSpawnPos({ 3640, -3450 });
+
+		Flea* NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(4); 
+		NewFlea->SetSpawnPos({ 4317,-3358 });
+
+		NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(4);
+		NewFlea->SetSpawnPos({ 4445,-3486 });
+
+		NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(4);
+		NewFlea->SetSpawnPos({ 4576,-3613 });
 	}
 
 }

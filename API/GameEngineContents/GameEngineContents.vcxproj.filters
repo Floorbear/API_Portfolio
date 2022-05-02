@@ -77,6 +77,9 @@
     <ClInclude Include="SuperCutterSpawner.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="Flea.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -157,6 +160,9 @@
       <Filter>Actor\Monster</Filter>
     </ClCompile>
     <ClCompile Include="SuperCutterSpawner.cpp">
+      <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Flea.cpp">
       <Filter>Actor\Monster</Filter>
     </ClCompile>
   </ItemGroup>

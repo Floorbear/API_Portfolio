@@ -243,6 +243,13 @@ void RockMan::InitImage()
 			SuperCutter = GameEngineImageManager::GetInst()->Find("SuperCutter_Right.bmp");
 			SuperCutter->Cut({ 256,256 });
 		}
+
+		//Flea
+		{
+			GameEngineImage* Flea;
+			Flea = GameEngineImageManager::GetInst()->Find("Flea.bmp");
+			Flea->Cut({ 256,256 });
+		}
 	}
 }
 
