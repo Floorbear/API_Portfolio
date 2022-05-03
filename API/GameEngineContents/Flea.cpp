@@ -92,7 +92,7 @@ void Flea::AttackStart()
 void Flea::AttackUpdate()
 {
 	Gravity_ += 1900 * GameEngineTime::GetDeltaTime();
-	Speed_ += Speed_ *0.9f* GameEngineTime::GetDeltaTime();
+	Speed_ += Speed_ *0.6f* GameEngineTime::GetDeltaTime();
 
 
 

@@ -55,7 +55,9 @@ void BackGround::Update()
 				if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
 				{
 					GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
-					CurPlayer->GoToVer(float4::UP);
+					float4 Dir = float4(0, UpBackground_->GetPosition().y, -GetPosition().y);
+					Dir.Normal2D();
+					CurPlayer->GoToVer(Dir);
 				}
 			}
 		}
@@ -66,7 +68,9 @@ void BackGround::Update()
 			{
 				Player* CurPlayer = GameManager::GetInst()->GetPlayer();
 				GameManager::GetInst()->SetCurrentBackGround(DownBackground_);
-				CurPlayer->GoToVer(float4::DOWN);
+				float4 Dir = float4(0, DownBackground_->GetPosition().y, -GetPosition().y);
+				Dir.Normal2D();
+				CurPlayer->GoToVer(Dir);
 			}
 		}
 	}

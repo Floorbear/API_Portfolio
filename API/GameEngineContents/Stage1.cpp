@@ -138,6 +138,34 @@ void Stage1::InitColPosNScale()
 			//Down
 			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 5985,-5149 });
 			AllBackground_[6]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
+			//UP
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 5281,-6136 });
+			AllBackground_[6]->AllMoveNextCol_.push_back(NewMoveNextCol);
+		}
+	}
+
+	//Map Index = 7
+	{
+		//맵 이동 충돌체
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 5281,-6166 });
+			AllBackground_[7]->AllMovePrevCol_.push_back(NewMovePrevCol);
+			//UP
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 7329,-6250 });
+			AllBackground_[7]->AllMoveNextCol_.push_back(NewMoveNextCol);
+		}
+	}
+
+	//Map Index = 8
+	{
+		//맵 이동 충돌체
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 7329,-6220 });
+			AllBackground_[8]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
 		}
 	}
 
@@ -202,6 +230,23 @@ void Stage1::InitBackground()
 		NewBackground->SetPosition({ 5120,-6144 });
 		AllBackground_.push_back(NewBackground);
 	}
+
+	//Map Index = 7
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_7");
+		NewBackground->SetIndex(7);
+		NewBackground->SetPosition({ 5120,-7168 });
+		AllBackground_.push_back(NewBackground);
+	}
+
+	//Map Index = 8
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_8");
+		NewBackground->SetIndex(8);
+		NewBackground->SetPosition({ 7168,-6144 });
+		AllBackground_.push_back(NewBackground);
+	}
+
 }
 
 void Stage1::ConnectBackground()
@@ -245,6 +290,18 @@ void Stage1::ConnectBackground()
 	//Map Index = 6
 	{
 		AllBackground_[6]->DownBackground_ = AllBackground_[5];
+		AllBackground_[6]->UpBackground_ = AllBackground_[7];
+	}
+
+	//Map Index = 7
+	{
+		AllBackground_[7]->DownBackground_ = AllBackground_[6];
+		AllBackground_[7]->UpBackground_ = AllBackground_[8];
+	}
+
+	//Map Index = 8
+	{
+		AllBackground_[8]->DownBackground_ = AllBackground_[7];
 	}
 
 
@@ -419,6 +476,33 @@ void Stage1::InitMonster()
 		NewOctopusBattery->SetIndex(6);
 		NewOctopusBattery->SetDir(false);
 		NewOctopusBattery->SetSpawnPos({ 5985,-5840});
+	}
+
+	//Map Index : 7
+	{
+		SuperCutterSpawner* NewSuperCutterSpawner = CreateActor<SuperCutterSpawner>(static_cast<int>(GameLayer::Monster), "SuperCutterSpawner");
+		NewSuperCutterSpawner->SetIndex(7);
+		NewSuperCutterSpawner->SetSpawnPos({ 5692,-6500 });
+
+		Flea* NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(7);
+		NewFlea->SetSpawnPos({ 6237,-6558 });
+
+		NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(7);
+		NewFlea->SetSpawnPos({ 6493,-6686 });
+
+		NewFlea = CreateActor<Flea>(static_cast<int>(GameLayer::Monster), "Flea");
+		NewFlea->SetIndex(7);
+		NewFlea->SetSpawnPos({ 6683,-6813 });
+
+		BunbyHeli* NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(7); 
+		NewMonster->SetSpawnPos({ 7549, -6906 });
+
+		NewMonster = CreateActor<BunbyHeli>(static_cast<int>(GameLayer::Monster), "BunbyHeli");
+		NewMonster->SetIndex(7);
+		NewMonster->SetSpawnPos({ 7989,-6450 });
 	}
 
 }
