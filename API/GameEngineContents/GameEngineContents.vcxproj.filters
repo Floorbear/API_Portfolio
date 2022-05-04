@@ -83,6 +83,9 @@
     <ClInclude Include="OctopusBattery.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="BossEntranceDoor.h">
+      <Filter>Actor\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="OctopusBattery.cpp">
       <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BossEntranceDoor.cpp">
+      <Filter>Actor\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

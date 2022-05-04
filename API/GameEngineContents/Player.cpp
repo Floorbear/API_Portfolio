@@ -185,8 +185,8 @@ void Player::Update()
 	{
 		std::vector<BackGround*> AllBackground = dynamic_cast<RockmanStage*>(GetLevel())->GetAllBackground();
 		//!!주의 Position과 인덱스를 둘다 셋팅해줘야함!!
-		SetPosition({ 7330,-6450 });
-		GameManager::GetInst()->SetCurrentBackGround(AllBackground[7]);
+		SetPosition({ 9022,-4530});
+		GameManager::GetInst()->SetCurrentBackGround(AllBackground[9]);
 		CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
 		CameraPosY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
 	}

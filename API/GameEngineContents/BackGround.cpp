@@ -52,13 +52,22 @@ void BackGround::Update()
 			if (MoveUpCol->CollisionCheck("Player", CollisionType::Rect, CollisionType::Rect) == true)
 			{
 				Player* CurPlayer = GameManager::GetInst()->GetPlayer();
-				if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
+				float4 Dir = float4(0, UpBackground_->GetPosition().y - GetPosition().y);
+				Dir.Normal2D();
+				if (Dir.CompareInt2D(float4::UP) == true) //내가 윗맵으로 올라가는 상태라면 사다리에 타고있는 상태여야한다
+				{
+					if (CurPlayer->GetCurPlayerState() == PlayerState::Climb)
+					{
+						GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
+						CurPlayer->GoToVer(Dir);
+					}
+				}
+				else //다음맵이 아래면, 그냥 옮긴다
 				{
 					GameManager::GetInst()->SetCurrentBackGround(UpBackground_);
-					float4 Dir = float4(0, UpBackground_->GetPosition().y, -GetPosition().y);
-					Dir.Normal2D();
 					CurPlayer->GoToVer(Dir);
 				}
+				
 			}
 		}
 
@@ -68,7 +77,7 @@ void BackGround::Update()
 			{
 				Player* CurPlayer = GameManager::GetInst()->GetPlayer();
 				GameManager::GetInst()->SetCurrentBackGround(DownBackground_);
-				float4 Dir = float4(0, DownBackground_->GetPosition().y, -GetPosition().y);
+				float4 Dir = float4(0, DownBackground_->GetPosition().y -GetPosition().y);
 				Dir.Normal2D();
 				CurPlayer->GoToVer(Dir);
 			}

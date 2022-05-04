@@ -15,6 +15,7 @@
 #include "SuperCutterSpawner.h"
 #include "Flea.h"
 #include "OctopusBattery.h"
+#include "BossEntranceDoor.h"
 Stage1::Stage1()
 {
 
@@ -153,7 +154,7 @@ void Stage1::InitColPosNScale()
 			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 5281,-6166 });
 			AllBackground_[7]->AllMovePrevCol_.push_back(NewMovePrevCol);
 			//UP
-			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 7329,-6250 });
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 7969,-6250 });
 			AllBackground_[7]->AllMoveNextCol_.push_back(NewMoveNextCol);
 		}
 	}
@@ -163,8 +164,26 @@ void Stage1::InitColPosNScale()
 		//맵 이동 충돌체
 		{
 			//Down
-			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 7329,-6220 });
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 7969,-6220 });
 			AllBackground_[8]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
+			//Up
+			GameEngineCollision* NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 50,10 }, { 7329,-5170 });
+			AllBackground_[8]->AllMoveNextCol_.push_back(NewMoveNextCol);
+
+			NewMoveNextCol = StartBackground_->CreateCollision("MoveNext", { 600,10 }, { 7900,-5170 });
+			AllBackground_[8]->AllMoveNextCol_.push_back(NewMoveNextCol);
+		}
+	}
+
+	//Map Index = 9
+	{
+		//맵 이동 충돌체
+		{
+			//Down
+			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 7329,-5140 });
+			AllBackground_[9]->AllMovePrevCol_.push_back(NewMovePrevCol);
+
 
 		}
 	}
@@ -247,6 +266,14 @@ void Stage1::InitBackground()
 		AllBackground_.push_back(NewBackground);
 	}
 
+	//Map Index = 9
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_9");
+		NewBackground->SetIndex(9);
+		NewBackground->SetPosition({ 7168,-5120 });
+		AllBackground_.push_back(NewBackground);
+	}
+
 }
 
 void Stage1::ConnectBackground()
@@ -302,6 +329,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 8
 	{
 		AllBackground_[8]->DownBackground_ = AllBackground_[7];
+		AllBackground_[8]->UpBackground_ = AllBackground_[9];
+	}
+
+	//Map Index = 9
+	{
+		AllBackground_[9]->DownBackground_ = AllBackground_[8];
 	}
 
 
@@ -504,7 +537,30 @@ void Stage1::InitMonster()
 		NewMonster->SetIndex(7);
 		NewMonster->SetSpawnPos({ 7989,-6450 });
 	}
+	
+	//Map Index : 8
+	{
+		Blaster* NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(8);
+		NewBlaster->SetDir(float4::RIGHT);
+		NewBlaster->SetSpawnPos({ 7510,-6002 });
 
+		NewBlaster = CreateActor<Blaster>(static_cast<int>(GameLayer::Monster), "Blaster");
+		NewBlaster->SetIndex(8);
+		NewBlaster->SetDir(float4::RIGHT);
+		NewBlaster->SetSpawnPos({ 7320,-5362 });
+
+		OctopusBattery* NewOctopusBattery = CreateActor<OctopusBattery>(static_cast<int>(GameLayer::Monster), "OctopusBattery");
+		NewOctopusBattery->SetIndex(8);
+		NewOctopusBattery->SetDir(true);
+		NewOctopusBattery->SetSpawnPos({ 7395,-5342 });
+	}
+
+	//Map Index : 9
+	{
+		BossEntranceDoor* NewDoor = CreateActor<BossEntranceDoor>(static_cast<int>(GameLayer::Object), "BossEntranceDoor");
+		NewDoor->SetPosition({ 9090,-4736});
+	}
 }
 
 
