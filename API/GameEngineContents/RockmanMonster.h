@@ -58,6 +58,12 @@ protected:
 	virtual void AttackStart() {};
 	virtual void AttackUpdate() {};
 
+	virtual void MoveStart() {};
+	virtual void MoveUpdate() {};
+
+	virtual void JumpStart() {};
+	virtual void JumpUpdate() { };
+
 	virtual void Hit(BulletType _BulletType);
 	void Die();
 private:

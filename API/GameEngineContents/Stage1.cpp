@@ -16,6 +16,8 @@
 #include "Flea.h"
 #include "OctopusBattery.h"
 #include "BossEntranceDoor.h"
+#include "Cutman.h"
+
 Stage1::Stage1()
 {
 
@@ -588,6 +590,13 @@ void Stage1::InitMonster()
 		BossEntranceDoor* NewDoor = CreateActor<BossEntranceDoor>(static_cast<int>(GameLayer::Object), "BossDoor");
 		NewDoor->SetPosition({ 12230,-4736 });
 		NewDoor->SetDoor(true);
+	}
+
+	//Map Index : 11
+	{
+		Cutman* NewCutman = CreateActor<Cutman>(static_cast<int>(GameLayer::Monster), "Cutman");
+		NewCutman->SetIndex(11);
+		NewCutman->SetSpawnPos({ 13057,-4392 });
 	}
 }
 

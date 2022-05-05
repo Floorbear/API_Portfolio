@@ -32,6 +32,8 @@ enum class MonsterState
 {
 	Idle,
 	Attack,
+	Move,
+	Jump,
 	Max
 };
 

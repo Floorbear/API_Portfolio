@@ -122,6 +122,12 @@ void RockmanMonster::ChangeState(MonsterState _State)
 	case MonsterState::Attack:
 		AttackStart();
 		break;
+	case MonsterState::Jump:
+		JumpStart();
+		break;
+	case MonsterState::Move:
+		MoveStart();
+		break;
 	default:
 		break;
 	}
@@ -138,6 +144,12 @@ void RockmanMonster::UpdateState()
 		break;
 	case MonsterState::Attack:
 		AttackUpdate();
+		break;
+	case MonsterState::Jump:
+		JumpUpdate();
+		break;
+	case MonsterState::Move:
+		MoveUpdate();
 		break;
 	default:
 		break;
