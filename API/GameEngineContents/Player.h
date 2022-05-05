@@ -11,6 +11,7 @@ private:
 	void StateChange(PlayerState _State);
 public:
 	void GoToVer(float4 _VerDir);
+	void GoToRight(float _Value);
 	inline PlayerState GetCurPlayerState()
 	{
 		return CurState_;
@@ -38,6 +39,16 @@ public:
 	inline bool GetCanActivate()
 	{
 		return CanActivate;
+	}
+
+	inline void SwitchCanActivate()
+	{
+		CanActivate = !CanActivate;
+	}
+
+	inline GameEngineRenderer* GetPlayerRenderer()
+	{
+		return PlayerRenderer_;
 	}
 
 private:
@@ -150,6 +161,9 @@ private:
 	//카메라
 	float CameraPosY_;
 	float CameraDesY_; //Y축 맵 이동이 일어날 경우 이동할 맵의 Y좌표
+	float CameraDesX_;
+	bool IsHoriCameraMove_;
+	float HoriCameraMoveTimer_;
 
 	//활성화
 	bool CanActivate;

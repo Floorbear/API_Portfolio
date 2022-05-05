@@ -23,6 +23,11 @@ public:
 	BackGround& operator=(const BackGround& _Ohter) = delete;
 	BackGround& operator=(const BackGround&& _Other) noexcept = delete;
 
+	inline BackGround* GetUPBackground()
+	{
+		return UpBackground_;
+	}
+
 public:
 
 	inline float4 GetScale()

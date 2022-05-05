@@ -187,6 +187,12 @@ void RockMan::InitImage()
 
 		ObjectImage = GameEngineImageManager::GetInst()->Find("BossEntranceDoor.bmp");
 		ObjectImage->Cut({ 128,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("BossDoor.bmp");
+		ObjectImage->Cut({ 64,256 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("Stage1_11_Ani.bmp");
+		ObjectImage->Cut({ 1024,1024 });
 	}
 
 	//UI비트맵 초기화

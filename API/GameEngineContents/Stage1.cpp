@@ -183,8 +183,6 @@ void Stage1::InitColPosNScale()
 			//Down
 			GameEngineCollision* NewMovePrevCol = StartBackground_->CreateCollision("MovePrev", { 50,10 }, { 7329,-5140 });
 			AllBackground_[9]->AllMovePrevCol_.push_back(NewMovePrevCol);
-
-
 		}
 	}
 
@@ -274,6 +272,22 @@ void Stage1::InitBackground()
 		AllBackground_.push_back(NewBackground);
 	}
 
+	//Map Index = 10
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_10");
+		NewBackground->SetIndex(10);
+		NewBackground->SetPosition({ 9216,-5120 });
+		AllBackground_.push_back(NewBackground);
+	}
+
+	//Map Index = 11
+	{
+		BackGround* NewBackground = CreateActor<BackGround>(static_cast<int>(GameLayer::Background), "Stage1_11");
+		NewBackground->SetIndex(11);
+		NewBackground->SetPosition({ 12288,-5120 });
+		AllBackground_.push_back(NewBackground);
+	}
+
 }
 
 void Stage1::ConnectBackground()
@@ -335,6 +349,12 @@ void Stage1::ConnectBackground()
 	//Map Index = 9
 	{
 		AllBackground_[9]->DownBackground_ = AllBackground_[8];
+		AllBackground_[9]->UpBackground_ = AllBackground_[10];
+	}
+
+	//Map Index = 10
+	{
+		AllBackground_[10]->UpBackground_ = AllBackground_[11];
 	}
 
 
@@ -560,6 +580,14 @@ void Stage1::InitMonster()
 	{
 		BossEntranceDoor* NewDoor = CreateActor<BossEntranceDoor>(static_cast<int>(GameLayer::Object), "BossEntranceDoor");
 		NewDoor->SetPosition({ 9090,-4736});
+		NewDoor->SetDoor(false);
+	}
+
+	//Map Index : 10
+	{
+		BossEntranceDoor* NewDoor = CreateActor<BossEntranceDoor>(static_cast<int>(GameLayer::Object), "BossDoor");
+		NewDoor->SetPosition({ 12230,-4736 });
+		NewDoor->SetDoor(true);
 	}
 }
 

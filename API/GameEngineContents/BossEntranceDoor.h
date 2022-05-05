@@ -17,6 +17,8 @@ public:
 	BossEntranceDoor& operator=(const BossEntranceDoor& _Ohter) = delete;
 	BossEntranceDoor& operator=(const BossEntranceDoor&& _Other) noexcept = delete;
 
+	void SetDoor(bool _IsBossDoor);
+
 protected:
 	void Start() override;
 	void Update() override;
@@ -25,6 +27,7 @@ private:
 	void DoorColCheck();
 	GameEngineRenderer* DoorRenderer_;
 	GameEngineCollision* DoorCol_;
+	bool IsSet_;
 
 
 };

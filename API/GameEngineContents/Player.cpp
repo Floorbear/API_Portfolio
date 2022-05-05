@@ -75,6 +75,10 @@ void Player::InitPlayerPara()
 	HitEffect_Center_Renderer_ = nullptr;
 	HitEffect_Top_Renderer_ = nullptr;
 	PlayerSpawnRenderer_ = nullptr;
+
+	CameraDesX_ = 0;
+	IsHoriCameraMove_ = false;
+	HoriCameraMoveTimer_ = 0;
 }
 
 Player::~Player()
@@ -154,7 +158,7 @@ void Player::Update()
 		}
 	}
 
-	//맵 변경이 일어날때 카메라와 플레이어를 부드럽게 이동
+	//수직 맵 변경이 일어날때 카메라와 플레이어를 부드럽게 이동
 	if (CameraDesY_ != CameraPosY_)
 	{
 		float VerDirY = CameraDesY_ - CameraPosY_;
@@ -170,14 +174,30 @@ void Player::Update()
 		if (VerDir.Len2D() < 0.5f)
 		{
 			CameraPosY_ = CameraDesY_;
+			CanActivate = true;
+			PlayerCol_->On();
 		}
 
 
 	}
-	else //맵 변경이 종료되면
+	else if (IsHoriCameraMove_ == true) //수평 맵 변경이 일어날 때 부드럽게 이동
 	{
-		CanActivate = true;
-		PlayerCol_->On();
+		float CameraPosX = GetLevel()->GetCameraPos().x;
+		float MoveCameraPosX = CameraPosX;
+		HoriCameraMoveTimer_ += GameEngineTime::GetDeltaTime();
+		MoveCameraPosX = GameEngineMath::Lerp(CameraPosX, CameraDesX_, HoriCameraMoveTimer_/50);
+		if (MoveCameraPosX >= CameraDesX_)
+		{
+			IsHoriCameraMove_ = false;
+			CanActivate = true;
+			HoriCameraMoveTimer_ = 0;
+			PlayerCol_->On();
+		}
+		else
+		{
+			GetLevel()->SetCameraPos({ MoveCameraPosX,CameraPosY_ });
+			SetMove(float4::RIGHT * GameEngineTime::GetDeltaTime() * 100.0f);
+		}
 	}
 
 	//디버그용 텔포 키워드
@@ -185,35 +205,40 @@ void Player::Update()
 	{
 		std::vector<BackGround*> AllBackground = dynamic_cast<RockmanStage*>(GetLevel())->GetAllBackground();
 		//!!주의 Position과 인덱스를 둘다 셋팅해줘야함!!
-		SetPosition({ 9022,-4530});
-		GameManager::GetInst()->SetCurrentBackGround(AllBackground[9]);
+		SetPosition({ 12080,-4531});
+		GameManager::GetInst()->SetCurrentBackGround(AllBackground[10]);
 		CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
 		CameraPosY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
 	}
 
-	//플레이어가 화면 밖으로 벗어나지 못하게
-	if (GetPosition().x < GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
+
+
+	if (IsHoriCameraMove_ == false)
 	{
-		SetPosition(float4(GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x, GetPosition().y));
+		//플레이어가 화면 밖으로 벗어나지 못하게
+		if (GetPosition().x < GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
+		{
+			SetPosition(float4(GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x, GetPosition().y));
+		}
+
+		//카메라가 화면 밖으로 벗어나지 못하게 한다
+		float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,CameraPosY_ };
+		float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x + GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
+
+
+		if (CameraPos.x <= GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
+		{
+			CameraPos.x = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
+		}
+		if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
+		{
+			CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
+		}
+
+
+
+		GetLevel()->SetCameraPos(CameraPos);
 	}
-
-	//카메라가 화면 밖으로 벗어나지 못하게 한다
-	float4 CameraPos = { GetPosition().x - GameEngineWindow::GetScale().Half().x,CameraPosY_ };
-	float BackGroundScale_X = GameManager::GetInst()->GetCurrentBackGround()->GetScale().x + GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
-
-
-	if (CameraPos.x <= GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x)
-	{
-		CameraPos.x = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().x;
-	}
-	if (CameraPos.x > BackGroundScale_X - GameEngineWindow::GetScale().x)
-	{
-		CameraPos.x = BackGroundScale_X - GameEngineWindow::GetScale().x;
-	}
-
-
-
-	GetLevel()->SetCameraPos(CameraPos);
 
 }
 
@@ -332,6 +357,14 @@ void Player::GoToVer(float4 _VerDir)
 	CameraDesY_ = GameManager::GetInst()->GetCurrentBackGround()->GetPosition().y;
 	MoveToLadderPos();
 
+}
+
+void Player::GoToRight(float _Value)
+{
+	CanActivate = false;
+	IsHoriCameraMove_ = true;
+	PlayerCol_->Off();
+	CameraDesX_ = GetLevel()->GetCameraPos().x + _Value;
 }
 
 bool Player::IsMoveVerKeyPress()
