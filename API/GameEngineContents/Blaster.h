@@ -27,7 +27,7 @@ protected:
 	void AttackStart() override;
 	void AttackUpdate() override;
 
-	void Hit(BulletType _BulletType) override;
+	void Hit(BulletType _BulletType, const float4& _BulletPos) override;
 
 private:
 	float CurIdleTime_;

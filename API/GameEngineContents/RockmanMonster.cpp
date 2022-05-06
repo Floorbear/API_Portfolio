@@ -24,6 +24,8 @@ RockmanMonster::RockmanMonster()
 {
 	StateStr_[static_cast<int>(MonsterState::Idle)] = "Idle";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
+	StateStr_[static_cast<int>(MonsterState::Jump)] = "Jump";
+	StateStr_[static_cast<int>(MonsterState::Move)] = "Move";
 }
 
 RockmanMonster::~RockmanMonster()
@@ -128,6 +130,9 @@ void RockmanMonster::ChangeState(MonsterState _State)
 	case MonsterState::Move:
 		MoveStart();
 		break;
+	case MonsterState::Hit:
+		HitStart();
+		break;
 	default:
 		break;
 	}
@@ -151,6 +156,9 @@ void RockmanMonster::UpdateState()
 	case MonsterState::Move:
 		MoveUpdate();
 		break;
+	case MonsterState::Hit:
+		HitUpdate();
+		break;
 	default:
 		break;
 	}
@@ -161,6 +169,7 @@ void RockmanMonster::HitByBulletCheck()
 	if (MonsterContactCol_ != nullptr) //충돌체가 없는 몬스터가 있을 수 있다(ex 스포너)
 	{
 		std::vector<GameEngineCollision*> BulletColList;
+		float4 BulletPos = float4::ZERO;
 		if (MonsterContactCol_->CollisionResult("Bullet", BulletColList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
 			BulletType Type = BulletType::Normal;
@@ -169,14 +178,15 @@ void RockmanMonster::HitByBulletCheck()
 			{
 				Bullet* HitBullet = dynamic_cast<Bullet*>(Col->GetActor());
 				Type = HitBullet->GetBulletType();
+				BulletPos = HitBullet->GetPosition();
 				HitBullet->Death();
 			}
-			Hit(Type);
+			Hit(Type,BulletPos);
 		}
 	}
 }
 
-void RockmanMonster::Hit(BulletType _BulletType)
+void RockmanMonster::Hit(BulletType _BulletType, const float4& _BulletPos)
 {
 	switch (_BulletType)
 	{

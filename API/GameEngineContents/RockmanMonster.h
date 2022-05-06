@@ -64,11 +64,15 @@ protected:
 	virtual void JumpStart() {};
 	virtual void JumpUpdate() { };
 
-	virtual void Hit(BulletType _BulletType);
+	virtual void HitStart() {};
+	virtual void HitUpdate() {};
+
+	virtual void Hit(BulletType _BulletType,const float4& _BulletPos = float4::ZERO);
+	virtual void HitByBulletCheck(); //MonsterContactCol_에 총알이 닿았는지 확인하는 함수
 	void Die();
 private:
 	//Col Check
-	void HitByBulletCheck(); //MonsterContactCol_에 총알이 닿았는지 확인하는 함수
+
 
 
 

@@ -152,7 +152,7 @@ void Blaster::AttackUpdate()
 	}
 }
 
-void Blaster::Hit(BulletType _BulletType)
+void Blaster::Hit(BulletType _BulletType, const float4& _BulletPos)
 {
 	switch (_BulletType)
 	{

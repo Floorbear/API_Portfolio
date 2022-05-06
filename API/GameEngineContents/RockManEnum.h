@@ -34,6 +34,7 @@ enum class MonsterState
 	Attack,
 	Move,
 	Jump,
+	Hit,
 	Max
 };
 
@@ -47,6 +48,7 @@ enum class MonsterBulletType
 {
 	Red,
 	Orange,
+	CutmanBullet,
 	Max
 };
 

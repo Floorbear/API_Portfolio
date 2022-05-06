@@ -2,6 +2,7 @@
 #include <GameEngine/GameEngineActor.h>
 #include "RockManEnum.h"
 
+class Cutman;
 class MonsterBullet : public GameEngineActor
 {
 public:
@@ -26,6 +27,18 @@ public:
 		return Dmg_;
 	}
 
+	inline void SetCutman(Cutman* _Cutman)
+	{
+		Cutman_ = _Cutman;
+	}
+
+	inline bool GetIsReturn()
+	{
+		return IsReturn_;
+	}
+
+
+
 protected:
 	void Start() override;
 	void Update() override;
@@ -39,6 +52,12 @@ private:
 	MonsterBulletType Type_;
 
 	GameEngineRenderer* Renderer_;
+
+
+	//ÄÆ¸Ç¿ë
+	Cutman* Cutman_;
+	bool IsReturn_;
+	float4 StartPos_;
 
 };
 
