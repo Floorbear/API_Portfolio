@@ -596,9 +596,7 @@ void Stage1::InitMonster()
 
 	//Map Index : 11
 	{
-		Cutman* NewCutman = CreateActor<Cutman>(static_cast<int>(GameLayer::Monster), "Cutman");
-		NewCutman->SetIndex(11);
-		NewCutman->SetSpawnPos({ 13057,-4392 });
+
 	}
 }
 

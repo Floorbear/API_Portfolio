@@ -13,6 +13,11 @@ public:
 	Cutman(const Cutman&& _Other) noexcept = delete;
 	Cutman& operator=(const Cutman& _Ohter) = delete;
 	Cutman& operator=(const Cutman&& _Other) noexcept = delete;
+
+	inline int GetHP()
+	{
+		return CurHP_;
+	}
 protected:
 	void Update() override;
 	void InitMonster() override;
@@ -46,16 +51,27 @@ private:
 	float CurIdleTime_;
 	float MaxIdleTime_;
 	float AttackJudgmentTime_;
+	float JumpAttackJudgmentTime_;
 	float AttackStartWaitTime_;
+	float AttackStartCoolTime_;
 	float CurHitTime_;
+	float CurBlinkTime_;
 
 	float Gravity_;
 
 	bool IsAttacking_;
+	bool IsHitAlphaOn_;
+	bool IsFirst_;
 	std::string HaveWeaponStr_[2];
 
 	//공격관련
 	MonsterBullet* CurBullet_;
+
+	GameEngineRenderer* HitEffect_Center_Renderer_;
+	GameEngineRenderer* HitEffect_Top_Renderer_;
+
+	//스테이터스
+	float CurHPFloat_;
 
 	//void Hit(BulletType _BulletType) override;
 };

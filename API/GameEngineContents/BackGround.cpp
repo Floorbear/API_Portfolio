@@ -6,6 +6,7 @@
 #include <GameEngine/GameEngineCollision.h>
 #include "GameManager.h"
 #include "Player.h"
+#include "Cutman.h"
 
 BackGround::BackGround()
 	:
@@ -14,7 +15,11 @@ BackGround::BackGround()
 	Renderer_(nullptr),
 	BackGroundImage_(nullptr),
 	BackGroundColImage_(nullptr),
-	SpawnPoint_(float4::ZERO)
+	SpawnPoint_(float4::ZERO),
+	BossRoomRenderer_(nullptr),
+	BossRoomImage_(nullptr),
+	BossRoomBlinkTime_(0)
+
 {
 	AllMovePrevCol_.reserve(5);
 	AllMoveNextCol_.reserve(5);
@@ -32,12 +37,23 @@ void BackGround::Start()
 
 	BackGroundColImage_ = GameEngineImageManager::GetInst()->Find(GetNameConstRef() + "_Col.bmp");
 
+	BossRoomImage_ = GameEngineImageManager::GetInst()->Find(GetNameConstRef() + "_Boss.bmp");
+
 	if (BackGroundImage_ == nullptr || BackGroundColImage_ == nullptr)
 	{
 		MsgBoxAssertString("BackGroundImage_ 혹은 BackGroundColImage를 찾을 수 없습니다." + GetNameConstRef() + ".bmp");
 	}
 
 	Renderer_ = CreateRenderer(GetNameConstRef() + ".bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
+
+	if (BossRoomImage_ != nullptr)
+	{
+		BossRoomImage_->Cut({ 1024,1024 });
+		BossRoomRenderer_ = CreateRenderer(GetNameConstRef() + "_Boss.bmp", static_cast<int>(GameLayer::Background), RenderPivot::LeftTop);
+		BossRoomRenderer_->CreateAnimation(GetNameConstRef() + "_Boss.bmp", "Blink", 0, 1, 0.1);
+		BossRoomRenderer_->ChangeAnimation("Blink");
+		BossRoomRenderer_->PauseOn();
+	}
 	SetScale(BackGroundImage_->GetScale());
 }
 
@@ -45,7 +61,7 @@ void BackGround::Update()
 {
 	//충돌체크
 	//맵 방향 체크 >> 업 백그라운드와 좌표값 빼고 그 벡터로 방향을 잡자
-	if (Index_ == GameManager::GetInst()->GetCurrentBackGround()->GetIndex()) //현재 백그라운드 일때만 충돌체크
+	if (Index_ == GameManager::GetInst()->GetCurrentBackGround()->GetIndex()) //현재 백그라운드 일때만 체크
 	{
 		for (GameEngineCollision* MoveUpCol : AllMoveNextCol_)
 		{
@@ -82,7 +98,35 @@ void BackGround::Update()
 				CurPlayer->GoToVer(Dir);
 			}
 		}
+
+		//보스룸 애니메이션 체크
+		if (BossRoomImage_ != nullptr)
+		{
+			//플레이어 이동이 완료하면 애니메이션 재생
+			Player* CurPlayer = GameManager::GetInst()->GetPlayer();
+			if (CurPlayer == nullptr)
+			{
+				return;
+			}
+			if (CurPlayer->GetIsHoriCameraMove() == true)
+			{
+				return;
+			}
+			CurPlayer->OffCanActivate();
+			BossRoomRenderer_->PauseOff();
+			BossRoomBlinkTime_ += GameEngineTime::GetDeltaTime();
+			if (BossRoomBlinkTime_ > 2.5f)
+			{
+				Cutman* NewCutman = GetLevel()->CreateActor<Cutman>(static_cast<int>(GameLayer::Monster), "Cutman");
+				NewCutman->SetIndex(11);
+				NewCutman->SetSpawnPos({ 13057,-4392 });
+				BossRoomRenderer_->Death();
+				BossRoomImage_ = nullptr;
+			}
+		}
 	}
+
+	
 	
 }
 

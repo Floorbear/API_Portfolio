@@ -11,7 +11,10 @@
 #include <GameEngine/GameEngineCollision.h>
 #include <GameEngineBase/GameEngineSound.h>
 #include "Bullet.h"
-Cutman::Cutman()
+#include "BossHPBar.h"
+Cutman::Cutman():
+	HitEffect_Center_Renderer_(nullptr),
+	HitEffect_Top_Renderer_(nullptr)
 {
 }
 
@@ -26,10 +29,43 @@ void Cutman::Update()
 	if (CurHitTime_ > 0)
 	{
 		CurHitTime_ += GameEngineTime::GetDeltaTime();
+		CurBlinkTime_ += GameEngineTime::GetDeltaTime();
 
-		if (CurHitTime_ > 1.2f) //1.2초뒤 무적이 풀린다
+		if (CurBlinkTime_ >= 0.12f) //무적상태일때 깜빡거린ㅁ
 		{
+			if (IsHitAlphaOn_ == false)
+			{
+				IsHitAlphaOn_ = true;
+				MonsterRenderer_->SetAlpha(40);
+				HitEffect_Center_Renderer_->SetAlpha(40);
+			}
+			else
+			{
+				IsHitAlphaOn_ = false;
+				MonsterRenderer_->SetAlpha(255);
+				HitEffect_Center_Renderer_->SetAlpha(200);
+			}
+		}
+
+		if (CurHitTime_ > 1.5f) //1.2초뒤 무적이 풀린다
+		{
+			IsHitAlphaOn_ = false;
+			CurBlinkTime_ = 0;
 			CurHitTime_ = 0;
+			MonsterRenderer_->SetAlpha(255);
+		}
+	}
+
+	//최초의 연출 파트
+	if (IsFirst_ == true)
+	{
+		CurHPFloat_ += 10*GameEngineTime::GetDeltaTime();
+		CurHP_ = static_cast<int>(CurHPFloat_);
+		if (CurHP_ >= MaxHP_)
+		{
+			IsFirst_ = false;
+			GameManager::GetInst()->GetPlayer()->OnCanActivate();
+			ChangeState(MonsterState::Move);
 		}
 	}
 }
@@ -50,8 +86,9 @@ void Cutman::InitMonster()
 
 	Default_DeathTimer_ = 1.0f;
 	DeathTimer_ = Default_DeathTimer_;
-	MaxHP_ = 10;
-	CurHP_ = MaxHP_;
+	MaxHP_ = 28;
+	CurHP_ = 0;
+	CurHPFloat_ = 0;
 
 	//공격관련
 	IsAttacking_ = false;
@@ -63,10 +100,16 @@ void Cutman::InitMonster()
 	MaxIdleTime_ = 1.0f;
 	AttackStartWaitTime_ = 0;
 	AttackJudgmentTime_ = 0;
+	JumpAttackJudgmentTime_ = 0;
 	CurHitTime_ = 0;
+	CurBlinkTime_ = 0;
+	IsHitAlphaOn_ = false;
+	AttackStartCoolTime_ = 0;
 
 	//중력관련
 	Gravity_ = 0;
+
+	IsFirst_ = true;
 
 }
 
@@ -74,20 +117,24 @@ void Cutman::InitRenderer()
 {
 	//렌더러 애니메이션 셋팅
 	MonsterRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Monster), RenderPivot::CENTER,float4(0,40));
+	HitEffect_Center_Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Monster), RenderPivot::CENTER);
+	HitEffect_Top_Renderer_ = CreateRenderer(static_cast<int>(GameLayer::Monster), RenderPivot::CENTER, float4(0, -50));
 	MonsterRenderer_->SetTransColor(TransColor);
+	HitEffect_Center_Renderer_->SetTransColor(RGB(255, 255, 255));
+	HitEffect_Top_Renderer_->SetTransColor(RGB(255, 255, 255));
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Idle_HaveWeaponRight", 0, 1, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Idle_HaveWeaponLeft", 0, 1, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Move_HaveWeaponRight", 2, 4, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Move_HaveWeaponLeft", 2, 4, 0.1f);
-	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Jump_HaveWeaponLeft", 5, 5, 0.1f,false);
-	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Jump_HaveWeaponRight", 5, 5, 0.1f, false);
+	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Jump_HaveWeaponLeft", 5, 5, 0.001f,false);
+	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Jump_HaveWeaponRight", 5, 5, 0.001f, false);
 
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Idle_AttackingRight", 8, 9, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Idle_AttackingLeft", 8, 9, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Move_AttackingRight", 10, 12, 0.1f);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Move_AttackingLeft", 10, 12, 0.1f);
-	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Jump_AttackingLeft", 13, 13, 0.1f, false);
-	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Jump_AttackingRight", 13, 13, 0.1f, false);
+	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Jump_AttackingLeft", 13, 13, 0.001f, false);
+	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Jump_AttackingRight", 13, 13, 0.001f, false);
 
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Attack_Right", 6, 7, 0.25f, false);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Attack_Left", 6, 7, 0.25f, false);
@@ -97,7 +144,15 @@ void Cutman::InitRenderer()
 	MonsterRenderer_->CreateAnimation("Cutman_Right.bmp", "Cutman_Hit_AttackingRight",11, 11, 0.25f, false);
 	MonsterRenderer_->CreateAnimation("Cutman_Left.bmp", "Cutman_Hit_AttackingLeft", 11, 11, 0.25f, false);
 
+	HitEffect_Center_Renderer_->CreateAnimation("HitEffect_Center.bmp", "HitEffect_Center_On", 0, 0, 0.05f, true);
+	HitEffect_Center_Renderer_->CreateAnimation("HitEffect_Center.bmp", "HitEffect_Center_Off", 1, 1, 0.05f, false);
+	HitEffect_Top_Renderer_->CreateAnimation("HitEffect_Top.bmp", "HitEffect_Top_On", 0, 3, 0.07f, false);
+	HitEffect_Top_Renderer_->CreateAnimation("HitEffect_Top.bmp", "HitEffect_Top_Off", 3, 3, 0.07f, false);
 
+	HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+	HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
+
+	HitEffect_Center_Renderer_->SetAlpha(140);
 	//사망 애니메이션
 	MonsterRenderer_->CreateAnimation("Explosion.bmp", "Die", 0, 4, 0.05f, false);
 
@@ -115,10 +170,16 @@ void Cutman::SetMonster()
 {
 	//콜리전 생성
 	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
+
+	//HP바 생성
+	BossHPBar* HPbar = GetLevel()->CreateActor<BossHPBar>(static_cast<int>(GameLayer::UI), "BossHPbar");
+	HPbar->SetCutman(this);
+
 }
 
 void Cutman::IdleStart()
 {
+
 	ChangeIdleAni();
 	CurIdleTime_ = 0;
 }
@@ -153,16 +214,16 @@ void Cutman::MoveUpdate()
 		MonsterRenderer_->ChangeAnimation("Cutman_Move_" + HaveWeaponStr_[static_cast<int>(IsAttacking_)] + RockmanUtility::DirToStr(CurHoriDir_));
 	}
 
-	//이동상태가 2초이상(누적) 지속됐으면, 50%확률로 공격을 한다
+	//이동상태가 1초이상(누적) 지속됐으면, 70%확률로 공격을 한다
 	AttackJudgmentTime_ += GameEngineTime::GetDeltaTime();
-	if (AttackJudgmentTime_ >= 0.5f)
+	if (AttackJudgmentTime_ >= 1.0f)
 	{
 		AttackJudgmentTime_ = 0;
 		if (IsAttacking_ == false)
 		{
 			GameEngineRandom NewRandom;
 			int RandomValue = NewRandom.RandomInt(0, 100);
-			if (RandomValue > 1)
+			if (RandomValue > 30)
 			{
 				ChangeState(MonsterState::Attack);
 				return;
@@ -201,15 +262,61 @@ void Cutman::MoveUpdate()
 void Cutman::JumpStart()
 {
 	MonsterRenderer_->ChangeAnimation("Cutman_Jump_" + HaveWeaponStr_[static_cast<int>(IsAttacking_)] + RockmanUtility::DirToStr(CurHoriDir_));
+	AttackStartCoolTime_ = 0;
 }
 
 void Cutman::JumpUpdate()
 {
+	//점프공격
+	//이동상태가 1.8초이상(누적) 지속됐으면, 70%확률로 공격을 한다
+	JumpAttackJudgmentTime_ += GameEngineTime::GetDeltaTime();
+	if (JumpAttackJudgmentTime_ >= 1.2f)
+	{
+		JumpAttackJudgmentTime_ = 0;
+		if (IsAttacking_ == false)
+		{
+			GameEngineRandom NewRandom;
+			int RandomValue = NewRandom.RandomInt(0, 100);
+			if (RandomValue > 30)
+			{
+				if (IsAttacking_ == false) //공격 시간
+				{
+					CurHoriDir_ = float4(Player_->GetPosition().x - GetPosition().x, 0);
+					CurHoriDir_.Normal2D();
+					IsAttacking_ = true;
+					MonsterRenderer_->ChangeAnimation("Cutman_Attack_" + RockmanUtility::DirToStr(CurHoriDir_));
+				}
+			}
+		}
+	}
+
+	if (CurBullet_ == nullptr && AttackStartCoolTime_ >= 0.2f && IsAttacking_ == true)
+	{
+		float4 PlayerDir = float4(Player_->GetPosition().x - GetPosition().x, Player_->GetPosition().y - GetPosition().y);
+		float Distance = PlayerDir.Len2D() * 1.6f; //플레이어가 있는 지점보다 살짝 더 뒤까지 발사시킨다
+		PlayerDir.Normal2D();
+
+		CurBullet_ = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "CutmanBullet");
+		CurBullet_->SetCutman(this);
+		CurBullet_->SetBullet(GetPosition(), GetPosition() + PlayerDir * Distance, 3, MonsterBulletType::CutmanBullet);
+	}
+
+	//공격 On이면 선딜쿨타이머가 돈다
+	if (IsAttacking_ == true)
+	{
+		AttackStartCoolTime_ += GameEngineTime::GetDeltaTime();
+	}
+
 	Gravity_ += 5000 * GameEngineTime::GetDeltaTime();
 	Speed_ -= Speed_ * 0.5f * GameEngineTime::GetDeltaTime();
 
+	///////////////////////////////////////////////////////////////////////////
+
 	//수평 이동
-	Move(CurHoriDir_, Speed_, WallColor, false);
+	if (MonsterRenderer_->IsEndAnimation() == true)
+	{
+		Move(CurHoriDir_, Speed_, WallColor, false);
+	}
 
 	//수직이동
 	if (Gravity_ >= 0) //떨어지고 있는 상태라면
@@ -242,7 +349,10 @@ void Cutman::JumpUpdate()
 				float4 WantMovePos = NextPos - float4(0, GetScale().Half().y);
 				SetMove(WantMovePos);
 			}
-			ChangeState(MonsterState::Move);
+			if (MonsterRenderer_->IsEndAnimation() == true)
+			{
+				ChangeState(MonsterState::Move);
+			}		
 			return;
 		}
 
@@ -259,6 +369,7 @@ void Cutman::AttackStart()
 
 	ChangeIdleAni();
 	AttackStartWaitTime_ = 0;
+	AttackStartCoolTime_ = 0;
 }
 
 void Cutman::AttackUpdate()
@@ -270,16 +381,23 @@ void Cutman::AttackUpdate()
 		CurHoriDir_.Normal2D();
 		IsAttacking_ = true;
 		MonsterRenderer_->ChangeAnimation("Cutman_Attack_" + RockmanUtility::DirToStr(CurHoriDir_));
-		if (CurBullet_ == nullptr)
-		{
-			float4 PlayerDir = float4(Player_->GetPosition().x - GetPosition().x, Player_->GetPosition().y - GetPosition().y);
-			float Distance = PlayerDir.Len2D() * 1.4f; //플레이어가 있는 지점보다 살짝 더 뒤까지 발사시킨다
-			PlayerDir.Normal2D();
+	}
 
-			CurBullet_ = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "CutmanBullet");
-			CurBullet_->SetCutman(this);
-			CurBullet_->SetBullet(GetPosition(), GetPosition() + PlayerDir * Distance, 3, MonsterBulletType::CutmanBullet);
-		}
+	if (CurBullet_ == nullptr && AttackStartCoolTime_ >= 0.2f && IsAttacking_ == true)
+	{
+		float4 PlayerDir = float4(Player_->GetPosition().x - GetPosition().x, Player_->GetPosition().y - GetPosition().y);
+		float Distance = PlayerDir.Len2D() * 1.6f; //플레이어가 있는 지점보다 살짝 더 뒤까지 발사시킨다
+		PlayerDir.Normal2D();
+
+		CurBullet_ = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "CutmanBullet");
+		CurBullet_->SetCutman(this);
+		CurBullet_->SetBullet(GetPosition(), GetPosition() + PlayerDir * Distance, 3, MonsterBulletType::CutmanBullet);
+	}
+
+	//공격 On이면 선딜쿨타이머가 돈다
+	if (IsAttacking_ == true)
+	{
+		AttackStartCoolTime_ += GameEngineTime::GetDeltaTime();
 	}
 
 	if (IsAttacking_ == true)
@@ -297,6 +415,8 @@ void Cutman::HitStart()
 {
 	CurHitTime_ += GameEngineTime::GetDeltaTime();
 	MonsterRenderer_->ChangeAnimation("Cutman_Hit_" + HaveWeaponStr_[static_cast<int>(IsAttacking_)] + RockmanUtility::DirToStr(CurHoriDir_));
+	HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_On");
+	HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_On");
 	Speed_ = Default_Speed_;
 	Gravity_ = 0;
 }
@@ -357,9 +477,13 @@ void Cutman::HitUpdate()
 		//아래 발판이 없을 경우
 		if (CheckPixelCol(float4::DOWN, WallColor,false) == false)
 		{
+			HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+			HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 			ChangeState(MonsterState::Jump);
 			return;
 		}
+		HitEffect_Center_Renderer_->ChangeAnimation("HitEffect_Center_Off");
+		HitEffect_Top_Renderer_->ChangeAnimation("HitEffect_Top_Off");
 		ChangeState(MonsterState::Move);
 		return;
 	}
@@ -381,7 +505,11 @@ void Cutman::Hit(BulletType _BulletType, const float4& _BulletPos)
 	{
 	case BulletType::Normal:
 		GameEngineSound::SoundPlayOneShot("EnemyDeath.mp3");
-		--CurHP_;
+		CurHP_ -= 3;
+		if (CurHP_ <= 0)
+		{
+			CurHP_ = 0;
+		}
 		break;
 	default:
 		break;

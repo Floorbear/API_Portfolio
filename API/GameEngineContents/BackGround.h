@@ -68,8 +68,10 @@ protected:
 
 private:
 	GameEngineRenderer* Renderer_;
+	GameEngineRenderer* BossRoomRenderer_;
 	GameEngineImage* BackGroundImage_;
 	GameEngineImage* BackGroundColImage_;
+	GameEngineImage* BossRoomImage_;
 
 	BackGround* DownBackground_;
 	BackGround* UpBackground_;
@@ -80,6 +82,8 @@ private:
 	float4 SpawnPoint_;
 
 	int Index_;
+
+	float BossRoomBlinkTime_;
 
 };
 

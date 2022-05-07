@@ -85,11 +85,11 @@ void MonsterBullet::Update()
 	//컷맨 불릿용
 	if (Type_ == MonsterBulletType::CutmanBullet)
 	{
-		DeathTime_ -= GameEngineTime::GetDeltaTime();
+		/*DeathTime_ -= GameEngineTime::GetDeltaTime();
 		if (DeathTime_ >= 0)
 		{
 			return;
-		}
+		}*/
 
 
 		//여기서 Cutman이 없으면 죽게 만들어

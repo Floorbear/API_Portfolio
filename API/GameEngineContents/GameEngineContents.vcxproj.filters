@@ -89,6 +89,9 @@
     <ClInclude Include="Cutman.h">
       <Filter>Actor\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="BossHPBar.h">
+      <Filter>Actor\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -182,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="Cutman.cpp">
       <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BossHPBar.cpp">
+      <Filter>Actor\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

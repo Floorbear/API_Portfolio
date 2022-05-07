@@ -191,8 +191,6 @@ void RockMan::InitImage()
 		ObjectImage = GameEngineImageManager::GetInst()->Find("BossDoor.bmp");
 		ObjectImage->Cut({ 64,256 });
 
-		ObjectImage = GameEngineImageManager::GetInst()->Find("Stage1_11_Ani.bmp");
-		ObjectImage->Cut({ 1024,1024 });
 	}
 
 	//UIºñÆ®¸Ê ÃÊ±âÈ­
@@ -202,6 +200,9 @@ void RockMan::InitImage()
 		UIImage->Cut({ 1024,960 });
 
 		UIImage = GameEngineImageManager::GetInst()->Find("PerHP.bmp");
+		UIImage->Cut({ 32,32 });
+
+		UIImage = GameEngineImageManager::GetInst()->Find("BossPerHP.bmp");
 		UIImage->Cut({ 32,32 });
 
 		UIImage = GameEngineImageManager::GetInst()->Find("Numbers.bmp");

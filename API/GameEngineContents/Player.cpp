@@ -192,6 +192,7 @@ void Player::Update()
 			CanActivate = true;
 			HoriCameraMoveTimer_ = 0;
 			PlayerCol_->On();
+			StateChange(PlayerState::Idle); //오류있을수 잇음
 		}
 		else
 		{

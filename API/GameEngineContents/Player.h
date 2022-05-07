@@ -46,9 +46,24 @@ public:
 		CanActivate = !CanActivate;
 	}
 
+	inline void OnCanActivate()
+	{
+		CanActivate = true;
+	}
+
+	inline void OffCanActivate()
+	{
+		CanActivate = false;
+	}
+
 	inline GameEngineRenderer* GetPlayerRenderer()
 	{
 		return PlayerRenderer_;
+	}
+
+	inline bool GetIsHoriCameraMove()
+	{
+		return IsHoriCameraMove_;
 	}
 
 private:
