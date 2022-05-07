@@ -12,6 +12,8 @@
 #include <GameEngineBase/GameEngineSound.h>
 #include "Bullet.h"
 #include "BossHPBar.h"
+#include "BossDieEffect.h"
+#include "RockmanItem.h"
 Cutman::Cutman():
 	HitEffect_Center_Renderer_(nullptr),
 	HitEffect_Top_Renderer_(nullptr)
@@ -59,7 +61,7 @@ void Cutman::Update()
 	//최초의 연출 파트
 	if (IsFirst_ == true)
 	{
-		CurHPFloat_ += 10*GameEngineTime::GetDeltaTime();
+		CurHPFloat_ += 18*GameEngineTime::GetDeltaTime();
 		CurHP_ = static_cast<int>(CurHPFloat_);
 		if (CurHP_ >= MaxHP_)
 		{
@@ -68,10 +70,33 @@ void Cutman::Update()
 			ChangeState(MonsterState::Move);
 		}
 	}
+
+	//죽을때 화면 멈추는 연출
+	if (IsWillDead_ == true)
+	{
+		DeathTimer_ -= GameEngineTime::GetDeltaTime();
+		CanActivate = false;
+		MonsterRenderer_->PauseOn();
+		Player_->OffCanActivate();
+		if (DeathTimer_ <= 0)
+		{
+			Player_->OnCanActivate();
+			Die();
+
+		}
+	}
+
+	//x왼쪽으로 안빠져나가게
+	BackGround* CurBackground = GameManager::GetInst()->GetCurrentBackGround();
+	if (GetPosition().x < CurBackground->GetPosition().x + 50)
+	{
+		SetPosition({ CurBackground->GetPosition().x + 50,GetPosition().y });
+	}
 }
 
 void Cutman::InitMonster()
 {
+	IsBossType_ = true;
 	SetScale({ 60,80 });
 	//스테이터스
 	AttackDamage_ = 3;//Default 3
@@ -84,7 +109,7 @@ void Cutman::InitMonster()
 	Speed_ = Default_Speed_;
 	AttackStartRange_ = 200.0f;
 
-	Default_DeathTimer_ = 1.0f;
+	Default_DeathTimer_ = 1.5f;
 	DeathTimer_ = Default_DeathTimer_;
 	MaxHP_ = 28;
 	CurHP_ = 0;
@@ -110,6 +135,7 @@ void Cutman::InitMonster()
 	Gravity_ = 0;
 
 	IsFirst_ = true;
+	IsWillDead_ = false;
 
 }
 
@@ -172,8 +198,8 @@ void Cutman::SetMonster()
 	MonsterContactCol_ = CreateCollision("MonsterCol", GetScale());
 
 	//HP바 생성
-	BossHPBar* HPbar = GetLevel()->CreateActor<BossHPBar>(static_cast<int>(GameLayer::UI), "BossHPbar");
-	HPbar->SetCutman(this);
+	CurHPBar_ = GetLevel()->CreateActor<BossHPBar>(static_cast<int>(GameLayer::UI), "BossHPbar");
+	CurHPBar_->SetCutman(this);
 
 }
 
@@ -521,13 +547,30 @@ void Cutman::Hit(BulletType _BulletType, const float4& _BulletPos)
 	//체력이 0보다 작다면 
 	if (CurHP_ <= 0 && CanActivate == true)
 	{
-		Die();
+		IsWillDead_ = true;
 		return;
 	}
 	else if (CurHP_ > 0 && CanActivate == true)
 	{
 		ChangeState(MonsterState::Hit);
 	}
+}
+
+void Cutman::Die()
+{
+	CanActivate = false;
+	MonsterRenderer_->PauseOn();
+	BossDieEffect* DieEffect = GetLevel()->CreateActor<BossDieEffect>(static_cast<int>(GameLayer::Object), "DieEffect");
+	DieEffect->SetPosition(GetPosition());
+	RockmanItem* NewItem = GetLevel()->CreateActor<RockmanItem>(static_cast<int>(GameLayer::Object), "Item");
+	NewItem->SetItem({ 12723, -4900 });
+	CurHPBar_->Death();
+	GameManager::GetInst()->AddScore(DropScore_);
+	MonsterContactCol_->Off();
+	Speed_ = Default_Speed_;
+
+
+	Death();
 }
 
 bool Cutman::CheckPixelCol(float4 _Dir, unsigned long _RGB, bool _CheckOnlyMid)

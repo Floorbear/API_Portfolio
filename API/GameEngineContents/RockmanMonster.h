@@ -69,14 +69,15 @@ protected:
 
 	virtual void Hit(BulletType _BulletType,const float4& _BulletPos = float4::ZERO);
 	virtual void HitByBulletCheck(); //MonsterContactCol_에 총알이 닿았는지 확인하는 함수
-	void Die();
+	virtual void Die();
+	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수
 private:
 	//Col Check
 
 
 
 
-	void DropItem(); //확률계산(아이템을 드랍할꺼냐 안할꺼냐)을해서 아이템을 드랍하는 함수
+	
 
 
 protected:
@@ -115,5 +116,7 @@ protected:
 	GameEngineCollision* MonsterContactCol_;
 	GameEngineRenderer* MonsterRenderer_;
 	Player* Player_;
+
+	bool IsBossType_;
 };
 

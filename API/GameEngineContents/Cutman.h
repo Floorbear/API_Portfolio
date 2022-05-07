@@ -1,6 +1,7 @@
 #pragma once
 #include "RockmanMonster.h"
 
+class BossHPBar;
 class MonsterBullet;
 class Cutman : public RockmanMonster
 {
@@ -41,6 +42,7 @@ protected:
 	void HitUpdate() override;
 	void HitByBulletCheck() override;
 	void Hit(BulletType _BulletType, const float4& _BulletPos) override;
+	void Die() override;
 private:
 	bool CheckPixelCol(float4 _Dir, unsigned long _RGB, bool _CheckOnlyMid);
 	void Move(float4 _Dir, float _Speed, unsigned long _RGB, bool _CheckOnlyMid);
@@ -62,6 +64,7 @@ private:
 	bool IsAttacking_;
 	bool IsHitAlphaOn_;
 	bool IsFirst_;
+	bool IsWillDead_;
 	std::string HaveWeaponStr_[2];
 
 	//공격관련
@@ -72,7 +75,7 @@ private:
 
 	//스테이터스
 	float CurHPFloat_;
-
+	BossHPBar* CurHPBar_;
 	//void Hit(BulletType _BulletType) override;
 };
 

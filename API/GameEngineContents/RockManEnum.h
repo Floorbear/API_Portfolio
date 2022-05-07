@@ -57,6 +57,7 @@ enum class ItemType
 	SmallEnergy,
 	BigEnergy,
 	RedBonusBall,
+	ClearItem,
 	Max
 };
 

@@ -92,6 +92,15 @@
     <ClInclude Include="BossHPBar.h">
       <Filter>Actor\UI</Filter>
     </ClInclude>
+    <ClInclude Include="BossDieEffect.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearLevel.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="CutmanClear.h">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RockMan.cpp" />
@@ -188,6 +197,15 @@
     </ClCompile>
     <ClCompile Include="BossHPBar.cpp">
       <Filter>Actor\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="BossDieEffect.cpp">
+      <Filter>Actor\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearLevel.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="CutmanClear.cpp">
+      <Filter>Actor\UI\Title&amp;Select</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

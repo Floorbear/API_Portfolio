@@ -15,6 +15,7 @@ RockmanItem::RockmanItem()
 	ItemName_[static_cast<int>(ItemType::BigEnergy)] = "BigEnergy";
 	ItemName_[static_cast<int>(ItemType::SmallEnergy)] = "SmallEnergy";
 	ItemName_[static_cast<int>(ItemType::RedBonusBall)] = "RedBonusBall";
+	ItemName_[static_cast<int>(ItemType::ClearItem)] = "ClearItem";
 }
 
 RockmanItem::~RockmanItem()
@@ -23,8 +24,6 @@ RockmanItem::~RockmanItem()
 
 void RockmanItem::SetItem(const float4& _Pos)
 {
-
-
 	//여기에 스케일
 	switch (CurItemType_)
 	{
@@ -36,6 +35,9 @@ void RockmanItem::SetItem(const float4& _Pos)
 		break;
 	case ItemType::RedBonusBall:
 		SetScale({ 32,32 });
+		break;
+	case ItemType::ClearItem:
+		SetScale({ 64,64 });
 		break;
 	case ItemType::Max:
 		break;
@@ -77,12 +79,19 @@ void RockmanItem::Start()
 		CurItemType_ = ItemType::BigEnergy;
 	}
 
+	//최종보스 스테이지면, 보스아이템만 뜨게 한다.
+	if (GameManager::GetInst()->GetCurrentBackGround()->GetIndex() == 11)
+	{
+		CurItemType_ = ItemType::ClearItem;
+	}
+
 	ItemRenderer_ = CreateRenderer(static_cast<int>(GameLayer::Object));
 
 	ItemRenderer_->SetTransColor(TransColor);
 	ItemRenderer_->CreateAnimation("BonusBall.bmp", "RedBonusBall", 0, 0, 1, false);
 	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "SmallEnergy", 0, 0, 1, false);
 	ItemRenderer_->CreateAnimation("RecoveryItem.bmp", "BigEnergy", 1, 2, 1, true);
+	ItemRenderer_->CreateAnimation("ClearItem.bmp", "ClearItem", 0, 1, 0.8, true);
 
 
 	//아이템타입에 따른 이미지 변경
@@ -96,6 +105,9 @@ void RockmanItem::Start()
 		break;
 	case ItemType::RedBonusBall:
 		ItemRenderer_->ChangeAnimation("RedBonusBall");
+		break;
+	case ItemType::ClearItem:
+		ItemRenderer_->ChangeAnimation("ClearItem");
 		break;
 	case ItemType::Max:
 		break;
@@ -112,7 +124,10 @@ void RockmanItem::Update()
 	DeathTimer_ -= GameEngineTime::GetDeltaTime();
 	if (DeathTimer_ <= 0)
 	{
-		Death();
+		if (CurItemType_ != ItemType::ClearItem)
+		{
+			Death();
+		}
 	}
 
 	Gravity_ += 1500*GameEngineTime::GetDeltaTime();
@@ -155,6 +170,9 @@ void RockmanItem::Update()
 		case ItemType::RedBonusBall:
 			GameEngineSound::SoundPlayOneShot("HPEnergy.mp3");
 			GameManager::GetInst()->AddScore(1000);
+			break;
+		case ItemType::ClearItem:
+			GameManager::GetInst()->ChangeLevel("ClearLevel");
 			break;
 		case ItemType::Max:
 			break;

@@ -2,6 +2,7 @@
 #include "TitleLevel.h"
 #include "SelectLevel.h"
 #include "Stage1.h"
+#include "ClearLevel.h"
 #include "GameManager.h"
 #include <GameEngineBase/GameEngineWindow.h>
 #include <GameEngineBase/GameEngineDirectory.h>
@@ -25,6 +26,7 @@ void RockMan::GameInit()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
+	CreateLevel<ClearLevel>("ClearLevel");
 	ChangeLevel("Stage1");
 }
 
@@ -183,6 +185,9 @@ void RockMan::InitImage()
 		ObjectImage->Cut({ 32,32 });
 
 		ObjectImage = GameEngineImageManager::GetInst()->Find("RecoveryItem.bmp");
+		ObjectImage->Cut({ 64,64 });
+
+		ObjectImage = GameEngineImageManager::GetInst()->Find("ClearItem.bmp");
 		ObjectImage->Cut({ 64,64 });
 
 		ObjectImage = GameEngineImageManager::GetInst()->Find("BossEntranceDoor.bmp");

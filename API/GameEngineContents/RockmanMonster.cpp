@@ -20,7 +20,8 @@ RockmanMonster::RockmanMonster()
 	WantHoriDir_(float4::ZERO),
 	CanActivate(true),
 	SpawnPos_({ -1000, -1000 }),
-	Index_(0)
+	Index_(0),
+	IsBossType_(false)
 {
 	StateStr_[static_cast<int>(MonsterState::Idle)] = "Idle";
 	StateStr_[static_cast<int>(MonsterState::Attack)] = "Attack";
@@ -84,6 +85,10 @@ void RockmanMonster::Update()
 	//몬스터가 죽었을경우 일정시간 이후 몬스터를 DeletePos_로 옮긴다.
 	if (CanActivate == false && DeathTimer_ >= 0)
 	{
+		if (IsBossType_ == true)
+		{
+			return;
+		}
 		DeathTimer_ -= GameEngineTime::GetDeltaTime();
 		if (DeathTimer_ <= 0)
 		{

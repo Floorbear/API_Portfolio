@@ -98,6 +98,11 @@ void MonsterBullet::Update()
 			Death();
 		}
 
+		if (Cutman_->GetHP() == 0)
+		{
+			Death();
+		}
+
 
 		if (HaveDir_ == true) //셋된 상태에서만
 		{
