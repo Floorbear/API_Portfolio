@@ -79,6 +79,8 @@ void Player::InitPlayerPara()
 	CameraDesX_ = 0;
 	IsHoriCameraMove_ = false;
 	HoriCameraMoveTimer_ = 0;
+
+	IsGod_ = false;
 }
 
 Player::~Player()
@@ -99,6 +101,15 @@ void Player::Start()
 
 void Player::Update()
 {
+	//키입력
+	if (GameEngineInput::GetInst()->IsDown("GodMode") == true)
+	{
+		IsGod_ = !IsGod_;
+	}
+	if (GameEngineInput::GetInst()->IsDown("Recovery") == true)
+	{
+		AddPlayerHP(5);
+	}
 	if (PlayerSpawnRenderer_->IsEndAnimation() == true)
 	{
 		PlayerRenderer_->On();
@@ -417,6 +428,10 @@ void Player::CheckMonsterCol()
 		//몬스터에 집적 충돌했을 때 충돌검사
 		std::vector<GameEngineCollision*> MonsterColList;
 		RockmanMonster* Monster = nullptr;
+		if (IsGod_ == true)
+		{
+			return;
+		}
 		if (PlayerCol_->CollisionResult("MonsterCol", MonsterColList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
 			for (GameEngineCollision* MonsterCol : MonsterColList)
@@ -444,6 +459,10 @@ void Player::CheckMonsterCol()
 		//몬스터 총알에 충돌했을 때 충돌검사
 		std::vector<GameEngineCollision*> MonsterBulletList;
 		MonsterBullet* MonsterBullet_ = nullptr;
+		if (IsGod_ == true)
+		{
+			return;
+		}
 		if (PlayerCol_->CollisionResult("MonsterBullet", MonsterBulletList, CollisionType::Rect, CollisionType::Rect) == true)
 		{
 			for (GameEngineCollision* MonsterBulletCol : MonsterBulletList)

@@ -14,6 +14,7 @@
 #include "BossHPBar.h"
 #include "BossDieEffect.h"
 #include "RockmanItem.h"
+#include "RockmanStage.h"
 Cutman::Cutman():
 	HitEffect_Center_Renderer_(nullptr),
 	HitEffect_Top_Renderer_(nullptr)
@@ -74,6 +75,8 @@ void Cutman::Update()
 	//죽을때 화면 멈추는 연출
 	if (IsWillDead_ == true)
 	{
+		RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
+		CurrentStage->Bgm_.Stop();
 		DeathTimer_ -= GameEngineTime::GetDeltaTime();
 		CanActivate = false;
 		MonsterRenderer_->PauseOn();
@@ -321,7 +324,7 @@ void Cutman::JumpUpdate()
 		float4 PlayerDir = float4(Player_->GetPosition().x - GetPosition().x, Player_->GetPosition().y - GetPosition().y);
 		float Distance = PlayerDir.Len2D() * 1.6f; //플레이어가 있는 지점보다 살짝 더 뒤까지 발사시킨다
 		PlayerDir.Normal2D();
-
+		GameEngineSound::SoundPlayOneShot("MetShoot.mp3");
 		CurBullet_ = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "CutmanBullet");
 		CurBullet_->SetCutman(this);
 		CurBullet_->SetBullet(GetPosition(), GetPosition() + PlayerDir * Distance, 3, MonsterBulletType::CutmanBullet);
@@ -414,7 +417,7 @@ void Cutman::AttackUpdate()
 		float4 PlayerDir = float4(Player_->GetPosition().x - GetPosition().x, Player_->GetPosition().y - GetPosition().y);
 		float Distance = PlayerDir.Len2D() * 1.6f; //플레이어가 있는 지점보다 살짝 더 뒤까지 발사시킨다
 		PlayerDir.Normal2D();
-
+		GameEngineSound::SoundPlayOneShot("MetShoot.mp3");
 		CurBullet_ = GetLevel()->CreateActor<MonsterBullet>(static_cast<int>(GameLayer::Bullet), "CutmanBullet");
 		CurBullet_->SetCutman(this);
 		CurBullet_->SetBullet(GetPosition(), GetPosition() + PlayerDir * Distance, 3, MonsterBulletType::CutmanBullet);

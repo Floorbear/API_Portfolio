@@ -27,7 +27,7 @@ void RockMan::GameInit()
 	CreateLevel<SelectLevel>("Select");
 	CreateLevel<Stage1>("Stage1");
 	CreateLevel<ClearLevel>("ClearLevel");
-	ChangeLevel("Stage1");
+	ChangeLevel("Title");
 }
 
 void RockMan::LoadResources()
@@ -287,6 +287,8 @@ void RockMan::InitKey()
 		GameEngineInput::GetInst()->CreateKey("Attack", 'J');
 		GameEngineInput::GetInst()->CreateKey("DebugMOde", 'O');
 		GameEngineInput::GetInst()->CreateKey("TeleportKey", 'T');
+		GameEngineInput::GetInst()->CreateKey("GodMode", 0x31);
+		GameEngineInput::GetInst()->CreateKey("Recovery", 'R');
 	}
 
 }

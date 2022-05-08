@@ -5,6 +5,7 @@
 #include "Player.h"
 #include <GameEngineBase/GameEngineSound.h>
 #include <GameEngineBase/GameEngineRandom.h>
+#include "RockmanStage.h"
 
 RockmanItem::RockmanItem()
 	:ItemRenderer_(nullptr),
@@ -156,6 +157,7 @@ void RockmanItem::Update()
 		Player* CurPlayer = GameManager::GetInst()->GetPlayer();
 		
 		//아이템을 먹으면 효과
+		RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
 		switch (CurItemType_)
 		{
 		case ItemType::SmallEnergy:
@@ -172,6 +174,7 @@ void RockmanItem::Update()
 			GameManager::GetInst()->AddScore(1000);
 			break;
 		case ItemType::ClearItem:
+			CurrentStage->Bgm_ = GameEngineSound::SoundPlayControl("Victory.mp3");
 			GameManager::GetInst()->ChangeLevel("ClearLevel");
 			break;
 		case ItemType::Max:

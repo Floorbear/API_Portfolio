@@ -183,6 +183,7 @@ private:
 	//È°¼ºÈ­
 	bool CanActivate;
 	float DieTimer_;
+	bool IsGod_;
 
 
 public:

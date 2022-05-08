@@ -7,6 +7,8 @@
 #include "GameManager.h"
 #include "Player.h"
 #include "Cutman.h"
+#include "RockmanStage.h"
+#include "GameEngineBase/GameEngineSound.h"
 
 BackGround::BackGround()
 	:
@@ -112,6 +114,14 @@ void BackGround::Update()
 			{
 				return;
 			}
+
+			//여기서 사운드 변경
+			if (BossRoomBlinkTime_ == 0)
+			{
+				RockmanStage* CurrentStage = dynamic_cast<RockmanStage*>(GetLevel());
+				CurrentStage->Bgm_.Stop();
+				CurrentStage->Bgm_ = GameEngineSound::SoundPlayControl("BossBattle.mp3", 30);
+			}
 			CurPlayer->OffCanActivate();
 			BossRoomRenderer_->PauseOff();
 			BossRoomBlinkTime_ += GameEngineTime::GetDeltaTime();
@@ -120,6 +130,7 @@ void BackGround::Update()
 				Cutman* NewCutman = GetLevel()->CreateActor<Cutman>(static_cast<int>(GameLayer::Monster), "Cutman");
 				NewCutman->SetIndex(11);
 				NewCutman->SetSpawnPos({ 13057,-4392 });
+				GameEngineSound::SoundPlayOneShot("HPEnergy.mp3",1);
 				BossRoomRenderer_->Death();
 				BossRoomImage_ = nullptr;
 			}
